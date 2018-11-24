@@ -1,0 +1,15 @@
+﻿CREATE TABLE [dbo].[FamilyMember]
+(
+	[FamilyMemberId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+	[Name] NVARCHAR(100) NOT NULL,
+	[DateOfBirth] DATE NULL,
+	[Gender] INT NULL,
+	[TshirtSize] INT NULL,
+	[PhotoLocation] NVARCHAR(255),
+	[UserId] UNIQUEIDENTIFIER NULL CONSTRAINT FK_FamilyMember_UserId FOREIGN KEY REFERENCES [dbo].[User]([UserId]),
+	[FamilyId] UNIQUEIDENTIFIER NOT NULL CONSTRAINT FK_FamilyMember_FamilyId FOREIGN KEY REFERENCES [dbo].[Family]([FamilyId]),
+	[CreatedBy] NVARCHAR(100) NOT NULL,
+	[CreatedDate] DATETIME NOT NULL,
+	[ModifiedBy] NVARCHAR(100) NULL,
+	[ModifiedDate] DATETIME NULL
+)

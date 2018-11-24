@@ -1,0 +1,13 @@
+﻿CREATE TABLE [dbo].[Reunion]
+(
+	[ReunionId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CONSTRAINT PK_Reunion_ReunionId DEFAULT NEWID(),
+	[Name] NVARCHAR(100) NOT NULL,
+	[Description] NVARCHAR(4000) NULL,
+	[StartDate] DATE NULL,
+	[EndDate] DATE NULL,
+	[AddressId] UNIQUEIDENTIFIER NULL CONSTRAINT FK_Reunion_AddressId FOREIGN KEY REFERENCES [dbo].[Address](AddressId),
+	[CreatedBy] NVARCHAR(100) NOT NULL,
+	[CreatedDate] DATETIME NOT NULL,
+	[ModifiedBy] NVARCHAR(100) NULL,
+	[ModifiedDate] DATETIME NULL
+)
