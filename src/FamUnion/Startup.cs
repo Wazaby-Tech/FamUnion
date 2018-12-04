@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using FamUnion.Data;
 using FamUnion.Services;
 using FamUnion.Core.Model;
+using Microsoft.Extensions.Logging;
 
 namespace FamUnion
 {
@@ -36,7 +37,7 @@ namespace FamUnion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -59,6 +60,8 @@ namespace FamUnion
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            loggerFactory.AddLog4Net();
         }
     }
 }

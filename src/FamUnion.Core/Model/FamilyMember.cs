@@ -14,7 +14,6 @@ namespace FamUnion.Core.Model
         public string Name { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public int Age => DateOfBirth.HasValue ? DateOfBirth.Value.Age() : -1;
-        public GenderIdentity Gender { get; set; }
         public Size TshirtSize { get; set; }
         public string PhotoLocation { get; set; }
 
