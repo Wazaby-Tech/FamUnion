@@ -24,11 +24,5 @@
             Organizer,
             SystemAdmin
         };
-
-        public enum GenderIdentity
-        {
-            Female = 0,
-            Male
-        };
     }
 }
