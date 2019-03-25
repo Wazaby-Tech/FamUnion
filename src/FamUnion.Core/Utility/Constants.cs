@@ -1,4 +1,7 @@
-﻿namespace FamUnion.Core.Utility
+﻿using StatesAndProvinces;
+using System.Collections.Generic;
+
+namespace FamUnion.Core.Utility
 {
     public static class Constants
     {
@@ -24,5 +27,7 @@
             Organizer,
             SystemAdmin
         };
+
+        public static IList<SubRegion> States => Factory.Make(CountrySelection.UnitedStates);
     }
 }

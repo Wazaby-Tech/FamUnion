@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FamUnion.Core.Model
 {
-    public class Reunion : IAuditInfo
+    public class Reunion : ModelBase
     {
-        [Key]
-        public Guid ReunionId { get; set; }
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
@@ -21,9 +19,9 @@ namespace FamUnion.Core.Model
         public virtual IEnumerable<User> Organizers { get; set; }
         public virtual IEnumerable<Family> Families { get; set; }
 
-        public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public override bool IsValid()
+        {
+            return !string.IsNullOrEmpty(Name);
+        }
     }
 }

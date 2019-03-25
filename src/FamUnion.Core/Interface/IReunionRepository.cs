@@ -1,6 +1,13 @@
-﻿namespace FamUnion.Core.Interface
+﻿using FamUnion.Core.Model;
+using System;
+using System.Collections.Generic;
+
+namespace FamUnion.Core.Interface
 {
-    interface IReunionRepository
+    public interface IReunionRepository
     {
+        IEnumerable<Reunion> GetReunions();
+        Reunion GetReunion(Guid id);
+        Reunion SaveReunion(Reunion reunion);
     }
 }

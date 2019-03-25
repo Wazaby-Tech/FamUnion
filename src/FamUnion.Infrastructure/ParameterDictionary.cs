@@ -1,4 +1,13 @@
-public class ParameterDictionary
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Dynamic;
+using System.Linq;
+
+namespace FamUnion.Infrastructure
+{
+    public class ParameterDictionary
     {
         private IDictionary<string, object> _dictionary;
 
@@ -12,7 +21,7 @@ public class ParameterDictionary
         public ParameterDictionary(IDictionary<string, object> dictionary)
             : this()
         {
-            foreach(KeyValuePair<string, object> kvp in dictionary)
+            foreach (KeyValuePair<string, object> kvp in dictionary)
             {
                 _dictionary.Add(kvp.Key, kvp.Value);
             }
@@ -32,7 +41,7 @@ public class ParameterDictionary
         }
 
         #endregion
-                
+
         #region Static Methods
 
         public static ParameterDictionary Empty
@@ -91,3 +100,5 @@ public class ParameterDictionary
             return eoDynamic;
         }
     }
+
+}

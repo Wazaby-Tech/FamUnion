@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FamUnion.Core.Model
 {
-    public class Family : IAuditInfo
+    public class Family : ModelBase
     {
-        [Key]
-        public Guid FamilyId { get; set; }
         [Required]
         [MaxLength(100)]
         public string LastName { get; set; }        
@@ -17,11 +15,6 @@ namespace FamUnion.Core.Model
 
         public virtual IEnumerable<FamilyMember> Members { get; set; }
         public virtual Address Address { get; set; }    
-        public virtual IEnumerable<User> Users { get; set; }
-
-        public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime ModifiedDate { get; set; }
+        public virtual IEnumerable<User> Users { get; set; }    // Needed if Members are also linked to users?
     }
 }

@@ -1,10 +1,7 @@
-using Dapper;
-using System;
+﻿using Dapper;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ERC.ProductGroup.Data
+namespace FamUnion.Infrastructure
 {
     public interface IDataMapper<T>
     {

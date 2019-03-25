@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FamUnion.Core.Model
 {
-    public class Event : IAuditInfo
-    {
-        [Key]
-        public Guid EventId { get; set; }
+    public class Event : ModelBase
+    {        
         [Required]
         [MaxLength(255)]
         public string Name { get; set; }
@@ -20,9 +18,5 @@ namespace FamUnion.Core.Model
         public virtual Reunion Reunion { get; set; }
         public virtual Address Location { get; set; }
 
-        public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime ModifiedDate { get; set; }
     }
 }

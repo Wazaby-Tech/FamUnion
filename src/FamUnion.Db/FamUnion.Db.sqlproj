@@ -67,5 +67,8 @@
     <Build Include="Tables\Family.sql" />
     <Build Include="Tables\FamilyMember.sql" />
     <Build Include="Tables\Event.sql" />
+    <Build Include="StoredProcedures\spGetReunions.sql" />
+    <Build Include="StoredProcedures\spGetReunionById.sql" />
+    <Build Include="StoredProcedures\spSaveReunion.sql" />
   </ItemGroup>
 </Project>

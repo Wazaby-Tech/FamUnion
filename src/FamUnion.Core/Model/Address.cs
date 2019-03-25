@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FamUnion.Core.Model
 {
-    public class Address : IAuditInfo
-    {
-        [Key]
-        public Guid AddressId { get; set; }
+    public class Address : ModelBase
+    {        
         [Required]
         [MaxLength(255)]
         public string Description { get; set; }
@@ -24,9 +22,5 @@ namespace FamUnion.Core.Model
         public long? Latitude { get; set; }
         public long? Longitude { get; set; }
 
-        public string CreatedBy { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTime ModifiedDate { get; set; }
     }
 }

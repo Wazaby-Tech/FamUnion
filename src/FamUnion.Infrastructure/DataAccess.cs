@@ -1,15 +1,13 @@
-using Dapper;
-using ERC.ProductGroup.Util;
+﻿using Dapper;
+using FamUnion.Core.Validation;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
 
-namespace ERC.ProductGroup.Data
+namespace FamUnion.Infrastructure
 {
-    public abstract class PgDataAccess
+    public abstract class DataAccess
     {
         protected string _connectionString;
         protected static object[] _emptyParams = new object[] { };
@@ -17,13 +15,12 @@ namespace ERC.ProductGroup.Data
 
         private static readonly CommandType _sProcType = CommandType.StoredProcedure;
 
-        protected PgDataAccess(IERCDbConnection connection, ILogger logger)
-        {
-            Validator.ThrowIfNull(connection, nameof(connection));
-            _connectionString = Validator.ThrowIfNull(connection.Connection, nameof(connection.Connection));
+        protected DataAccess(string connection, ILogger logger)
+        {            
+            _connectionString = Validator.ThrowIfNull(connection, nameof(connection));
             _logger = Validator.ThrowIfNull(logger, nameof(logger));
-        }        
-        
+        }
+
         protected IEnumerable<T> ExecuteStoredProc<T>(string proc, IDataMapper<T> mapper, ParameterDictionary parameters)
         {
             return Execute<T>(proc, mapper, parameters);
@@ -46,7 +43,7 @@ namespace ERC.ProductGroup.Data
 
         private IEnumerable<T> Execute<T>(string proc, IDataMapper<T> mapper, ParameterDictionary parameters)
         {
-            _logger.LogInformation($"PgDataAccess.Execute|Stored Proc: {proc}, Return type: {typeof(T).ToString()}, Data Mapper: {mapper?.GetType()?.ToString() ?? "N/A"}, Parameters: {parameters?.GetDynamicObject() ?? "N/A"}");
+            _logger.LogInformation($"DataAccess.Execute|Stored Proc: {proc}, Return type: {typeof(T).ToString()}, Data Mapper: {mapper?.GetType()?.ToString() ?? "N/A"}, Parameters: {parameters?.GetDynamicObject() ?? "N/A"}");
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -73,10 +70,10 @@ namespace ERC.ProductGroup.Data
         {
             return ExecuteScalarWithTimeout(proc, parameters, null);
         }
-
+        
         protected object ExecuteScalarWithTimeout(string proc, ParameterDictionary parameters, int? timeout)
         {
-            _logger.LogInformation($"PgDataAccess.ExecuteScalarWithTimeout|Stored Proc: {proc}, Parameters: {parameters?.GetDynamicObject() ?? "N/A"}, Timeout: {timeout ?? 0}");
+            _logger.LogInformation($"DataAccess.ExecuteScalarWithTimeout|Stored Proc: {proc}, Parameters: {parameters?.GetDynamicObject() ?? "N/A"}, Timeout: {timeout ?? 0}");
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
