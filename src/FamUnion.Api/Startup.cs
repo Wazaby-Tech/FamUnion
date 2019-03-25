@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FamUnion.Core.Interface;
 using FamUnion.Infrastructure.Repository;
+using FamUnion.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,7 +37,7 @@ namespace FamUnion.Api
                 return new ReunionRepository(Configuration.GetValue<string>(DbKey));
             });
 
-            
+            services.AddTransient<IReunionService, ReunionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,31 +10,31 @@ namespace FamUnion.Api.Controllers
     [ApiController]
     public class ReunionsController : ControllerBase
     {
-        private readonly IReunionRepository _reunionRepository;
+        private readonly IReunionService _reunionService;
 
-        public ReunionsController(IReunionRepository reunionRepository)
+        public ReunionsController(IReunionService reunionService)
         {
-            _reunionRepository = Validator.ThrowIfNull(reunionRepository, nameof(reunionRepository));
+            _reunionService = Validator.ThrowIfNull(reunionService, nameof(reunionService));
         }
 
         [HttpGet("list")]
         public IActionResult GetReunions()
         {
-            var result = _reunionRepository.GetReunions();
+            var result = _reunionService.GetReunions();
             return new OkObjectResult(result);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetReunion(Guid id)
         {
-            var result = _reunionRepository.GetReunion(id);
+            var result = _reunionService.GetReunion(id);
             return new OkObjectResult(result);
         }
 
         [HttpPost("save")]
         public IActionResult SaveReunion([FromBody] Reunion reunion)
         {
-            var result = _reunionRepository.SaveReunion(reunion);
+            var result = _reunionService.SaveReunion(reunion);
             return new OkObjectResult(result);
         }
     }

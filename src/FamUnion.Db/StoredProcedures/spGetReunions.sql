@@ -13,4 +13,5 @@ AS
 		ModifiedDate
 	FROM
 		[dbo].[Reunion]
+	ORDER BY StartDate, Name
 RETURN 0
