@@ -1,16 +1,23 @@
 ﻿using FamUnion.Core.Model;
 using System;
+using System.Threading.Tasks;
 
 namespace FamUnion.Core.Interface
 {
     public interface IAddressRepository
     {
-        Address GetAddress(Guid id);
+        Task<Address> GetAddress(Guid id);
 
-        Address SaveReunionAddress(Guid reunionId, Address address);
+        Task<Address> GetReunionAddress(Guid reunionId);
 
-        Address SaveEventAddress(Guid eventId, Address address);
+        Task<Address> GetEventAddress(Guid eventId);
 
-        Address SaveFamilyAddress(Guid familyId, Address address);
+        Task<Address> GetFamilyAddress(Guid familyId);
+
+        Task<Address> SaveReunionAddress(Guid reunionId, Address address);
+
+        Task<Address> SaveEventAddress(Guid eventId, Address address);
+
+        Task<Address> SaveFamilyAddress(Guid familyId, Address address);
     }
 }

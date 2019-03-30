@@ -2,13 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FamUnion.Core.Interface
 {
     public interface IReunionService
     {
-        IEnumerable<Reunion> GetReunions();
-        Reunion GetReunion(Guid id);
-        Reunion SaveReunion(Reunion reunion);
+        Task<IEnumerable<Reunion>> GetReunions();
+        Task<Reunion> GetReunion(Guid id);
+        Task<Reunion> SaveReunion(Reunion reunion);
     }
 }

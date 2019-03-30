@@ -32,11 +32,18 @@ namespace FamUnion.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            // Repositories
             services.AddTransient<IReunionRepository, ReunionRepository>(Provider =>
             {
                 return new ReunionRepository(Configuration.GetValue<string>(DbKey));
             });
 
+            services.AddTransient<IAddressRepository, AddressRepository>(Provider =>
+            {
+                return new AddressRepository(Configuration.GetValue<string>(DbKey));
+            });
+
+            // Services
             services.AddTransient<IReunionService, ReunionService>();
         }
 

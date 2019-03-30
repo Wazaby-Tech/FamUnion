@@ -59,6 +59,7 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
+    <Folder Include="PostDeployment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Reunion.sql" />
@@ -70,5 +71,15 @@
     <Build Include="StoredProcedures\spGetReunions.sql" />
     <Build Include="StoredProcedures\spGetReunionById.sql" />
     <Build Include="StoredProcedures\spSaveReunion.sql" />
+    <Build Include="StoredProcedures\spGetAddressByEntityTypeAndId.sql" />
+    <Build Include="StoredProcedures\spGetAddressByReunionId.sql" />
+    <Build Include="Tables\EntityType.sql" />
+    <Build Include="StoredProcedures\spSaveReunionAddress.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="PostDeployment\EntityType.sql" />
   </ItemGroup>
 </Project>

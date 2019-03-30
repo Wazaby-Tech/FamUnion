@@ -27,7 +27,7 @@ WHEN NOT MATCHED
 THEN
 	INSERT (ReunionId, Name, Description, StartDate, EndDate, CreatedDate, CreatedBy)
 	VALUES (@insertId, SOURCE.Name, SOURCE.Description, SOURCE.StartDate, SOURCE.EndDate, SYSDATETIME(), SUSER_SNAME())
-WHEN MATCHED
+WHEN MATCHED AND TARGET.IsActive = 1
 THEN
 	UPDATE SET
 		TARGET.Name = SOURCE.Name,

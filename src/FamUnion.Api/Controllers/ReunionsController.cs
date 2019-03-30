@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
 using FamUnion.Core.Validation;
@@ -18,23 +19,26 @@ namespace FamUnion.Api.Controllers
         }
 
         [HttpGet("list")]
-        public IActionResult GetReunions()
+        public async Task<IActionResult> GetReunions()
         {
-            var result = _reunionService.GetReunions();
+            var result = await _reunionService.GetReunions()
+                .ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetReunion(Guid id)
+        public async Task<IActionResult> GetReunion(Guid id)
         {
-            var result = _reunionService.GetReunion(id);
+            var result = await _reunionService.GetReunion(id).
+                ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }
 
         [HttpPost("save")]
-        public IActionResult SaveReunion([FromBody] Reunion reunion)
+        public async Task<IActionResult> SaveReunion([FromBody] Reunion reunion)
         {
-            var result = _reunionService.SaveReunion(reunion);
+            var result = await _reunionService.SaveReunion(reunion)
+                .ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }
     }

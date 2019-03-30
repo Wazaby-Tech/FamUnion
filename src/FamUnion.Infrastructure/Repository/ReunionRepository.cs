@@ -1,9 +1,11 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
+using FamUnion.Core.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FamUnion.Infrastructure.Repository
 {
@@ -15,31 +17,34 @@ namespace FamUnion.Infrastructure.Repository
 
         }
 
-        public Reunion GetReunion(Guid id)
+        public async Task<Reunion> GetReunion(Guid id)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
                 "id", id.ToString()
             });
-            return ExecuteStoredProc<Reunion>("[dbo].[spGetReunionById]", parameters).SingleOrDefault();
+            return (await ExecuteStoredProc("[dbo].[spGetReunionById]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public IEnumerable<Reunion> GetReunions()
+        public async Task<IEnumerable<Reunion>> GetReunions()
         {
-            return ExecuteStoredProc<Reunion>("[dbo].[spGetReunions]", ParameterDictionary.Empty);
+            return await ExecuteStoredProc("[dbo].[spGetReunions]", ParameterDictionary.Empty)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public Reunion SaveReunion(Reunion reunion)
+        public async Task<Reunion> SaveReunion(Reunion reunion)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[] {
-                "id", (reunion.Id ?? Guid.Empty) == Guid.Empty ? Guid.NewGuid().ToString() : reunion.Id.ToString(),
+                "id", reunion.Id.GetDbGuidString(),
                 "name", reunion.Name,
                 "description", reunion.Description,
                 "startDate", reunion.StartDate.ToString(),
                 "endDate", reunion.EndDate.ToString()
             });
 
-            return ExecuteStoredProc<Reunion>("[dbo].[spSaveReunion]", parameters).SingleOrDefault();
+            return (await ExecuteStoredProc("[dbo].[spSaveReunion]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
     }
 }
