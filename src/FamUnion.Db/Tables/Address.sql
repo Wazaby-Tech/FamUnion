@@ -1,6 +1,8 @@
 ﻿CREATE TABLE [dbo].[Address]
 (
 	[AddressId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY CONSTRAINT DF_Address_AddressId DEFAULT NEWID(),
+	[EntityId] UNIQUEIDENTIFIER NOT NULL,
+	[EntityType] INT NOT NULL CONSTRAINT FK_EntityTypeId FOREIGN KEY REFERENCES [dbo].[EntityType]([EntityTypeId]),
 	[Description] NVARCHAR(255) NOT NULL,
 	[Line1] NVARCHAR(100) NULL,
 	[Line2] NVARCHAR(100) NULL,
@@ -9,6 +11,7 @@
 	[ZipCode] NVARCHAR(5) NULL,
 	[Latitude] BIGINT NULL,
 	[Longitude] BIGINT NULL,
+	[IsActive] BIT NOT NULL DEFAULT 1,
 	[CreatedBy] NVARCHAR(100) NOT NULL,
 	[CreatedDate] DATETIME NOT NULL,
 	[ModifiedBy] NVARCHAR(100) NULL,

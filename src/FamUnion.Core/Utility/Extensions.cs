@@ -33,5 +33,15 @@ namespace FamUnion.Core.Utility
             }
             return expando as ExpandoObject;
         }
+
+        public static string GetDbGuidString(this Guid? id)
+        {
+            return (id ?? Guid.Empty) == Guid.Empty ? Guid.NewGuid().ToString() : id.ToString();
+        }
+
+        public static IEnumerable<T> Yield<T>(this T item)
+        {
+            yield return item;
+        }
     }
 }

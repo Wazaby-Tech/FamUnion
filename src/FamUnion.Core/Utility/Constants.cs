@@ -5,6 +5,12 @@ namespace FamUnion.Core.Utility
 {
     public static class Constants
     {
+        public enum AddressEntityType
+        {
+            Reunion = 1,
+            Event = 2,
+            Family = 3
+        }
         public enum Size
         {
             KIDS_XS = 0,
