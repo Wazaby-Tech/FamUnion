@@ -6,18 +6,18 @@ namespace FamUnion.Core.Interface
 {
     public interface IAddressRepository
     {
-        Task<Address> GetAddress(Guid id);
+        Task<Address> GetAddressAsync(Guid id);
 
-        Task<Address> GetReunionAddress(Guid reunionId);
+        Task<Address> GetReunionAddressAsync(Guid reunionId);
 
-        Task<Address> GetEventAddress(Guid eventId);
+        Task<Address> GetEventAddressAsync(Guid eventId);
 
-        Task<Address> GetFamilyAddress(Guid familyId);
+        Task<Address> GetFamilyAddressAsync(Guid familyId);
 
-        Task<Address> SaveReunionAddress(Guid reunionId, Address address);
+        Task<Address> SaveReunionAddressAsync(Guid reunionId, Address address);
 
-        Task<Address> SaveEventAddress(Guid eventId, Address address);
+        Task<Address> SaveEventAddressAsync(Guid eventId, Address address);
 
-        Task<Address> SaveFamilyAddress(Guid familyId, Address address);
+        Task<Address> SaveFamilyAddressAsync(Guid familyId, Address address);
     }
 }

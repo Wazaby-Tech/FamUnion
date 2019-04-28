@@ -1,8 +1,0 @@
-version: '3.4'
-
-services:
-  famunion:
-    image: ${DOCKER_REGISTRY}famunion
-    build:
-      context: .
-      dockerfile: FamUnion\Dockerfile

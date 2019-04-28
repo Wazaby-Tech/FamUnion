@@ -17,7 +17,7 @@ namespace FamUnion.Infrastructure.Repository
 
         }
 
-        public async Task<Reunion> GetReunion(Guid id)
+        public async Task<Reunion> GetReunionAsync(Guid id)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
@@ -27,13 +27,13 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<Reunion>> GetReunions()
+        public async Task<IEnumerable<Reunion>> GetReunionsAsync()
         {
             return await ExecuteStoredProc("[dbo].[spGetReunions]", ParameterDictionary.Empty)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task<Reunion> SaveReunion(Reunion reunion)
+        public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[] {
                 "id", reunion.Id.GetDbGuidString(),

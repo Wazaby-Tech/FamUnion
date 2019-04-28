@@ -29,8 +29,8 @@ namespace FamUnion.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReunion(Guid id)
         {
-            var result = await _reunionService.GetReunion(id).
-                ConfigureAwait(continueOnCapturedContext: false);
+            var result = await _reunionService.GetReunion(id)
+                .ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }
 

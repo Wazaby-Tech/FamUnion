@@ -1,5 +1,7 @@
 ﻿using FamUnion.Core.Model;
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
 
 namespace FamUnion.Core
 {
@@ -15,10 +17,17 @@ namespace FamUnion.Core
         {
             return true;
         }
-
+        
         public virtual dynamic ToDynamic()
         {
-            return new { };
+            IDictionary<string, object> expando = new ExpandoObject();
+
+            foreach (var propertyInfo in GetType().GetProperties())
+            {
+                var currentValue = propertyInfo.GetValue(this);
+                expando.Add(propertyInfo.Name, currentValue);
+            }
+            return expando as ExpandoObject;
         }
     }
 }

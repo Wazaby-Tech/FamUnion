@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FamUnion.Core.Interface;
+﻿using FamUnion.Core.Interface;
 using FamUnion.Infrastructure.Repository;
 using FamUnion.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace FamUnion.Api
 {
@@ -43,8 +36,26 @@ namespace FamUnion.Api
                 return new AddressRepository(Configuration.GetValue<string>(DbKey));
             });
 
+            services.AddTransient<IEventRepository, EventRepository>(Provider =>
+            {
+                return new EventRepository(Configuration.GetValue<string>(DbKey));
+            });
+
             // Services
             services.AddTransient<IReunionService, ReunionService>();
+            services.AddTransient<IEventService, EventService>();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .Build();
+                });                    
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +70,7 @@ namespace FamUnion.Api
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseMvc();
         }

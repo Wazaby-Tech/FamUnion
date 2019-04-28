@@ -1,0 +1,30 @@
+﻿<template>
+    <div>
+        <h1>Dashboard</h1>
+
+        <p>Your reunions:</p>
+
+        <table v-if="reunions.length" class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Dates</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in reunions">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.startDate }} - {{item.endDate}}</td>
+                    <td>{{ item.cityLocation || 'N/A' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p v-else><em>Loading...</em></p>
+    </div>
+</template>
+
+<script src="./dashboard.ts"></script>

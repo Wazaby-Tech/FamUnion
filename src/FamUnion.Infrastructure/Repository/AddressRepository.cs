@@ -15,7 +15,7 @@ namespace FamUnion.Infrastructure.Repository
 
         }
 
-        public async Task<Address> GetAddress(Guid id)
+        public async Task<Address> GetAddressAsync(Guid id)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
@@ -25,17 +25,17 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public Task<Address> GetEventAddress(Guid eventId)
+        public Task<Address> GetEventAddressAsync(Guid eventId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Address> GetFamilyAddress(Guid familyId)
+        public Task<Address> GetFamilyAddressAsync(Guid familyId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Address> GetReunionAddress(Guid reunionId)
+        public async Task<Address> GetReunionAddressAsync(Guid reunionId)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
@@ -45,18 +45,26 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public Task<Address> SaveEventAddress(Guid eventId, Address address)
+        public Task<Address> SaveEventAddressAsync(Guid eventId, Address address)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Address> SaveFamilyAddress(Guid familyId, Address address)
+        public Task<Address> SaveFamilyAddressAsync(Guid familyId, Address address)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Address> SaveReunionAddress(Guid reunionId, Address address)
+        public async Task<Address> SaveReunionAddressAsync(Guid reunionId, Address address)
         {
+            Address currentAddress = await GetReunionAddressAsync(reunionId).
+                ConfigureAwait(continueOnCapturedContext: false);
+
+            if(currentAddress.Equals(address))
+            {
+                return currentAddress;
+            }
+
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
                 "reunionId", reunionId.ToString(),

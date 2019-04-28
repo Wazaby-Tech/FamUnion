@@ -5,6 +5,7 @@ AS
 	SELECT
 		a.AddressId [Id],
 		a.Description,
+		a.EntityType,
 		a.Line1,
 		a.Line2,
 		a.City,

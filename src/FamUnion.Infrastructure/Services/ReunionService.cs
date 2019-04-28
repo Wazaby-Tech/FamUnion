@@ -22,7 +22,7 @@ namespace FamUnion.Infrastructure.Services
 
         public async Task<Reunion> GetReunion(Guid id)
         {
-            var reunion = await _reunionRepository.GetReunion(id).
+            var reunion = await _reunionRepository.GetReunionAsync(id).
                 ConfigureAwait(continueOnCapturedContext: false);
 
             await PopulateAddresses(reunion.Yield())
@@ -33,7 +33,7 @@ namespace FamUnion.Infrastructure.Services
 
         public async Task<IEnumerable<Reunion>> GetReunions()
         {
-            var reunions = await _reunionRepository.GetReunions()
+            var reunions = await _reunionRepository.GetReunionsAsync()
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             await PopulateAddresses(reunions)
@@ -44,10 +44,10 @@ namespace FamUnion.Infrastructure.Services
 
         public async Task<Reunion> SaveReunion(Reunion reunion)
         {
-            var savedReunion = await _reunionRepository.SaveReunion(reunion)
+            var savedReunion = await _reunionRepository.SaveReunionAsync(reunion)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            _ = await _addressRepository.SaveReunionAddress(savedReunion.Id.Value, reunion.CityLocation)
+            _ = await _addressRepository.SaveReunionAddressAsync(savedReunion.Id.Value, reunion.Location)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return await GetReunion(savedReunion.Id.Value).
@@ -59,7 +59,7 @@ namespace FamUnion.Infrastructure.Services
             Parallel.ForEach(reunions, async reunion =>
             {
                 if(reunion.Id.HasValue)
-                    reunion.CityLocation = await _addressRepository.GetReunionAddress(reunion.Id.Value)
+                    reunion.Location = await _addressRepository.GetReunionAddressAsync(reunion.Id.Value)
                     .ConfigureAwait(continueOnCapturedContext: false);
             });
 

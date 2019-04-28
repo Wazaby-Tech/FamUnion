@@ -24,7 +24,7 @@ namespace FamUnion.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAddressById(Guid id)
         {
-            var result = await _addressRepository.GetAddress(id)
+            var result = await _addressRepository.GetAddressAsync(id)
                 .ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }
@@ -32,7 +32,7 @@ namespace FamUnion.Api.Controllers
         [HttpGet("reunion/{reunionId}")]
         public async Task<IActionResult> GetReunionAddress(Guid reunionId)
         {
-            var result = await _addressRepository.GetReunionAddress(reunionId)
+            var result = await _addressRepository.GetReunionAddressAsync(reunionId)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return new OkObjectResult(result);
@@ -41,7 +41,7 @@ namespace FamUnion.Api.Controllers
         [HttpPost("reunion/{reunionId}")]
         public async Task<IActionResult> SaveReunionAddress(Guid reunionId, [FromBody] Address address)
         {
-            var result = await _addressRepository.SaveReunionAddress(reunionId, address)
+            var result = await _addressRepository.SaveReunionAddressAsync(reunionId, address)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             return new OkObjectResult(result);

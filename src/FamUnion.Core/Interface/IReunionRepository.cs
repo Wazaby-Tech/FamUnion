@@ -7,8 +7,8 @@ namespace FamUnion.Core.Interface
 {
     public interface IReunionRepository
     {
-        Task<IEnumerable<Reunion>> GetReunions();
-        Task<Reunion> GetReunion(Guid id);
-        Task<Reunion> SaveReunion(Reunion reunion);
+        Task<IEnumerable<Reunion>> GetReunionsAsync();
+        Task<Reunion> GetReunionAsync(Guid id);
+        Task<Reunion> SaveReunionAsync(Reunion reunion);
     }
 }

@@ -1,6 +1,13 @@
-﻿namespace FamUnion.Core.Interface
+﻿using FamUnion.Core.Model;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace FamUnion.Core.Interface
 {
-    interface IEventRepository
+    public interface IEventRepository
     {
+        Task<IEnumerable<Event>> GetEventsByReunionAsync(Guid reunionId);
+        Task<Event> SaveEventAsync(Event @event);
     }
 }

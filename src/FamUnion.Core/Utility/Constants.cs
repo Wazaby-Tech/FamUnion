@@ -9,7 +9,8 @@ namespace FamUnion.Core.Utility
         {
             Reunion = 1,
             Event = 2,
-            Family = 3
+            Family = 3,
+            Lodging = 4
         }
         public enum Size
         {
