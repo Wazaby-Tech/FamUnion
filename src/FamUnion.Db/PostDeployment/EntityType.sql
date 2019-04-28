@@ -6,7 +6,8 @@
 		VALUES
 		(1, 'Reunion'),
 		(2, 'Event'),
-		(3, 'Family')
+		(3, 'Family'),
+		(4, 'Lodging')
 	)a (i, n)
 )
 MERGE INTO [dbo].[EntityType] TARGET

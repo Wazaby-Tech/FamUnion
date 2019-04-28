@@ -5,7 +5,6 @@
 	[Details] NVARCHAR(2000) NULL,
 	[StartTime] DATETIME NOT NULL,
 	[EndTime] DATETIME NULL,
-	[Duration] NUMERIC(2,2) NULL,
 	[AddressId] UNIQUEIDENTIFIER NULL CONSTRAINT FK_Event_AddressId FOREIGN KEY REFERENCES [dbo].[Address]([AddressId]),
 	[CreatedBy] NVARCHAR(100) NOT NULL,
 	[CreatedDate] DATETIME NOT NULL,
