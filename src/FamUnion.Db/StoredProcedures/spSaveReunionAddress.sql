@@ -1,6 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spSaveReunionAddress]
 	@reunionId UNIQUEIDENTIFIER,
-	@addressId UNIQUEIDENTIFIER,
 	@description NVARCHAR(255),
 	@line1 NVARCHAR(100),
 	@line2 NVARCHAR(100),
@@ -8,7 +7,7 @@
 	@state NVARCHAR(2),
 	@zipcode NVARCHAR(5)
 AS
-	DECLARE @insertId uniqueidentifier = ISNULL(@addressId, newid())
+	DECLARE @insertId uniqueidentifier = newid()
 	DECLARE @reunionEntityTypeId INT = (SELECT EntityTypeId FROM [dbo].[EntityType] WHERE EntityName = 'Reunion')
 
 	MERGE INTO [dbo].[Address] TARGET
@@ -29,7 +28,7 @@ AS
 			null [ModifiedBy],
 			null [ModifiedDate]
 	) SOURCE
-	ON TARGET.AddressId = SOURCE.AddressId AND TARGET.EntityType = @reunionEntityTypeId
+	ON TARGET.EntityId = SOURCE.EntityId AND TARGET.EntityType = @reunionEntityTypeId AND TARGET.IsActive = 1
 	WHEN NOT MATCHED 
 	THEN
 		INSERT (AddressId, EntityId, EntityType, Description, Line1, Line2, City, State, ZipCode, Latitude, Longitude, CreatedDate, CreatedBy)
