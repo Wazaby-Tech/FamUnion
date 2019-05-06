@@ -1,6 +1,7 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
 using FamUnion.Core.Utility;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,11 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
+            if(!reunion.IsValid())
+            {
+                throw new Exception($"Reunion is not valid|{JsonConvert.SerializeObject(reunion)}");
+            }
+
             ParameterDictionary parameters = new ParameterDictionary(new string[] {
                 "id", reunion.Id.GetDbGuidString(),
                 "name", reunion.Name,
@@ -45,6 +51,14 @@ namespace FamUnion.Infrastructure.Repository
 
             return (await ExecuteStoredProc("[dbo].[spSaveReunion]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+        }
+
+        public async Task DeleteReunionAsync(Guid id)
+        {
+            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", id);
+
+            _ = await ExecuteStoredProc("[dbo].[spDeleteReunionById]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

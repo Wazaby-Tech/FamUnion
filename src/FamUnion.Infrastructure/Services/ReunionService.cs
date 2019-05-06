@@ -20,7 +20,7 @@ namespace FamUnion.Infrastructure.Services
             _addressRepository = Validator.ThrowIfNull(addressRepository, nameof(addressRepository));
         }
 
-        public async Task<Reunion> GetReunion(Guid id)
+        public async Task<Reunion> GetReunionAsync(Guid id)
         {
             var reunion = await _reunionRepository.GetReunionAsync(id).
                 ConfigureAwait(continueOnCapturedContext: false);
@@ -31,7 +31,7 @@ namespace FamUnion.Infrastructure.Services
             return reunion;
         }
 
-        public async Task<IEnumerable<Reunion>> GetReunions()
+        public async Task<IEnumerable<Reunion>> GetReunionsAsync()
         {
             var reunions = await _reunionRepository.GetReunionsAsync()
                 .ConfigureAwait(continueOnCapturedContext: false);
@@ -42,16 +42,25 @@ namespace FamUnion.Infrastructure.Services
             return reunions;
         }
 
-        public async Task<Reunion> SaveReunion(Reunion reunion)
+        public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
             var savedReunion = await _reunionRepository.SaveReunionAsync(reunion)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            _ = await _addressRepository.SaveReunionAddressAsync(savedReunion.Id.Value, reunion.Location)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            if (!(reunion.Location is null))
+            {
+                _ = await _addressRepository.SaveReunionAddressAsync(savedReunion.Id.Value, reunion.Location)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+            }
 
-            return await GetReunion(savedReunion.Id.Value).
+            return await GetReunionAsync(savedReunion.Id.Value).
                 ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task DeleteReunionAsync(Guid id)
+        {
+            await _reunionRepository.DeleteReunionAsync(id)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private Task PopulateAddresses(IEnumerable<Reunion> reunions)
