@@ -12,11 +12,15 @@ namespace FamUnion.Core.Interface
 
         Task<Address> GetEventAddressAsync(Guid eventId);
 
+        Task<Address> GetLodgingAddressAsync(Guid lodgingId);
+
         Task<Address> GetFamilyAddressAsync(Guid familyId);
 
         Task<Address> SaveReunionAddressAsync(Guid reunionId, Address address);
 
         Task<Address> SaveEventAddressAsync(Guid eventId, Address address);
+
+        Task<Address> SaveLodgingAddressAsync(Guid lodgingId, Address address);
 
         Task<Address> SaveFamilyAddressAsync(Guid familyId, Address address);
     }

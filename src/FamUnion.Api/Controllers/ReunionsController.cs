@@ -21,7 +21,7 @@ namespace FamUnion.Api.Controllers
         [HttpGet("list")]
         public async Task<IActionResult> GetReunions()
         {
-            var result = await _reunionService.GetReunions()
+            var result = await _reunionService.GetReunionsAsync()
                 .ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }
@@ -29,7 +29,7 @@ namespace FamUnion.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReunion(Guid id)
         {
-            var result = await _reunionService.GetReunion(id)
+            var result = await _reunionService.GetReunionAsync(id)
                 .ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }
@@ -37,7 +37,7 @@ namespace FamUnion.Api.Controllers
         [HttpPost("save")]
         public async Task<IActionResult> SaveReunion([FromBody] Reunion reunion)
         {
-            var result = await _reunionService.SaveReunion(reunion)
+            var result = await _reunionService.SaveReunionAsync(reunion)
                 .ConfigureAwait(continueOnCapturedContext: false);
             return new OkObjectResult(result);
         }

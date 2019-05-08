@@ -26,7 +26,7 @@ namespace FamUnion.Api.Controllers
         {
             var result = await _addressRepository.GetAddressAsync(id)
                 .ConfigureAwait(continueOnCapturedContext: false);
-            return new OkObjectResult(result);
+            return Ok(result);
         }
 
         [HttpGet("reunion/{reunionId}")]
@@ -35,7 +35,7 @@ namespace FamUnion.Api.Controllers
             var result = await _addressRepository.GetReunionAddressAsync(reunionId)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            return new OkObjectResult(result);
+            return Ok(result);
         }
 
         [HttpPost("reunion/{reunionId}")]
@@ -44,7 +44,25 @@ namespace FamUnion.Api.Controllers
             var result = await _addressRepository.SaveReunionAddressAsync(reunionId, address)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            return new OkObjectResult(result);
+            return Ok(result);
+        }
+
+        [HttpGet("event/{eventId}")]
+        public async Task<IActionResult> GetEventAddress(Guid eventId)
+        {
+            var result = await _addressRepository.GetEventAddressAsync(eventId)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            return Ok(result);
+        }
+
+        [HttpPost("event/{eventId}")]
+        public async Task<IActionResult> SaveEventAddress(Guid eventId, [FromBody] Address address)
+        {
+            var result = await _addressRepository.SaveEventAddressAsync(eventId, address)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            return Ok(result);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[Event]
 (
 	[EventId] UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+	[ReunionId] UNIQUEIDENTIFIER NOT NULL CONSTRAINT FK_Event_ReunionId FOREIGN KEY REFERENCES [dbo].[Reunion]([ReunionId]),
 	[Name] NVARCHAR(255) NOT NULL,
 	[Details] NVARCHAR(2000) NULL,
 	[StartTime] DATETIME NOT NULL,
@@ -9,5 +10,6 @@
 	[CreatedBy] NVARCHAR(100) NOT NULL,
 	[CreatedDate] DATETIME NOT NULL,
 	[ModifiedBy] NVARCHAR(100) NULL,
-	[ModifiedDate] DATETIME NULL
+	[ModifiedDate] DATETIME NULL,
+	[IsActive] BIT NOT NULL DEFAULT 1
 )

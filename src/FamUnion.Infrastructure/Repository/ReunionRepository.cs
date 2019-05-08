@@ -19,10 +19,7 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<Reunion> GetReunionAsync(Guid id)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "id", id.ToString()
-            });
+            ParameterDictionary parameters = ParameterDictionary.Single("id", id.ToString());
             return (await ExecuteStoredProc("[dbo].[spGetReunionById]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }

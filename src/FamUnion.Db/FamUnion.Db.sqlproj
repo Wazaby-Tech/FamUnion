@@ -75,6 +75,12 @@
     <Build Include="StoredProcedures\spGetAddressByReunionId.sql" />
     <Build Include="Tables\EntityType.sql" />
     <Build Include="StoredProcedures\spSaveReunionAddress.sql" />
+    <Build Include="StoredProcedures\spGetEventsByReunionId.sql" />
+    <Build Include="StoredProcedures\spGetEventById.sql" />
+    <Build Include="StoredProcedures\spSaveEvent.sql" />
+    <Build Include="StoredProcedures\spGetAddressByEventId.sql" />
+    <Build Include="StoredProcedures\spSaveAddressByEntityTypeAndId.sql" />
+    <Build Include="StoredProcedures\spSaveEventAddress.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

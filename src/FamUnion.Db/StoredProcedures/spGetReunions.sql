@@ -12,6 +12,6 @@ AS
 		ModifiedBy,
 		ModifiedDate
 	FROM
-		[dbo].[Reunion]
+		[dbo].[Reunion] (NOLOCK)
 	ORDER BY StartDate, Name
 RETURN 0

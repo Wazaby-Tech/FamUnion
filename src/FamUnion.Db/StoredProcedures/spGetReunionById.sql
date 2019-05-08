@@ -13,7 +13,7 @@ AS
 		ModifiedBy,
 		ModifiedDate
 	FROM
-		[dbo].[Reunion]
+		[dbo].[Reunion] (NOLOCK)
 	WHERE
 		ReunionId = @id
 

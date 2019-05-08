@@ -25,11 +25,18 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public Task<Address> GetEventAddressAsync(Guid eventId)
+        public async Task<Address> GetEventAddressAsync(Guid eventId)
+        {
+            ParameterDictionary parameters = ParameterDictionary.Single("eventId", eventId.ToString());
+            return (await ExecuteStoredProc("[dbo].[spGetAddressByEventId]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+        }
+
+        public Task<Address> GetLodgingAddressAsync(Guid lodgingId)
         {
             throw new NotImplementedException();
         }
-
+        
         public Task<Address> GetFamilyAddressAsync(Guid familyId)
         {
             throw new NotImplementedException();
@@ -37,15 +44,37 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<Address> GetReunionAddressAsync(Guid reunionId)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "reunionId", reunionId.ToString()
-            });
+            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId.ToString());
             return (await ExecuteStoredProc("[dbo].[spGetAddressByReunionId]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public Task<Address> SaveEventAddressAsync(Guid eventId, Address address)
+        public async Task<Address> SaveEventAddressAsync(Guid eventId, Address address)
+        {
+            Address currentAddress = await GetEventAddressAsync(eventId)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            if(currentAddress.Equals(address))
+            {
+                return currentAddress;
+            }
+
+            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            {
+                "eventId", eventId.ToString(),
+                "addressId", address.Id.GetDbGuidString(),
+                "description", address.Description,
+                "line1", address.Line1,
+                "line2", address.Line2,
+                "city", address.City,
+                "state", address.State,
+                "zipcode", address.ZipCode
+            });
+            return (await ExecuteStoredProc("[dbo].[spSaveEventAddress]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+        }
+
+        public Task<Address> SaveLodgingAddressAsync(Guid lodgingId, Address address)
         {
             throw new NotImplementedException();
         }

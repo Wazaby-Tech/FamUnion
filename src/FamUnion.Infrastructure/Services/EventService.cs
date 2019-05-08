@@ -24,13 +24,19 @@ namespace FamUnion.Infrastructure.Services
             _addressRepository = Validator.ThrowIfNull(addressRepository, nameof(addressRepository));
         }
 
+        public async Task<Event> GetEventAsync(Guid eventId)
+        {
+            return await _eventRepository.GetEventAsync(eventId)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
         public async Task<IEnumerable<Event>> GetEventsByReunionAsync(Guid reunionId)
         {
             var events = await _eventRepository.GetEventsByReunionAsync(reunionId)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             Parallel.ForEach(events, async @event =>
-            {
+            {                
                 @event.Location = await _addressRepository.GetEventAddressAsync(@event.AddressId)
                     .ConfigureAwait(continueOnCapturedContext: false);
             });
@@ -40,7 +46,17 @@ namespace FamUnion.Infrastructure.Services
 
         public async Task<Event> SaveEventAsync(Event @event)
         {
-            throw new NotImplementedException();
+            var savedEvent = await _eventRepository.SaveEventAsync(@event)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            if (@event.Location != null)
+            {
+                _ = await _addressRepository.SaveEventAddressAsync(savedEvent.Id.Value, @event.Location)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+            }
+
+            return await GetEventAsync(savedEvent.Id.Value).
+                ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }
