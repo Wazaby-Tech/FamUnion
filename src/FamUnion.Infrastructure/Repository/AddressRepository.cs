@@ -89,7 +89,7 @@ namespace FamUnion.Infrastructure.Repository
             Address currentAddress = await GetReunionAddressAsync(reunionId).
                 ConfigureAwait(continueOnCapturedContext: false);
 
-            if(currentAddress.Equals(address))
+            if(address is null || (currentAddress != null && currentAddress.Equals(address)))
             {
                 return currentAddress;
             }
@@ -97,7 +97,6 @@ namespace FamUnion.Infrastructure.Repository
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
                 "reunionId", reunionId.ToString(),
-                "addressId", address.Id.GetDbGuidString(),
                 "description", address.Description,
                 "line1", address.Line1,
                 "line2", address.Line2,

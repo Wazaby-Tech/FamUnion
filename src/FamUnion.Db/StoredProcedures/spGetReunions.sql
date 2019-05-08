@@ -13,5 +13,7 @@ AS
 		ModifiedDate
 	FROM
 		[dbo].[Reunion] (NOLOCK)
+	WHERE
+		IsActive = 1
 	ORDER BY StartDate, Name
 RETURN 0

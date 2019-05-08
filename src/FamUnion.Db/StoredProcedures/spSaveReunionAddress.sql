@@ -1,6 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spSaveReunionAddress]
 	@reunionId UNIQUEIDENTIFIER,
-	@addressId UNIQUEIDENTIFIER,
 	@description NVARCHAR(255),
 	@line1 NVARCHAR(100),
 	@line2 NVARCHAR(100),

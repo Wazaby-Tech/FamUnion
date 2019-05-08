@@ -7,6 +7,7 @@
 	[StartTime] DATETIME NOT NULL,
 	[EndTime] DATETIME NULL,
 	[AddressId] UNIQUEIDENTIFIER NULL CONSTRAINT FK_Event_AddressId FOREIGN KEY REFERENCES [dbo].[Address]([AddressId]),
+	[IsActive] BIT NOT NULL DEFAULT 1,
 	[CreatedBy] NVARCHAR(100) NOT NULL,
 	[CreatedDate] DATETIME NOT NULL,
 	[ModifiedBy] NVARCHAR(100) NULL,

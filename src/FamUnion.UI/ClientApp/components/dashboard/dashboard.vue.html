@@ -2,15 +2,16 @@
     <div>
         <h1>Dashboard</h1>
 
-        <p>Your reunions:</p>
+        <p>Reunions:</p>
 
-        <table v-if="reunions.length" class="table">
+        <table v-if="loading == true" class="table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Description</th>
                     <th>Dates</th>
                     <th>Location</th>
+                    <th>&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,6 +20,7 @@
                     <td>{{ item.description }}</td>
                     <td>{{ item.startDate }} - {{item.endDate}}</td>
                     <td>{{ item.cityLocation || 'N/A' }}</td>
+                    <td><button>Delete</button></td>
                 </tr>
             </tbody>
         </table>

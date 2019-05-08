@@ -81,6 +81,9 @@
     <Build Include="StoredProcedures\spGetAddressByEventId.sql" />
     <Build Include="StoredProcedures\spSaveAddressByEntityTypeAndId.sql" />
     <Build Include="StoredProcedures\spSaveEventAddress.sql" />
+    <Build Include="StoredProcedures\spDeleteAddressById.sql" />
+    <Build Include="StoredProcedures\spDeleteReunionById.sql" />
+    <Build Include="StoredProcedures\spDeleteEventById.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
