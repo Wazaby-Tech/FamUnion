@@ -20,4 +20,3 @@ AS
 		ModifiedDate = SYSDATETIME()
 	WHERE
 		ReunionId = @reunionId
-RETURN 0

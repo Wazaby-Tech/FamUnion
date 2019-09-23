@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
 using FamUnion.Core.Validation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -36,7 +37,7 @@ namespace FamUnion.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
-                return StatusCode((int)HttpStatusCode.InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -50,14 +51,14 @@ namespace FamUnion.Api.Controllers
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 if (result is null)
-                    return NotFound(id);
+                    return NotFound($"Id: {id} was not found");
 
                 return new OkObjectResult(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
-                return StatusCode((int)HttpStatusCode.InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -79,7 +80,7 @@ namespace FamUnion.Api.Controllers
                     return BadRequest(reunion);
                 }
 
-                return StatusCode((int)HttpStatusCode.InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -96,7 +97,7 @@ namespace FamUnion.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
-                return StatusCode((int)HttpStatusCode.InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

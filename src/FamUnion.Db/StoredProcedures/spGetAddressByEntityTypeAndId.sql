@@ -22,5 +22,3 @@ AS
 		a.EntityType = @entityTypeId 
 		AND a.EntityId = @entityId
 		AND a.IsActive = 1
-		
-RETURN 0

@@ -5,10 +5,10 @@
 	[Description] NVARCHAR(4000) NULL,
 	[StartDate] DATE NULL,
 	[EndDate] DATE NULL,
-	[AddressId] UNIQUEIDENTIFIER NULL CONSTRAINT FK_Reunion_AddressId FOREIGN KEY REFERENCES [dbo].[Address](AddressId),
+	[AddressId] UNIQUEIDENTIFIER NULL CONSTRAINT FK_Reunion_AddressId FOREIGN KEY REFERENCES [dbo].[Address](AddressId), 
+    [IsActive] BIT NOT NULL DEFAULT 1,
 	[CreatedBy] NVARCHAR(100) NOT NULL CONSTRAINT DF_Reunion_CreatedBy DEFAULT SUSER_SNAME(),
 	[CreatedDate] DATETIME NOT NULL CONSTRAINT DF_Reunion_CreatedDate DEFAULT SYSDATETIME(),
 	[ModifiedBy] NVARCHAR(100) NULL,
-	[ModifiedDate] DATETIME NULL, 
-    [IsActive] BIT NOT NULL DEFAULT 1
+	[ModifiedDate] DATETIME NULL
 )

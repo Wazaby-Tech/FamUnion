@@ -13,9 +13,7 @@ AS
 		ModifiedBy,
 		ModifiedDate
 	FROM
-		[dbo].[Reunion]
+		[dbo].[Reunion] (NOLOCK)
 	WHERE
 		ReunionId = @id
 		AND IsActive = 1
-
-RETURN 0

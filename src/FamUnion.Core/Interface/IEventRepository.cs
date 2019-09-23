@@ -7,7 +7,8 @@ namespace FamUnion.Core.Interface
 {
     public interface IEventRepository
     {
-        Task<IEnumerable<Event>> GetEventsByReunionAsync(Guid reunionId);
+        Task<Event> GetEventAsync(Guid eventId);
+        Task<IEnumerable<Event>> GetEventsByReunionIdAsync(Guid reunionId);
         Task<Event> SaveEventAsync(Event @event);
     }
 }

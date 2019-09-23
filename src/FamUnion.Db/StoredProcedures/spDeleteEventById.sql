@@ -19,5 +19,3 @@ AS
 		ModifiedDate = SYSDATETIME()
 	WHERE
 		EventId = @eventId
-
-RETURN 0
