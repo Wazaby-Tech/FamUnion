@@ -24,7 +24,7 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public async Task<IEnumerable<Event>> GetEventsByReunionAsync(Guid reunionId)
+        public async Task<IEnumerable<Event>> GetEventsByReunionIdAsync(Guid reunionId)
         {
             ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId.ToString());
             return await ExecuteStoredProc("[dbo].[spGetEventsByReunionId]", parameters)

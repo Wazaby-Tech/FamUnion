@@ -13,7 +13,6 @@ namespace FamUnion.Core.Model
         public DateTimeOffset StartTime { get; set; }
         public DateTimeOffset? EndTime { get; set; }
         public TimeSpan? Duration => EndTime.HasValue ? EndTime - StartTime : null;
-        public Guid AddressId { get; set; }
         public Guid ReunionId { get; set; }
 
         public virtual Address Location { get; set; }

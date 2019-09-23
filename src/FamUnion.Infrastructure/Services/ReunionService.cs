@@ -59,6 +59,12 @@ namespace FamUnion.Infrastructure.Services
                 ConfigureAwait(continueOnCapturedContext: false);
         }
 
+        public async Task DeleteReunionAsync(Guid id)
+        {
+            await _reunionRepository.DeleteReunionAsync(id)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
         private async Task PopulateDependentProperties(IEnumerable<Reunion> reunions)
         {
             await PopulateAddresses(reunions)
@@ -72,8 +78,11 @@ namespace FamUnion.Infrastructure.Services
         {
             Parallel.ForEach(reunions, async reunion =>
             {
-                reunion.Events = await _eventService.GetEventsByReunionAsync(reunion.Id.Value)
-                .ConfigureAwait(continueOnCapturedContext: false);
+                if (reunion != null)
+                {
+                    reunion.Events = await _eventService.GetEventsByReunionIdAsync(reunion.Id.Value)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                }
             });
 
             return Task.CompletedTask;
@@ -83,7 +92,7 @@ namespace FamUnion.Infrastructure.Services
         {
             Parallel.ForEach(reunions, async reunion =>
             {
-                if(reunion.Id.HasValue)
+                if (reunion != null && reunion.Id.HasValue)
                     reunion.Location = await _addressRepository.GetReunionAddressAsync(reunion.Id.Value)
                     .ConfigureAwait(continueOnCapturedContext: false);
             });

@@ -16,4 +16,3 @@ AS
 	WHERE
 		IsActive = 1
 	ORDER BY StartDate, Name
-RETURN 0

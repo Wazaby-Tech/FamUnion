@@ -17,4 +17,3 @@ AS
 		[dbo].[Event] (NOLOCK)
 	WHERE
 		EventId = @id
-RETURN 0

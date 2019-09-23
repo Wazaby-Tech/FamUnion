@@ -40,4 +40,3 @@ AS
 			TARGET.ModifiedDate = SYSDATETIME();
 
 	EXEC [dbo].[spGetEventById] @id = @insertId;
-RETURN 0

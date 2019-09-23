@@ -62,7 +62,6 @@ namespace FamUnion.Infrastructure.Repository
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
                 "eventId", eventId.ToString(),
-                "addressId", address.Id.GetDbGuidString(),
                 "description", address.Description,
                 "line1", address.Line1,
                 "line2", address.Line2,

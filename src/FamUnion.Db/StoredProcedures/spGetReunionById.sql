@@ -17,5 +17,3 @@ AS
 	WHERE
 		ReunionId = @id
 		AND IsActive = 1
-
-RETURN 0

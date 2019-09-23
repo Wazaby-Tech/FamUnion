@@ -11,6 +11,5 @@
 	[CreatedBy] NVARCHAR(100) NOT NULL,
 	[CreatedDate] DATETIME NOT NULL,
 	[ModifiedBy] NVARCHAR(100) NULL,
-	[ModifiedDate] DATETIME NULL,
-	[IsActive] BIT NOT NULL DEFAULT 1
+	[ModifiedDate] DATETIME NULL
 )
