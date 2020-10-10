@@ -8,5 +8,3 @@ AS
 		ModifiedDate = SYSDATETIME()
 	WHERE
 		AddressId = @addressId
-
-RETURN 0

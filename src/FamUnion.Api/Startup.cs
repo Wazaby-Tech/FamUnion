@@ -3,7 +3,6 @@ using FamUnion.Infrastructure.Repository;
 using FamUnion.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,8 +22,6 @@ namespace FamUnion.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
             // Repositories
             services.AddTransient<IReunionRepository, ReunionRepository>(Provider =>
             {
@@ -56,6 +53,10 @@ namespace FamUnion.Api
                     .Build();
                 });                    
             });
+
+            services.AddControllers();
+
+            services.AddOpenApiDocument(); // add OpenAPI v3 document
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,7 +73,25 @@ namespace FamUnion.Api
 
             app.UseCors();
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseRouting();
+
+            //app.UseAuthentication();
+            //app.UseAuthorization();
+
+            app.UseEndpoints(options =>
+            {
+                options.MapControllers();
+            });
+
+            app.UseOpenApi(options =>
+            {
+                options.DocumentName = "FamUnion API";
+            }); // serve OpenAPI/Swagger documents
+            app.UseSwaggerUi3(options =>
+            {
+                options.DocumentTitle = "FamUnion API";
+            }); // serve Swagger UI
         }
     }
 }

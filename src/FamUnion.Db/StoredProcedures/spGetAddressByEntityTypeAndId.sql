@@ -4,6 +4,7 @@
 AS
 	SELECT
 		a.AddressId [Id],
+		@entityTypeId [AddressType],
 		a.Description,
 		a.EntityType,
 		a.Line1,
@@ -22,5 +23,3 @@ AS
 		a.EntityType = @entityTypeId 
 		AND a.EntityId = @entityId
 		AND a.IsActive = 1
-		
-RETURN 0

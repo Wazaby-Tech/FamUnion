@@ -7,8 +7,7 @@
 	@state NVARCHAR(2),
 	@zipcode NVARCHAR(5)
 AS
-	EXEC [dbo].[spSaveAddressByEntityTypeAndId] @addressId = @addressId, @entityType = 'Reunion', @entityId = @reunionId,
+	EXEC [dbo].[spSaveAddressByEntityTypeAndId] @entityType = 'Reunion', @entityId = @reunionId,
 		@description = @description, @line1 = @line1, @line2 = @line2, @city = @city, @state = @state, @zipcode = @zipcode
 
 	EXEC [dbo].[spGetAddressByReunionId] @reunionId = @reunionId;
-RETURN 0

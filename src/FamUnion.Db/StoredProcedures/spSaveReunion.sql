@@ -38,4 +38,3 @@ THEN
 		TARGET.ModifiedDate = SYSDATETIME();
 
 EXEC [dbo].[spGetReunionById] @id = @insertId;
-RETURN 0

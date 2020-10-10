@@ -19,4 +19,3 @@ AS
 		ReunionId = @reunionId
 	ORDER BY
 		[StartTime], [Name]
-RETURN 0

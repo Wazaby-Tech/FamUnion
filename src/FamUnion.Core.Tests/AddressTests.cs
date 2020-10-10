@@ -1,7 +1,4 @@
 ﻿using FamUnion.Core.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace FamUnion.Core.Tests

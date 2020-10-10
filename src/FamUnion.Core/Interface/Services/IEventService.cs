@@ -8,8 +8,8 @@ namespace FamUnion.Core.Interface
 {
     public interface IEventService
     {
-        Task<Event> GetEventAsync(Guid eventId);
-        Task<IEnumerable<Event>> GetEventsByReunionAsync(Guid eventId);
+        Task<Event> GetEventByIdAsync(Guid eventId);
+        Task<IEnumerable<Event>> GetEventsByReunionIdAsync(Guid eventId);
         Task<Event> SaveEventAsync(Event @event);
     }
 }

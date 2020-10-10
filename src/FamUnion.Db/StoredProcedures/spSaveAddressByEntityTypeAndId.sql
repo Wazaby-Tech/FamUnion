@@ -1,5 +1,4 @@
-﻿CREATE PROCEDURE [dbo].[spSaveAddressByEntityTypeAndId]
-	@addressId uniqueidentifier null,
+﻿CREATE PROCEDURE [dbo].[spSaveAddressByEntityTypeAndId]	
 	@entityType nvarchar(100),
 	@entityId uniqueidentifier,
 	@description nvarchar(255),
@@ -9,7 +8,7 @@
 	@state nvarchar(2),
 	@zipcode nvarchar(5)
 AS
-	DECLARE @insertId uniqueidentifier = ISNULL(@addressId, newid())
+	DECLARE @insertId uniqueidentifier = newid()
 	DECLARE @entityTypeId INT = (SELECT EntityTypeId FROM [dbo].[EntityType] WHERE EntityName = @entityType)
 
 	MERGE INTO [dbo].[Address] TARGET
@@ -30,7 +29,7 @@ AS
 			null [ModifiedBy],
 			null [ModifiedDate]
 	) SOURCE
-	ON TARGET.AddressId = SOURCE.AddressId AND TARGET.EntityType = @entityTypeId
+	ON TARGET.EntityId = SOURCE.EntityId AND TARGET.EntityType = @entityTypeId AND TARGET.IsActive = 1
 	WHEN NOT MATCHED 
 	THEN
 		INSERT (AddressId, EntityId, EntityType, Description, Line1, Line2, City, State, ZipCode, Latitude, Longitude, CreatedDate, CreatedBy)
@@ -48,4 +47,3 @@ AS
 			TARGET.Longitude = SOURCE.Longitude,
 			TARGET.ModifiedBy = SUSER_SNAME(),
 			TARGET.ModifiedDate = SYSDATETIME();
-RETURN 0
