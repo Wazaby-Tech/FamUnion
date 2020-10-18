@@ -54,6 +54,11 @@ namespace FamUnion.Api.Controllers
             {
                 var result = await _addressRepository.GetReunionAddressAsync(reunionId)
                     .ConfigureAwait(continueOnCapturedContext: false);
+
+                if(result == null)
+                {
+                    return NotFound(reunionId);
+                }
                 
                 return Ok(result);
             }
@@ -90,6 +95,11 @@ namespace FamUnion.Api.Controllers
             {
                 var result = await _addressRepository.GetEventAddressAsync(eventId)
                     .ConfigureAwait(continueOnCapturedContext: false);
+
+                if(result == null)
+                {
+                    return NotFound(eventId);
+                }
 
                 return Ok(result);
             }

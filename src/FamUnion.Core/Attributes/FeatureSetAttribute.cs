@@ -15,10 +15,6 @@ namespace FamUnion.Core.Attributes
         public FeatureSetAttribute(string featureSet)
         {
             this.featureSet = featureSet;
-
-            // TODO: Implement code here
-
-            throw new NotImplementedException();
         }
 
         public string FeatureSet
