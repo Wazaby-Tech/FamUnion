@@ -1,5 +1,7 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
+using FamUnion.Core.Request;
+using FamUnion.Core.Utility;
 using FamUnion.Core.Validation;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,22 +14,26 @@ namespace FamUnion.Infrastructure.Services
     public class EventService : IEventService
     {
         private readonly IEventRepository _eventRepository;
-        private readonly IAddressRepository _addressRepository;
+        private readonly IAddressService _addressService;
         private readonly ILogger<EventService> _logger;
 
 
         public EventService(ILogger<EventService> logger, IEventRepository eventRepository,
-            IAddressRepository addressRepository)
+            IAddressService addressService)
         {
             _logger = Validator.ThrowIfNull(logger, nameof(logger));
             _eventRepository = Validator.ThrowIfNull(eventRepository, nameof(eventRepository));
-            _addressRepository = Validator.ThrowIfNull(addressRepository, nameof(addressRepository));
+            _addressService = Validator.ThrowIfNull(addressService, nameof(addressService));
         }
 
         public async Task<Event> GetEventByIdAsync(Guid eventId)
         {
-            return await _eventRepository.GetEventAsync(eventId)
+            var savedEvent = await _eventRepository.GetEventAsync(eventId)
                 .ConfigureAwait(continueOnCapturedContext: false);
+
+            await PopulateAddresses(savedEvent.Yield()).ConfigureAwait(continueOnCapturedContext: false);
+
+            return savedEvent;
         }
 
         public async Task<IEnumerable<Event>> GetEventsByReunionIdAsync(Guid reunionId)
@@ -35,11 +41,7 @@ namespace FamUnion.Infrastructure.Services
             var events = await _eventRepository.GetEventsByReunionIdAsync(reunionId)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            Parallel.ForEach(events, async @event =>
-            {                
-                @event.Location = await _addressRepository.GetEventAddressAsync(@event.Id.Value)
-                    .ConfigureAwait(continueOnCapturedContext: false);
-            });
+            await PopulateAddresses(events).ConfigureAwait(continueOnCapturedContext: false);
 
             return events;
         }
@@ -51,12 +53,39 @@ namespace FamUnion.Infrastructure.Services
 
             if (@event.Location != null)
             {
-                _ = await _addressRepository.SaveEventAddressAsync(savedEvent.Id.Value, @event.Location)
+                _ = await _addressService.SaveEntityAddressAsync(new SaveEventAddressRequest(savedEvent.Id.Value, @event.Location))
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
 
             return await GetEventByIdAsync(savedEvent.Id.Value).
                 ConfigureAwait(continueOnCapturedContext: false);
         }
+
+        public async Task DeleteEventAsync(Guid eventId)
+        {
+            await _eventRepository.DeleteEventAsync(eventId)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        #region Helper Methods
+
+        private Task PopulateAddresses(IEnumerable<Event> events)
+        {
+            Parallel.ForEach(events, async @event =>
+            {
+                if (@event != null && @event.Id.HasValue)
+                {
+                    var addrRequest = new GetEventAddressRequest(@event.Id.Value);
+
+                    @event.Location = await _addressService.GetEntityAddressAsync(addrRequest)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
+                }
+            });
+
+            return Task.CompletedTask;
+        }
+
+        #endregion
     }
 }

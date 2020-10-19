@@ -11,5 +11,6 @@ namespace FamUnion.Core.Interface
         Task<Event> GetEventByIdAsync(Guid eventId);
         Task<IEnumerable<Event>> GetEventsByReunionIdAsync(Guid eventId);
         Task<Event> SaveEventAsync(Event @event);
+        Task DeleteEventAsync(Guid eventId);
     }
 }

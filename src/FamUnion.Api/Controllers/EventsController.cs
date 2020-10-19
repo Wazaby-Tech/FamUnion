@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using FamUnion.Core.Interface;
+﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
 using FamUnion.Core.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
+using System.Threading.Tasks;
 
 namespace FamUnion.Api.Controllers
 {
@@ -15,12 +15,12 @@ namespace FamUnion.Api.Controllers
     public class EventsController : ControllerBase
     {
         private ILogger<EventsController> _logger;
-        private IEventService _eventsService;
+        private IEventService _eventService;
 
         public EventsController(ILogger<EventsController> logger, IEventService eventService)
         {
             _logger = Validator.ThrowIfNull(logger, nameof(logger));
-            _eventsService = Validator.ThrowIfNull(eventService, nameof(eventService));
+            _eventService = Validator.ThrowIfNull(eventService, nameof(eventService));
         }
 
         [HttpGet("{id}")]
@@ -29,7 +29,7 @@ namespace FamUnion.Api.Controllers
             _logger.LogInformation($"EventsController.GetEventById|{id}");
             try
             {
-                var result = await _eventsService.GetEventByIdAsync(id)
+                var result = await _eventService.GetEventByIdAsync(id)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 if(result is null)
@@ -52,7 +52,7 @@ namespace FamUnion.Api.Controllers
             _logger.LogInformation($"EventsController.GetEventsByReunion|{reunionId}");
             try
             {
-                var results = await _eventsService.GetEventsByReunionIdAsync(reunionId)
+                var results = await _eventService.GetEventsByReunionIdAsync(reunionId)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return Ok(results);
             }
@@ -63,13 +63,13 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpPost("update")]
+        [HttpPost()]
         public async Task<IActionResult> SaveEvent([FromBody] Event @event)
         {
             _logger.LogInformation($"EventsController.SaveEvent|{JsonConvert.SerializeObject(@event)}");
             try
             {
-                var result = await _eventsService.SaveEventAsync(@event)
+                var result = await _eventService.SaveEventAsync(@event)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return Ok(result);
             }
@@ -80,6 +80,23 @@ namespace FamUnion.Api.Controllers
                     return BadRequest(@event);
                 }
 
+                _logger.LogError(ex, ex.Message, null);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete("{eventId}")]
+        public async Task<IActionResult> DeleteEvent(Guid eventId)
+        {
+            _logger.LogInformation($"EventsController.DeleteEvent|{JsonConvert.SerializeObject(eventId)}");
+            try
+            {
+                await _eventService.DeleteEventAsync(eventId)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, ex.Message, null);
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace FamUnion.Api
 {
@@ -22,25 +23,29 @@ namespace FamUnion.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // DB Connection
+            var dbConnection = Configuration.GetValue<string>(DbKey);
+
             // Repositories
             services.AddTransient<IReunionRepository, ReunionRepository>(Provider =>
             {
-                return new ReunionRepository(Configuration.GetValue<string>(DbKey));
+                return new ReunionRepository(dbConnection);
             });
 
             services.AddTransient<IAddressRepository, AddressRepository>(Provider =>
             {
-                return new AddressRepository(Configuration.GetValue<string>(DbKey));
+                return new AddressRepository(dbConnection);
             });
 
             services.AddTransient<IEventRepository, EventRepository>(Provider =>
             {
-                return new EventRepository(Configuration.GetValue<string>(DbKey));
+                return new EventRepository(dbConnection);
             });
 
             // Services
             services.AddTransient<IReunionService, ReunionService>();
             services.AddTransient<IEventService, EventService>();
+            services.AddTransient<IAddressService, AddressService>();
 
             services.AddCors(options =>
             {
@@ -60,7 +65,7 @@ namespace FamUnion.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

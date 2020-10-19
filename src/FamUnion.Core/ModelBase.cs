@@ -1,33 +1,24 @@
 ﻿using FamUnion.Core.Model;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
 
 namespace FamUnion.Core
 {
     public abstract class ModelBase : IAuditInfo
     {
         public Guid? Id { get; set; }
+        [JsonIgnore]
         public string CreatedBy { get; set; }
+        [JsonIgnore]
         public DateTime? CreatedDate { get; set; }
+        [JsonIgnore]
         public string ModifiedBy { get; set; }
+        [JsonIgnore]
         public DateTime? ModifiedDate { get; set; }
 
         public virtual bool IsValid()
         {
             return true;
-        }
-        
-        public virtual dynamic ToDynamic()
-        {
-            IDictionary<string, object> expando = new ExpandoObject();
-
-            foreach (var propertyInfo in GetType().GetProperties())
-            {
-                var currentValue = propertyInfo.GetValue(this);
-                expando.Add(propertyInfo.Name, currentValue);
-            }
-            return expando as ExpandoObject;
         }
     }
 }
