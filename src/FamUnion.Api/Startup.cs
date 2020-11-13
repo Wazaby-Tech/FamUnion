@@ -77,7 +77,7 @@ namespace FamUnion.Api
             }
 
             app.UseCors();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
