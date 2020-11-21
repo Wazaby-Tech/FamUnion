@@ -9,14 +9,14 @@
 1. Do you feel like you reached everyone you wanted to include?
 
 ### MVP
-####Create reunion
+#### Create reunion
 - [ ] Reunion name
 - [ ] Description (optional)
 - [ ] Start Date
 - [ ] City
 - [ ] End Date (optional)
 - [ ] Add attendee emails (optional)
-####Attend reunion
+#### Attend reunion
 - [ ] Manage reunion profile
     - [ ] Picture
     - [ ] Attendance
@@ -45,7 +45,7 @@
         - [ ] iCal
         - [ ] Outlook
         - [ ] Google
-####Manage reunion
+#### Manage reunion
 - [ ] **Manage announcements**
     - [ ] Add announcement
         - [ ] AnnounceMessage
