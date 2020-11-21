@@ -2,11 +2,11 @@ import React from 'react';
 import {View, Text} from 'react-native';
 
 const Reunion = (props) => {
-    console.log(props.reunion);
+    let events = props.reunion.events;
+    let eventCount = (events || []).length;
     return (
         <View>
-            <Text>{props.reunion.name}</Text>
-            <Text>{props.reunion.description}</Text>
+            <Text>{props.reunion.name} ({eventCount})</Text>
         </View>
     );
 }

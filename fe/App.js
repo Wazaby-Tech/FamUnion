@@ -29,7 +29,7 @@ const App: () => React$Node = () => {
   const [reunions, setReunions] = useState([]);
   
   useEffect(() => {
-    fetch("https://b321afb172cb.ngrok.io/api/reunions")
+    fetch(`{process.env.APIURL}/api/reunions`)
     .then((response) => { return response.json(); })
     .then((responseJson) => { setReunions(responseJson || []); })
     .catch((reason) => {

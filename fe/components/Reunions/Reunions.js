@@ -1,13 +1,16 @@
 import React from 'react';
 import Reunion from './Reunion/Reunion';
-import {Text} from 'react-native';
+import {FlatList, Text} from 'react-native';
 
 const Reunions = (props) => {
-
     return props.reunions.length == 0 ? <Text>No reunions found</Text> : 
-        props.reunions.map(function(e){
-        <Reunion key={e.id} reunion={e} />
-    });
+    <FlatList
+        data={props.reunions}
+        keyExtractor={({ id }, index) => id}
+        renderItem={({ item }) => (
+            <Reunion reunion={item} />
+        )}
+    />;
 }
 
 export default Reunions;
