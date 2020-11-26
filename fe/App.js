@@ -17,19 +17,21 @@ import {
   ActivityIndicator
 } from 'react-native';
 
+import { APIURL } from '@env';
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
 import Reunions from './components/Reunions/Reunions';
 
-
 const App: () => React$Node = () => {
   const [isLoading, setLoading] = useState(true);
   const [reunions, setReunions] = useState([]);
   
+  console.log(APIURL);
+
   useEffect(() => {
-    fetch(`{process.env.APIURL}/api/reunions`)
+    fetch(`${APIURL}/api/reunions`)
     .then((response) => { return response.json(); })
     .then((responseJson) => { setReunions(responseJson || []); })
     .catch((reason) => {

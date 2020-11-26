@@ -21,13 +21,13 @@
     - [ ] Picture
     - [ ] Attendance
     - [ ] Lodging Accomodations
-        - [ ] Distance to each event
+        - [ ] Distance to each event (?)
         - [ ] Status
             - [ ] Organizer coordinated
             - [ ] Self coordinated
             - [ ] N/A
     - [ ] Family Management (?)
-        - [ ] Family members (minors)
+        - [ ] Family members (spouses/minors)
     - [ ] Requested sizes (T-shirt)
     - [ ] Notifications
         - [ ] Notification Types
@@ -40,11 +40,11 @@
                 - [ ] Travel time from current location
 - [ ] View reunion details
 - [ ] View events
-    - [ ] See events on map geolocated (Premium?)
+    - [ ] See events on map geolocated _(Premium?)_
 - [ ] Export reunion calendar to personal calendar
-        - [ ] iCal
-        - [ ] Outlook
-        - [ ] Google
+    - [ ] iCal
+    - [ ] Outlook
+    - [ ] Google
 #### Manage reunion
 - [ ] **Manage announcements**
     - [ ] Add announcement
@@ -96,3 +96,4 @@
         - [ ] Low cost entry OR enterprise license
     - [ ] Provide access to all emails on the attendee list
 - [ ] Provide lodging recommendations based on city, location of events
+- [ ] Provide event recommendations
