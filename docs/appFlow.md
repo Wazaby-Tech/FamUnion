@@ -7,8 +7,9 @@ _italic - Roadmap_
 ### Flow
 1. Login
     1. Email/PW
-    1. Phone Number
     1. Facebook
+    1. Google
+    1. _Phone Number_
 1. Home Page
     1. Create Reunion
         1. Enter reunion details
