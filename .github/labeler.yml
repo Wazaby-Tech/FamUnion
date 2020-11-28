@@ -1,0 +1,17 @@
+db:
+  - src/FamUnion.Database/*
+      
+api:
+  - src/FamUnion.API/*
+      
+core:
+  - src/FamUnion.Core/*
+  
+documentation:
+  - docs/*
+
+tests:
+  - src/**/*.Tests/*
+
+front-end:
+  - fe/*
