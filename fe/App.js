@@ -27,8 +27,6 @@ import Reunions from './components/Reunions/Reunions';
 const App: () => React$Node = () => {
   const [isLoading, setLoading] = useState(true);
   const [reunions, setReunions] = useState([]);
-  
-  console.log(APIURL);
 
   useEffect(() => {
     fetch(`${APIURL}/api/reunions`)
