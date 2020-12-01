@@ -17,4 +17,4 @@ jobs:
         with:
           dotnet-version: 5.0.100
       - name: Test with dotnet
-        run: dotnet test -c Release src/Actor2Actor.sln
+        run: dotnet test -c Release src/FamUnion.sln

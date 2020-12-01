@@ -83,6 +83,16 @@
     - [ ] Details
 
 #### Next Iteration
+- [ ] Payments https://www.entrepreneur.com/article/286006
+    - [ ] PayPal
+    - [ ] Apple Pay
+    - [ ] Google Pay
+    - [ ] Venmo
+    - [ ] Zelle
+    - [ ] Square
+- [ ] Budget
+    - [ ] Expenses
+    - [ ] Payments from attendees (if applicable)
 - [ ] Public Attendee (allow download of contact info for other attendees)
     - [ ] Export contact info for:
         - [ ] iOS
