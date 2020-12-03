@@ -1,5 +1,6 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
+using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
 using FamUnion.Core.Validation;
 using System;
@@ -12,13 +13,13 @@ namespace FamUnion.Infrastructure.Services
     public class ReunionService : IReunionService
     {
         private readonly IReunionRepository _reunionRepository;
-        private readonly IAddressRepository _addressRepository;
+        private readonly IAddressService _addressService;
         private readonly IEventService _eventService;
 
-        public ReunionService(IReunionRepository reunionRepository, IAddressRepository addressRepository, IEventService eventService)
+        public ReunionService(IReunionRepository reunionRepository, IAddressService addressService, IEventService eventService)
         {
             _reunionRepository = Validator.ThrowIfNull(reunionRepository, nameof(reunionRepository));
-            _addressRepository = Validator.ThrowIfNull(addressRepository, nameof(addressRepository));
+            _addressService = Validator.ThrowIfNull(addressService, nameof(addressService));
             _eventService = Validator.ThrowIfNull(eventService, nameof(eventService));
         }
 
@@ -51,7 +52,9 @@ namespace FamUnion.Infrastructure.Services
 
             if (reunion.Location != null)
             {
-                _ = await _addressRepository.SaveReunionAddressAsync(savedReunion.Id.Value, reunion.Location)
+                var addrRequest = new SaveReunionAddressRequest(savedReunion.Id.Value, reunion.Location);
+
+                savedReunion.Location = await _addressService.SaveEntityAddressAsync(addrRequest)
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
 
@@ -93,8 +96,13 @@ namespace FamUnion.Infrastructure.Services
             Parallel.ForEach(reunions, async reunion =>
             {
                 if (reunion != null && reunion.Id.HasValue)
-                    reunion.Location = await _addressRepository.GetReunionAddressAsync(reunion.Id.Value)
+                {
+                    var addrRequest = new GetReunionAddressRequest(reunion.Id.Value);
+
+                    reunion.Location = await _addressService.GetEntityAddressAsync(addrRequest)
                     .ConfigureAwait(continueOnCapturedContext: false);
+
+                }
             });
 
             return Task.CompletedTask;

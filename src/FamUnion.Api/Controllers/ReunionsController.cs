@@ -25,7 +25,7 @@ namespace FamUnion.Api.Controllers
             _logger = Validator.ThrowIfNull(logger, nameof(logger));
         }
 
-        [HttpGet("list")]
+        [HttpGet()]
         public async Task<IActionResult> GetReunions()
         {
             _logger.LogInformation("ReunionsController.GetReunions()");
@@ -87,7 +87,7 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpPost("save")]
+        [HttpPost()]
         public async Task<IActionResult> SaveReunion([FromBody] Reunion reunion)
         {
             _logger.LogInformation($"ReunionsController.SaveReunion|{JsonConvert.SerializeObject(reunion)}");
@@ -109,7 +109,7 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpDelete("delete/{reunionId}")]
+        [HttpDelete("{reunionId}")]
         public async Task<IActionResult> DeleteReunion(Guid reunionId)
         {
             _logger.LogInformation($"ReunionsController.DeleteReunion|{reunionId}");

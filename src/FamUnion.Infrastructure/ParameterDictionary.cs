@@ -57,6 +57,11 @@ namespace FamUnion.Infrastructure
             return new ParameterDictionary(parameterName, parameterValue);
         }
 
+        public static ParameterDictionary FromDictionary(IDictionary<string, object> dictionary)
+        {
+            return new ParameterDictionary(dictionary);
+        }
+
         #endregion
 
         public IList<string> ParameterNames { get { return _dictionary.Keys.ToList(); } }

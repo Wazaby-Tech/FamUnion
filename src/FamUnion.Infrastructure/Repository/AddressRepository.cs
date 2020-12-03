@@ -4,6 +4,7 @@ using FamUnion.Core.Utility;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static FamUnion.Core.Utility.Constants;
 
 namespace FamUnion.Infrastructure.Repository
 {
@@ -44,8 +45,9 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<Address> GetReunionAddressAsync(Guid reunionId)
         {
-            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId.ToString());
-            return (await ExecuteStoredProc("[dbo].[spGetAddressByReunionId]", parameters)
+            ParameterDictionary parameters = ParameterDictionary.Single("entityTypeId", (int)AddressEntityType.Reunion);
+            parameters.AddParameter("entityId", reunionId.ToString());
+            return (await ExecuteStoredProc("[dbo].[spGetAddressByEntityTypeAndId]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 

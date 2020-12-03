@@ -45,5 +45,12 @@ namespace FamUnion.Infrastructure.Repository
             return (await ExecuteStoredProc("[dbo].[spSaveEvent]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
+
+        public async Task DeleteEventAsync(Guid eventId)
+        {
+            ParameterDictionary parameters = ParameterDictionary.Single("eventId", eventId.ToString());
+
+            await ExecuteStoredProc("[dbo].[spDeleteEventById]", parameters).ConfigureAwait(continueOnCapturedContext: false);
+        }
     }
 }

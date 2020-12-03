@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -14,17 +14,30 @@ import {
   View,
   Text,
   StatusBar,
+  ActivityIndicator
 } from 'react-native';
 
+import { APIURL } from '@env';
 import {
-  Header,
-  LearnMoreLinks,
   Colors,
-  DebugInstructions,
-  ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+import Reunions from './components/Reunions/Reunions';
+
 const App: () => React$Node = () => {
+  const [isLoading, setLoading] = useState(true);
+  const [reunions, setReunions] = useState([]);
+
+  useEffect(() => {
+    fetch(`${APIURL}/api/reunions`)
+    .then((response) => { return response.json(); })
+    .then((responseJson) => { setReunions(responseJson || []); })
+    .catch((reason) => {
+      console.log(`ERROR fetching reunions: ${reason}`);
+    })
+    .finally(() => { setLoading(false); });
+  }, [])
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -32,39 +45,21 @@ const App: () => React$Node = () => {
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
           <View style={styles.body}>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
+              <Text style={styles.sectionTitle}>FamUnion</Text>
               <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
+                This is the FamUnion mobile app.
               </Text>
             </View>
+          </View>
+          <View style={styles.body}>
             <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
+              <Text style={styles.sectionTitle}>Reunions</Text>
               <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
+              {isLoading ? <ActivityIndicator/> : <Reunions reunions={reunions} />}
               </Text>
             </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -76,12 +71,9 @@ const styles = StyleSheet.create({
   scrollView: {
     backgroundColor: Colors.lighter,
   },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
   body: {
     backgroundColor: Colors.white,
+    
   },
   sectionContainer: {
     marginTop: 32,

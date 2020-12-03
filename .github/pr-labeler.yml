@@ -1,0 +1,3 @@
+feature: ['feature/*', 'feature-*', 'FAM-*']
+release: ['release/*', 'release-*']
+hotfix: ['hotfix/*', 'hotfix-*']
