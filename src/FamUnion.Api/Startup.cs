@@ -2,16 +2,26 @@
 using FamUnion.Infrastructure.Repository;
 using FamUnion.Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace FamUnion.Api
 {
     public class Startup
     {
-		private readonly string DbKey = "Data:FamUnionDb";
+        private readonly string DbKey = "Data:FamUnionDb";
 
         public Startup(IConfiguration configuration)
         {
@@ -42,6 +52,10 @@ namespace FamUnion.Api
                 return new EventRepository(dbConnection);
             });
 
+            // Health Checks
+            services.AddHealthChecks()
+                .AddSqlServer(dbConnection);
+
             // Services
             services.AddTransient<IReunionService, ReunionService>();
             services.AddTransient<IEventService, EventService>();
@@ -56,7 +70,7 @@ namespace FamUnion.Api
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .Build();
-                });                    
+                });
             });
 
             services.AddControllers();
@@ -87,6 +101,16 @@ namespace FamUnion.Api
             app.UseEndpoints(options =>
             {
                 options.MapControllers();
+                options.MapHealthChecks("/health", new HealthCheckOptions()
+                {
+                    ResultStatusCodes =
+                    {
+                        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+                        [HealthStatus.Degraded] = StatusCodes.Status200OK,
+                        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+                    },
+                    ResponseWriter = WriteResponse
+                });
             });
 
             app.UseOpenApi(options =>
@@ -97,6 +121,23 @@ namespace FamUnion.Api
             {
                 options.DocumentTitle = "FamUnion API";
             }); // serve Swagger UI
+        }
+
+        private static Task WriteResponse(HttpContext context, HealthReport result)
+        {
+            context.Response.ContentType = "application/json; charset=utf-8";
+
+            var json = new JObject(
+                new JProperty("status", result.Status.ToString()),
+                new JProperty("results", new JObject(result.Entries.Select(pair =>
+                    new JProperty(pair.Key, new JObject(
+                        new JProperty("status", pair.Value.Status.ToString()),
+                        new JProperty("description", pair.Value.Description),
+                        new JProperty("data", new JObject(pair.Value.Data.Select(
+                            p => new JProperty(p.Key, p.Value))))))))));
+
+            return context.Response.WriteAsync(
+                json.ToString(Formatting.Indented));
         }
     }
 }

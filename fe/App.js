@@ -6,7 +6,9 @@
  * @flow strict-local
  */
 
+import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   SafeAreaView,
   StyleSheet,
@@ -28,18 +30,21 @@ const App: () => React$Node = () => {
   const [isLoading, setLoading] = useState(true);
   const [reunions, setReunions] = useState([]);
 
+  //console.log(`${APIURL}/api/reunions`);
+
   useEffect(() => {
     fetch(`${APIURL}/api/reunions`)
     .then((response) => { return response.json(); })
     .then((responseJson) => { setReunions(responseJson || []); })
     .catch((reason) => {
       console.log(`ERROR fetching reunions: ${reason}`);
+      setReunions([]);
     })
     .finally(() => { setLoading(false); });
   }, [])
 
   return (
-    <>
+    <NavigationContainer>
       <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <ScrollView
@@ -63,7 +68,7 @@ const App: () => React$Node = () => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </>
+    </NavigationContainer>
   );
 };
 
