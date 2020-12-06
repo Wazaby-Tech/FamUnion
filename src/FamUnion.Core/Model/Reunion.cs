@@ -15,6 +15,7 @@ namespace FamUnion.Core.Model
         public DateTime? EndDate { get; set; }
         
         public virtual Address Location { get; set; }
+        public virtual IEnumerable<ReunionInvite> Invites { get; set; }
         public virtual IEnumerable<Event> Events { get; set; }
         public virtual IEnumerable<User> Organizers { get; set; }
         public virtual IEnumerable<Family> Families { get; set; }

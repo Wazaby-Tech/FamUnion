@@ -12,6 +12,14 @@ namespace FamUnion.Core.Utility
             Family = 3,
             Lodging = 4
         }
+
+        public enum InviteResponseStatus
+        {
+            NotResponded = 0,
+            Accepted = 1,
+            Declined = 2
+        }
+
         public enum Size
         {
             KIDS_XS = 0,
