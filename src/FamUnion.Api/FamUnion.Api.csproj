@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="3.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />
 	<PackageReference Include="NSwag.AspNetCore" Version="13.9.4" />
@@ -14,6 +15,10 @@
   <ItemGroup>
     <ProjectReference Include="..\FamUnion.Core\FamUnion.Core.csproj" />
     <ProjectReference Include="..\FamUnion.Infrastructure\FamUnion.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="HealthChecks\" />
   </ItemGroup>
 
 </Project>

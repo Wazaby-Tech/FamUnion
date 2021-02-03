@@ -49,5 +49,10 @@ namespace FamUnion.Core.Model
                 && (State?.Trim() ?? "") == (updated.State?.Trim() ?? "")
                 && (ZipCode?.Trim() ?? "") == (updated.ZipCode?.Trim() ?? "");
         }
+
+        public override int GetHashCode()
+        {
+            return (AddressType, Description, Line1, Line2, City, State, ZipCode, Latitude, Longitude).GetHashCode();
+        }
     }
 }
