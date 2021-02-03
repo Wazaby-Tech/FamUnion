@@ -37,4 +37,11 @@ namespace FamUnion.Core.Utility
 
         public static IList<SubRegion> States => Factory.Make(CountrySelection.UnitedStates);
     }
+
+    public static class ConfigSections
+    {
+        public static string AuthKey = "Auth0";
+        public static string DbKey = "Data:FamUnionDb";
+        public static string AppConfigKey = "AppConfig";
+    }
 }

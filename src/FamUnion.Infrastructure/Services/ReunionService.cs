@@ -5,7 +5,6 @@ using FamUnion.Core.Utility;
 using FamUnion.Core.Validation;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FamUnion.Infrastructure.Services
@@ -81,7 +80,7 @@ namespace FamUnion.Infrastructure.Services
         {
             Parallel.ForEach(reunions, async reunion =>
             {
-                if (reunion != null)
+                if (reunion != null && reunion.Id.HasValue)
                 {
                     reunion.Events = await _eventService.GetEventsByReunionIdAsync(reunion.Id.Value)
                     .ConfigureAwait(continueOnCapturedContext: false);

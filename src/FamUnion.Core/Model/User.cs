@@ -11,8 +11,6 @@ namespace FamUnion.Core.Model
         public DateTime? CreatedDate { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime? ModifiedDate { get; set; }
-
-        //public virtual IEnumerable<Reunion> Reunions { get; set; }
         public virtual Family Family { get; set; }
     }
 }

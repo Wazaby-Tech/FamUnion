@@ -37,11 +37,6 @@ namespace FamUnion.Infrastructure.Repository
         {
             throw new NotImplementedException();
         }
-        
-        public Task<Address> GetFamilyAddressAsync(Guid familyId)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<Address> GetReunionAddressAsync(Guid reunionId)
         {
@@ -76,11 +71,6 @@ namespace FamUnion.Infrastructure.Repository
         }
 
         public Task<Address> SaveLodgingAddressAsync(Guid lodgingId, Address address)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Address> SaveFamilyAddressAsync(Guid familyId, Address address)
         {
             throw new NotImplementedException();
         }
