@@ -14,7 +14,6 @@ namespace FamUnion.Core.Model
         public bool ReceivingAlerts { get; set; }
 
         public virtual IEnumerable<FamilyMember> Members { get; set; }
-        public virtual Address Address { get; set; }    
-        public virtual IEnumerable<User> Users { get; set; }    // Needed if Members are also linked to users?
+        public virtual Address Address { get; set; }
     }
 }

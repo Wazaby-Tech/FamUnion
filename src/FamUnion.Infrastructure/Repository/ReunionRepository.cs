@@ -31,6 +31,12 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
+        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync()
+        {
+            return await ExecuteStoredProc("[dbo].[spGetManageReunions]", ParameterDictionary.Empty)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
         public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
             if(!reunion.IsValid())

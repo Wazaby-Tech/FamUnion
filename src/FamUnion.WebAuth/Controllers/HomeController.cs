@@ -1,20 +1,15 @@
 ﻿using FamUnion.Auth;
 using FamUnion.Core.Auth;
-using FamUnion.Core.Model;
-using FamUnion.Core.Utility;
 using FamUnion.WebAuth.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace FamUnion.WebAuth.Controllers
@@ -32,7 +27,6 @@ namespace FamUnion.WebAuth.Controllers
             _httpClient = clientFactory.CreateClient("API");
         }
 
-        [Authorize]
         public async Task<IActionResult> Index()
         {
             // If the user is authenticated, then this is how you can get the access_token and id_token

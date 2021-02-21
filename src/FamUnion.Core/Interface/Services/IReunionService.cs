@@ -9,6 +9,7 @@ namespace FamUnion.Core.Interface
     public interface IReunionService
     {
         Task<IEnumerable<Reunion>> GetReunionsAsync();
+        Task<IEnumerable<Reunion>> GetManageReunionsAsync();
         Task<Reunion> GetReunionAsync(Guid id);
         Task<Reunion> SaveReunionAsync(Reunion reunion);
         Task DeleteReunionAsync(Guid id);

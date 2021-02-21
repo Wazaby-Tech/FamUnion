@@ -44,6 +44,17 @@ namespace FamUnion.Infrastructure.Services
             return reunions;
         }
 
+        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync()
+        {
+            var reunions = await _reunionRepository.GetManageReunionsAsync()
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            await PopulateDependentProperties(reunions)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            return reunions;
+        }
+
         public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
             var savedReunion = await _reunionRepository.SaveReunionAsync(reunion)
