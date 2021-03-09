@@ -1,5 +1,3 @@
-using System;
-
 namespace FamUnion.WebAuth.Models
 {
     public class ErrorViewModel

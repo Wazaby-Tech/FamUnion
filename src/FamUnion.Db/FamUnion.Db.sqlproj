@@ -82,6 +82,9 @@
     <Build Include="StoredProcedures\spDeleteEventById.sql" />
     <Build Include="StoredProcedures\spGetAddressByEventId.sql" />
     <Build Include="StoredProcedures\spGetAddressByReunionId.sql" />
+    <Build Include="StoredProcedures\spGetUserById.sql" />
+    <Build Include="StoredProcedures\spGetUserByEmail.sql" />
+    <Build Include="StoredProcedures\spSaveUser.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

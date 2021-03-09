@@ -1,15 +1,18 @@
 ﻿using FamUnion.Auth;
 using FamUnion.Core.Auth;
+using FamUnion.Core.Interface.Services;
+using FamUnion.Core.Utility;
 using FamUnion.WebAuth.Models;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace FamUnion.WebAuth.Controllers
@@ -17,14 +20,18 @@ namespace FamUnion.WebAuth.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly AuthConfig _auth0Config;
-        private readonly HttpClient _httpClient;
+        private readonly AuthConfig _appAuthConfig;
+        private readonly AuthConfig _identityAuthConfig;
+        private readonly HttpClient _apiClient;
+        private readonly HttpClient _appUsersClient;
 
-        public HomeController(ILogger<HomeController> logger, AuthConfig auth0Config, IHttpClientFactory clientFactory)
+        public HomeController(ILogger<HomeController> logger, IAuthConfigService authConfigService, IHttpClientFactory clientFactory)
         {
             _logger = logger;
-            _auth0Config = auth0Config;
-            _httpClient = clientFactory.CreateClient("API");
+            _appAuthConfig = authConfigService.GetConfig(ConfigSections.AppAuthKey);
+            _identityAuthConfig = authConfigService.GetConfig(ConfigSections.IdentityAuthKey);
+            _apiClient = clientFactory.CreateClient("API");
+            _appUsersClient = clientFactory.CreateClient("AppUsers");
         }
 
         public async Task<IActionResult> Index()
@@ -44,12 +51,18 @@ namespace FamUnion.WebAuth.Controllers
 
                 string idToken = await HttpContext.GetTokenAsync("id_token");
 
+                var appToken = TokenHelper.GetAuth0Token(_identityAuthConfig);
+                _appUsersClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {appToken.access_token}");
+
+                var user = await _appUsersClient.GetAsync($"users/{User.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value}")
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
                 // Now you can use them. For more info on when and how to use the
                 // access_token and id_token, see https://auth0.com/docs/tokens
-                var token = TokenHelper.GetAuth0Token(_auth0Config);
-                _httpClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {token.access_token}");
+                var token = TokenHelper.GetAuth0Token(_appAuthConfig);
+                _apiClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {token.access_token}");
 
-                var reunions = await _httpClient.GetAsync("/api/reunions");
+                var reunions = await _apiClient.GetAsync("api/reunions");
 
             }
 

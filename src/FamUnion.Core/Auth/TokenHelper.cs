@@ -1,9 +1,6 @@
 ﻿using FamUnion.Auth;
 using Newtonsoft.Json;
 using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace FamUnion.Core.Auth
 {

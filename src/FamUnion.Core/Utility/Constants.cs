@@ -1,5 +1,4 @@
-﻿using StatesAndProvinces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace FamUnion.Core.Utility
 {
@@ -34,14 +33,14 @@ namespace FamUnion.Core.Utility
             Organizer,
             SystemAdmin
         };
-
-        public static IList<SubRegion> States => Factory.Make(CountrySelection.UnitedStates);
     }
 
     public static class ConfigSections
     {
-        public static string AuthKey = "Auth0";
-        public static string DbKey = "Data:FamUnionDb";
+        public static string AppAuthKey = "AppAuth";
+        public static string IdentityAuthKey = "IdentityAuth";
+        public static string UseAuthKey = "Auth0:Lock";
+        public static string DbKey = "FamUnionDb";
         public static string AppConfigKey = "AppConfig";
     }
 }

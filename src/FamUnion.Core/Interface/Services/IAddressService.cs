@@ -1,8 +1,6 @@
 ﻿using FamUnion.Core.Model;
 using FamUnion.Core.Request;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FamUnion.Core.Interface

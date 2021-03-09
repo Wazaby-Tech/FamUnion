@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FamUnion.Core.Utility
+﻿namespace FamUnion.Core.Utility
 {
     public class AppConfig
     {

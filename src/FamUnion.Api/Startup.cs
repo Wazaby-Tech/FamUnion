@@ -14,6 +14,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace FamUnion.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // DB Connection
-            var dbConnection = Configuration.GetValue<string>(ConfigSections.DbKey);
+            var dbConnection = Configuration.GetConnectionString(ConfigSections.DbKey);
 
             // Repositories
             services.AddTransient<IReunionRepository, ReunionRepository>(Provider =>
@@ -71,31 +72,33 @@ namespace FamUnion.Api
                 });
             });
 
-            // Authentication
-            if (Configuration.GetSection(ConfigSections.AuthKey).Exists())
+            // App Authentication
+            var domain = $"https://{Configuration[$"{ConfigSections.AppAuthKey}:Domain"]}/";
+            services.AddAuthentication(options =>
             {
-                var domain = $"https://{Configuration[$"{ConfigSections.AuthKey}:Domain"]}/";
-                services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = domain;
-                    options.Audience = Configuration[$"{ConfigSections.AuthKey}:Audience"];
-                });
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.Authority = domain;
+                options.Audience = Configuration[$"{ConfigSections.AppAuthKey}:Audience"];
+            });
 
-                services.AddAuthorizationCore(options =>
+            services.AddAuthorizationCore(options =>
+            {
+                foreach (var (PolicyName, Policy) in AppClaimPolicy.AppPolicies)
                 {
-                    foreach (var (PolicyName, Policy) in AppClaimPolicy.AppPolicies)
-                    {
-                        options.AddPolicy(PolicyName, Policy);
-                    }
+                    options.AddPolicy(PolicyName, Policy);
+                }
 
-                    options.DefaultPolicy = AppClaimPolicy.AppPolicies.Single(ap => ap.PolicyName == AppClaimPolicy.Access).Policy;
-                });
-            }
+                options.DefaultPolicy = AppClaimPolicy.AppPolicies.Single(ap => ap.PolicyName == AppClaimPolicy.Access).Policy;
+            });
+
+            services.AddHttpClient("AppUsers", (client) =>
+            {
+                client.BaseAddress = new Uri(Configuration[$"{ConfigSections.IdentityAuthKey}:Audience"]);
+            });
 
             services.AddControllers();
 
@@ -115,11 +118,11 @@ namespace FamUnion.Api
             }
 
             app.UseCors();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            if(Configuration.GetSection(ConfigSections.AuthKey).Exists())
+            if (Configuration.GetSection(ConfigSections.AppAuthKey).Exists())
             {
                 app.UseAuthentication();
                 app.UseAuthorization();

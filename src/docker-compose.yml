@@ -2,5 +2,21 @@ version: "3.8"
 
 services:
   api:
-    build: 
-      context: ./FamUnion.API
+    build:
+      context: .
+      dockerfile: Dockerfile.Api
+    image: famunionapi:dev
+    ports:
+      - "444:443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+  
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.WebAuth
+    image: famunionweb:dev
+    ports:
+      - "443:443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development

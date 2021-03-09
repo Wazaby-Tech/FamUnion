@@ -1,5 +1,7 @@
 using FamUnion.Auth;
+using FamUnion.Core.Interface.Services;
 using FamUnion.Core.Utility;
+using FamUnion.WebAuth.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -29,8 +31,9 @@ namespace FamUnion.WebAuth
         public void ConfigureServices(IServiceCollection services)
         {
             // Configure Auth0
-            var auth0Config = Configuration.GetSection(ConfigSections.AuthKey).Get<AuthConfig>();
-            services.AddSingleton(auth0Config);
+            services.AddTransient<IAuthConfigService, AuthConfigService>();
+            var appAuthConfig = Configuration.GetSection(ConfigSections.AppAuthKey).Get<AuthConfig>();
+            var identityAuthConfig = Configuration.GetSection(ConfigSections.IdentityAuthKey).Get<AuthConfig>();
 
             var appConfig = Configuration.GetSection(ConfigSections.AppConfigKey).Get<AppConfig>();
             services.AddSingleton(appConfig);
@@ -51,11 +54,11 @@ namespace FamUnion.WebAuth
             .AddCookie()
             .AddOpenIdConnect("Auth0", options => {
                 // Set the authority to your Auth0 domain
-                options.Authority = $"https://{auth0Config.Domain}";
+                options.Authority = $"https://{appAuthConfig.Domain}";
 
                 // Configure the Auth0 Client ID and Client Secret
-                options.ClientId = auth0Config.ClientId;
-                options.ClientSecret = auth0Config.ClientSecret;
+                options.ClientId = appAuthConfig.ClientId;
+                options.ClientSecret = appAuthConfig.ClientSecret;
 
                 // Set response type to code
                 options.ResponseType = "code";
@@ -79,7 +82,7 @@ namespace FamUnion.WebAuth
                     // handle the logout redirection 
                     OnRedirectToIdentityProviderForSignOut = (context) =>
                     {
-                        var logoutUri = $"https://{auth0Config.Domain}/v2/logout?client_id={auth0Config.ClientId}";
+                        var logoutUri = $"https://{appAuthConfig.Domain}/v2/logout?client_id={appAuthConfig.ClientId}";
 
                         var postLogoutUri = context.Properties.RedirectUri;
                         if (!string.IsNullOrEmpty(postLogoutUri))
@@ -104,6 +107,11 @@ namespace FamUnion.WebAuth
             services.AddHttpClient("API", (options) =>
             {
                 options.BaseAddress = new Uri(appConfig.ApiUrl);
+            });
+
+            services.AddHttpClient("AppUsers", (client) =>
+            {
+                client.BaseAddress = new Uri($"https://{appAuthConfig.Domain}/api/v2/");
             });
 
             services.AddControllersWithViews();
