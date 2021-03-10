@@ -24,5 +24,10 @@ namespace FamUnion.Core.Model
             return !string.IsNullOrEmpty(Name)
                 && (StartDate ?? DateTime.MinValue) < (EndDate ?? DateTime.MaxValue);
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

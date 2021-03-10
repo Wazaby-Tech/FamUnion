@@ -1,12 +1,16 @@
 ﻿using FamUnion.Auth;
 using FamUnion.Core.Auth;
 using FamUnion.Core.Interface.Services;
+using FamUnion.Core.Model;
 using FamUnion.Core.Utility;
 using FamUnion.WebAuth.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -62,8 +66,9 @@ namespace FamUnion.WebAuth.Controllers
                 var token = TokenHelper.GetAuth0Token(_appAuthConfig);
                 _apiClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {token.access_token}");
 
-                var reunions = await _apiClient.GetAsync("api/reunions");
-
+                var resp = await _apiClient.GetAsync("api/reunions");
+                var respContent = await resp.Content.ReadAsStringAsync();
+                var reunions = JsonConvert.DeserializeObject<IEnumerable<Reunion>>(respContent);
             }
 
             return View();
