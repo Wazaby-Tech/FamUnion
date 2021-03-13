@@ -1,5 +1,7 @@
 using FamUnion.Auth;
+using FamUnion.Core.Auth;
 using FamUnion.Core.Interface.Services;
+using FamUnion.Core.Model;
 using FamUnion.Core.Utility;
 using FamUnion.WebAuth.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,7 +12,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
+using RestSharp.Serialization;
 using System;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FamUnion.WebAuth
@@ -100,6 +109,47 @@ namespace FamUnion.WebAuth
                         context.HandleResponse();
 
                         return Task.CompletedTask;
+                    },
+                    OnTokenValidated = async (context) =>
+                    {
+                        // Setup Auth0 client call
+                        var authClient = new HttpClient();
+                        authClient.BaseAddress = new Uri($"https://{appAuthConfig.Domain}/api/v2/");
+                        var identityToken = TokenHelper.GetAuth0Token(identityAuthConfig);
+                        authClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {identityToken.access_token}");
+
+                        // Setup App API client call
+                        var appClient = new HttpClient();
+                        appClient.BaseAddress = new Uri($"{appConfig.ApiUrl}");
+                        var appToken = TokenHelper.GetAuth0Token(appAuthConfig);
+                        appClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {appToken.access_token}");
+
+                        // Call App API to ensure user exists in database
+                        // TODO: Need caching here so we're not making this db call every time
+                        var identityId = context.Principal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                        var appUser = JsonConvert.DeserializeObject<User>(await appClient.GetStringAsync($"users/id/{identityId}"));
+
+                        // User is validated in Auth0 but not in the app database yet
+                        if(appUser.AuthType == Constants.UserAuthType.Unauthorized)
+                        {
+                            // Pull full user object from Auth0
+                            var authResp = JsonConvert.DeserializeObject<Auth0User>(await authClient.GetStringAsync($"users/{identityId}"));
+
+                            // Create app user and save in the database with proper auth type
+                            var newUser = new User()
+                            {
+                                UserId = identityId,
+                                AuthType = Extensions.GetUserAuthType(identityId),
+                                Email = authResp.email,
+                                PhoneNumber = authResp.phone_number,
+                                FirstName = authResp.given_name,
+                                LastName = authResp.family_name
+                            };
+
+                            var userContent = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, ContentType.Json);
+                            var postResp = await appClient.PostAsync("users", userContent);
+
+                        }
                     }
                 };
             });

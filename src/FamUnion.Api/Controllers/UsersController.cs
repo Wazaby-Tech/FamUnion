@@ -36,6 +36,14 @@ namespace FamUnion.Api.Controllers
             {
                 var result = await _userRepository.GetUserByEmailAsync(email)
                     .ConfigureAwait(continueOnCapturedContext: false);
+
+                if(result is null)
+                {
+                    _logger.LogInformation($"User with email: '{email}' was searched and not found");
+                    var user = new User() { Email = email };
+                    return Ok(user);
+                }
+
                 return Ok(result);
             }
             catch(Exception ex)
@@ -57,6 +65,14 @@ namespace FamUnion.Api.Controllers
             {
                 var result = await _userRepository.GetUserByIdAsync(id)
                     .ConfigureAwait(continueOnCapturedContext: false);
+
+                if(result is null)
+                {
+                    _logger.LogInformation($"User with id: '{id}' was searched and not found");
+                    var user = new User() { UserId = id };
+                    return Ok(user);
+                }
+
                 return Ok(result);
             }
             catch(Exception ex)

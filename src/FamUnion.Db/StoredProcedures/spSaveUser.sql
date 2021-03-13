@@ -3,7 +3,8 @@
 	@userId NVARCHAR(100),
 	@email NVARCHAR(255),
 	@firstName NVARCHAR(100),
-	@lastName NVARCHAR(100)
+	@lastName NVARCHAR(100),
+	@authType INT
 AS
 	DECLARE @insertId uniqueidentifier = ISNULL(@id, NEWID())
 
@@ -15,6 +16,7 @@ AS
 			@email [Email],
 			@firstName [FirstName],
 			@lastName [LastName],
+			@authType [AuthType],
 			null [CreatedBy],
 			null [CreatedDate],
 			null [ModifiedBy],
@@ -23,8 +25,8 @@ AS
 	ON TARGET.UserId = SOURCE.UserId
 	WHEN NOT MATCHED
 	THEN
-		INSERT (Id, UserId, Email, FirstName, LastName, CreatedDate, CreatedBy)
-		VALUES (@insertId, SOURCE.UserId, SOURCE.Email, SOURCE.FirstName, SOURCE.LastName, SYSDATETIME(), SUSER_SNAME())
+		INSERT (Id, UserId, Email, FirstName, LastName, AuthType, CreatedDate, CreatedBy)
+		VALUES (@insertId, SOURCE.UserId, SOURCE.Email, SOURCE.FirstName, SOURCE.LastName, SOURCE.AuthType, SYSDATETIME(), SUSER_SNAME())
 	WHEN MATCHED
 	THEN
 		UPDATE SET

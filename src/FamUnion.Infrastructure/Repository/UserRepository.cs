@@ -17,7 +17,7 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-            return (await ExecuteStoredProc("[dbo].[spGetUserBydId]", ParameterDictionary.Single("id", userId))
+            return (await ExecuteStoredProc("[dbo].[spGetUserById]", ParameterDictionary.Single("userId", userId))
                 .ConfigureAwait(continueOnCapturedContext: false)).FirstOrDefault();
         }
 
@@ -34,7 +34,8 @@ namespace FamUnion.Infrastructure.Repository
                 "userId", user.UserId,
                 "email", user.Email,
                 "firstName", user.FirstName,
-                "lastName", user.LastName
+                "lastName", user.LastName,
+                "authType", ((int)user.AuthType).ToString()
             });
 
             return (await ExecuteStoredProc("[dbo].[spSaveUser]", parameters)

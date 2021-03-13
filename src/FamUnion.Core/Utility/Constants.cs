@@ -33,6 +33,14 @@ namespace FamUnion.Core.Utility
             Organizer,
             SystemAdmin
         };
+
+        public enum UserAuthType : int
+        {
+            Unauthorized = 0,
+            Auth0 = 1,
+            Facebook = 2,
+            Google = 3
+        }
     }
 
     public static class ConfigSections

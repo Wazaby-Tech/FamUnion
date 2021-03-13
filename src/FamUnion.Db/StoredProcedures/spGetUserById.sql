@@ -7,6 +7,7 @@ AS
 		FirstName,
 		LastName,
 		Email,
-		PhoneNumber
+		PhoneNumber,
+		AuthType
 	FROM [dbo].[User]
 	WHERE UserId = @userId

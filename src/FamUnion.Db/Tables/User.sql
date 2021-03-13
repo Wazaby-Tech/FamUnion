@@ -6,6 +6,7 @@
 	[LastName] NVARCHAR(100) NULL,
 	[Email] NVARCHAR(255) NOT NULL,
 	[PhoneNumber] NVARCHAR(15) NULL,
+	[AuthType] INT NOT NULL,
 	[CreatedBy] NVARCHAR(100) NOT NULL,
 	[CreatedDate] DATETIME NOT NULL,
 	[ModifiedBy] NVARCHAR(100) NULL,

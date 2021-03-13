@@ -51,6 +51,11 @@ namespace FamUnion.Api
                 return new EventRepository(dbConnection);
             });
 
+            services.AddTransient<IUserRepository, UserRepository>(Provider =>
+            {
+                return new UserRepository(dbConnection);
+            });
+
             // Health Checks
             services.AddHealthChecks()
                 .AddSqlServer(dbConnection);
