@@ -15,6 +15,12 @@ namespace FamUnion.Infrastructure.Repository
 
         }
 
+        public async Task<bool> ValidateUserIdAsync(string userId)
+        {
+            return (await GetUserByIdAsync(userId)
+                .ConfigureAwait(continueOnCapturedContext: false)) != null;
+        }
+
         public async Task<User> GetUserByIdAsync(string userId)
         {
             return (await ExecuteStoredProc("[dbo].[spGetUserById]", ParameterDictionary.Single("userId", userId))

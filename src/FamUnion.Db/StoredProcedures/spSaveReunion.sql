@@ -1,5 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spSaveReunion]
 	@id uniqueidentifier NULL,
+	@userId nvarchar(100),
 	@name nvarchar(100),
 	@description nvarchar(4000),
 	@startdate date,
@@ -26,7 +27,7 @@ ON TARGET.ReunionId = SOURCE.ReunionId
 WHEN NOT MATCHED
 THEN
 	INSERT (ReunionId, Name, Description, StartDate, EndDate, CreatedDate, CreatedBy)
-	VALUES (@insertId, SOURCE.Name, SOURCE.Description, SOURCE.StartDate, SOURCE.EndDate, SYSDATETIME(), SUSER_SNAME())
+	VALUES (@insertId, SOURCE.Name, SOURCE.Description, SOURCE.StartDate, SOURCE.EndDate, SYSDATETIME(), @userId)
 WHEN MATCHED AND TARGET.IsActive = 1
 THEN
 	UPDATE SET
@@ -34,7 +35,7 @@ THEN
 		TARGET.Description = SOURCE.Description,
 		TARGET.StartDate = SOURCE.StartDate,
 		TARGET.EndDate = SOURCE.EndDate,
-		TARGET.ModifiedBy = SUSER_SNAME(),
+		TARGET.ModifiedBy = @userId,
 		TARGET.ModifiedDate = SYSDATETIME();
 
 EXEC [dbo].[spGetReunionById] @id = @insertId;

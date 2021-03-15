@@ -42,6 +42,23 @@ namespace FamUnion.Api.Controllers
             }
         }
 
+        [HttpGet("manage/{userId}")]
+        public async Task<IActionResult> GetManageReunions(string userId)
+        {
+            _logger.LogInformation("ReunionsController.GetManageReunions");
+            try
+            {
+                var result = await _reunionService.GetManageReunionsAsync(userId)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message, null);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetReunion(Guid id)
         {
@@ -71,17 +88,23 @@ namespace FamUnion.Api.Controllers
             try
             {
                 reunion = NewReunionRequestMapper.Map(request);
+
+                if (!reunion.IsValid())
+                {
+                    return BadRequest(request);
+                }
+
                 var result = await _reunionService.SaveReunionAsync(reunion)
                     .ConfigureAwait(continueOnCapturedContext: false);
+
+                await _reunionService.AddReunionOrganizer(result.Id.Value, reunion.ActionUserId)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
                 return Ok(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
-                if(!reunion.IsValid())
-                {
-                    return BadRequest(request);
-                }
 
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
@@ -93,6 +116,11 @@ namespace FamUnion.Api.Controllers
             _logger.LogInformation($"ReunionsController.SaveReunion|{JsonConvert.SerializeObject(reunion)}");
             try
             {
+                if(string.IsNullOrWhiteSpace(reunion.ActionUserId))
+                {
+                    reunion.ActionUserId = Helpers.GetUserId(HttpContext.User);
+                }
+
                 var result = await _reunionService.SaveReunionAsync(reunion)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return new OkObjectResult(result);

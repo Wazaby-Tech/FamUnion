@@ -126,7 +126,7 @@ namespace FamUnion.WebAuth
 
                         // Call App API to ensure user exists in database
                         // TODO: Need caching here so we're not making this db call every time
-                        var identityId = context.Principal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                        var identityId = Helpers.GetUserId(context.Principal);
                         var appUser = JsonConvert.DeserializeObject<User>(await appClient.GetStringAsync($"users/id/{identityId}"));
 
                         // User is validated in Auth0 but not in the app database yet
@@ -139,7 +139,7 @@ namespace FamUnion.WebAuth
                             var newUser = new User()
                             {
                                 UserId = identityId,
-                                AuthType = Extensions.GetUserAuthType(identityId),
+                                AuthType = Helpers.GetUserAuthType(identityId),
                                 Email = authResp.email,
                                 PhoneNumber = authResp.phone_number,
                                 FirstName = authResp.given_name,
@@ -148,7 +148,6 @@ namespace FamUnion.WebAuth
 
                             var userContent = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, ContentType.Json);
                             var postResp = await appClient.PostAsync("users", userContent);
-
                         }
                     }
                 };

@@ -30,9 +30,9 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync()
+        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync(string userId)
         {
-            return await ExecuteStoredProc("[dbo].[spGetManageReunions]", ParameterDictionary.Empty)
+            return await ExecuteStoredProc("[dbo].[spGetManageReunions]", ParameterDictionary.Single("userId", userId))
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
@@ -45,6 +45,7 @@ namespace FamUnion.Infrastructure.Repository
 
             ParameterDictionary parameters = new ParameterDictionary(new string[] {
                 "id", reunion.Id.GetDbGuidString(),
+                "userId", reunion.ActionUserId,
                 "name", reunion.Name,
                 "description", reunion.Description,
                 "startDate", reunion.StartDate.ToString(),
@@ -61,6 +62,23 @@ namespace FamUnion.Infrastructure.Repository
 
             _ = await ExecuteStoredProc("[dbo].[spDeleteReunionById]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task AddReunionOrganizer(Guid reunionId, string userId)
+        {
+            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            {
+                "reunionId", reunionId.ToString(),
+                "userId", userId
+            });
+
+            _ = await ExecuteStoredProc("[dbo].[spAddReunionOrganizer]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public Task RemoveReunionOrganizer(Guid reunionId, string userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

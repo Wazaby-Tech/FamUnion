@@ -15,6 +15,8 @@ namespace FamUnion.Core
         public string ModifiedBy { get; set; }
         [JsonIgnore]
         public DateTime? ModifiedDate { get; set; }
+        [JsonIgnore]
+        public string ActionUserId { get; set; }
 
         public virtual bool IsValid()
         {
