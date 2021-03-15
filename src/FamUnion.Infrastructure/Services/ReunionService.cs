@@ -5,7 +5,6 @@ using FamUnion.Core.Utility;
 using FamUnion.Core.Validation;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FamUnion.Infrastructure.Services
@@ -37,6 +36,17 @@ namespace FamUnion.Infrastructure.Services
         public async Task<IEnumerable<Reunion>> GetReunionsAsync()
         {
             var reunions = await _reunionRepository.GetReunionsAsync()
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            await PopulateDependentProperties(reunions)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            return reunions;
+        }
+
+        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync()
+        {
+            var reunions = await _reunionRepository.GetManageReunionsAsync()
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             await PopulateDependentProperties(reunions)
@@ -81,7 +91,7 @@ namespace FamUnion.Infrastructure.Services
         {
             Parallel.ForEach(reunions, async reunion =>
             {
-                if (reunion != null)
+                if (reunion != null && reunion.Id.HasValue)
                 {
                     reunion.Events = await _eventService.GetEventsByReunionIdAsync(reunion.Id.Value)
                     .ConfigureAwait(continueOnCapturedContext: false);

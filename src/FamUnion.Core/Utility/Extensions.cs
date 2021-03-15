@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using static FamUnion.Core.Utility.Constants;
 
 namespace FamUnion.Core.Utility
 {
@@ -41,6 +42,24 @@ namespace FamUnion.Core.Utility
         public static IEnumerable<T> Yield<T>(this T item)
         {
             yield return item;
+        }
+
+        public static UserAuthType GetUserAuthType(string id)
+        {
+            string[] idParts = id.Split("|", StringSplitOptions.RemoveEmptyEntries);
+            string authString = idParts[0];
+
+            switch(authString)
+            {
+                case "auth0":
+                    return UserAuthType.Auth0;
+
+                case "facebook":
+                    return UserAuthType.Facebook;
+
+                default:
+                    return UserAuthType.Unauthorized;
+            }
         }
     }
 }

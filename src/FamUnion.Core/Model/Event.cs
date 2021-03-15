@@ -25,5 +25,10 @@ namespace FamUnion.Core.Model
                 && validTimes
                 && validLocation;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

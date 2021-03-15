@@ -9,15 +9,21 @@
 1. Do you feel like you reached everyone you wanted to include?
 
 ### MVP
+#### Authentication (Auth0)
+- [ ] Email/Password
+- [ ] Facebook
+- [ ] Google
 #### Create reunion
-- [ ] Reunion name
+- [ ] Reunion Name
 - [ ] Description (optional)
 - [ ] Start Date
 - [ ] City
 - [ ] End Date (optional)
 - [ ] Add attendee emails (optional)
+- [ ] Organizer Contact Details (optional)
 #### Attend reunion
 - [ ] Manage reunion profile
+    - [ ] Phone Number
     - [ ] Picture
     - [ ] Attendance
     - [ ] Lodging Accomodations
@@ -32,6 +38,7 @@
     - [ ] Notifications
         - [ ] Notification Types
             - [ ] App
+            - [ ] Text (requires phone number and provider)
         - [ ] Notification Timing
             - [ ] Reunion
                 - [ ] X days/weeks prior to Start Date
@@ -40,26 +47,28 @@
                 - [ ] Travel time from current location
 - [ ] View reunion details
 - [ ] View events
+    - [ ] View next event (during reunion)
     - [ ] See events on map geolocated _(Premium?)_
 - [ ] Export reunion calendar to personal calendar
-    - [ ] iCal
+    - [ ] iCal/iOS
     - [ ] Outlook
-    - [ ] Google
+    - [ ] Google/Android
 #### Manage reunion
 - [ ] **Manage announcements**
     - [ ] Add announcement
         - [ ] AnnounceMessage
         - [ ] AnnounceDate
-        - [ ] ExpireDate
+        - [ ] ExpireDate (optional)
         - [ ] Priority
             - [ ] URGENT
             - [ ] INFO
     - [ ] Schedule announcement
         - [ ] ScheduledDate (AnnounceDate in the future)
-    - [ ] Expire announcement
+        - [ ] Trigger notifications at AnnounceDate
+    - [ ] Expire announcement (via Expire Date)
 - [ ] Send attendee invitations
     - [ ] Need SMTP service/server
-    - [ ] Allow sign up through app by passcode (?)
+    - [ ] Allow sign up through app by passcode (OTP) (?)
 - [ ] **Manage attendees**
     - [ ] Add attendee
     - [ ] Update attendance
@@ -83,6 +92,7 @@
     - [ ] Details
 
 #### Next Iteration
+- [ ] Organizer MFA
 - [ ] Payments https://www.entrepreneur.com/article/286006
     - [ ] PayPal
     - [ ] Apple Pay
@@ -93,12 +103,12 @@
 - [ ] Budget
     - [ ] Expenses
     - [ ] Payments from attendees (if applicable)
-- [ ] Public Attendee (allow download of contact info for other attendees)
+    - [ ] Balance Sheet
+- [ ] Public Attendee (allow download of contact info to other attendees)
     - [ ] Export contact info for:
         - [ ] iOS
         - [ ] Android
         - [ ] Excel (web) (?)
-- [ ] (Premium) Text message based notifications (phone number logins)
 - [ ] Events created by attendees
 - [ ] (Premium) Upload Reunion/Event Photos/Videos/Media
     - [ ] Integrate with 3rd party photo storage?

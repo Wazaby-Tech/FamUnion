@@ -17,13 +17,17 @@ namespace FamUnion.Core.Model
         public virtual Address Location { get; set; }
         public virtual IEnumerable<Event> Events { get; set; }
         public virtual IEnumerable<User> Organizers { get; set; }
-        public virtual IEnumerable<Family> Families { get; set; }
         public virtual IEnumerable<Lodging> Lodgings { get; set; }
 
         public override bool IsValid()
         {
             return !string.IsNullOrEmpty(Name)
                 && (StartDate ?? DateTime.MinValue) < (EndDate ?? DateTime.MaxValue);
+        }
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

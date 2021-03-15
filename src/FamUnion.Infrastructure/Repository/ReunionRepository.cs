@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FamUnion.Infrastructure.Repository
@@ -28,6 +27,12 @@ namespace FamUnion.Infrastructure.Repository
         public async Task<IEnumerable<Reunion>> GetReunionsAsync()
         {
             return await ExecuteStoredProc("[dbo].[spGetReunions]", ParameterDictionary.Empty)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync()
+        {
+            return await ExecuteStoredProc("[dbo].[spGetManageReunions]", ParameterDictionary.Empty)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
