@@ -85,13 +85,13 @@ namespace FamUnion.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveUser([FromBody] User user)
         {
-            if(!user.IsValid())
-            {
-                return BadRequest();
-            }
-
             try
             {
+                if(!user.IsValid())
+                {
+                    return BadRequest();
+                }
+
                 var result = await _userRepository.SaveUserAsync(user)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return Ok(result);

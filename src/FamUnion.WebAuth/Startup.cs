@@ -113,14 +113,18 @@ namespace FamUnion.WebAuth
                     OnTokenValidated = async (context) =>
                     {
                         // Setup Auth0 client call
-                        var authClient = new HttpClient();
-                        authClient.BaseAddress = new Uri($"https://{appAuthConfig.Domain}/api/v2/");
+                        var authClient = new HttpClient
+                        {
+                            BaseAddress = new Uri($"https://{appAuthConfig.Domain}/api/v2/")
+                        };
                         var identityToken = TokenHelper.GetAuth0Token(identityAuthConfig);
                         authClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {identityToken.access_token}");
 
                         // Setup App API client call
-                        var appClient = new HttpClient();
-                        appClient.BaseAddress = new Uri($"{appConfig.ApiUrl}");
+                        var appClient = new HttpClient
+                        {
+                            BaseAddress = new Uri($"{appConfig.ApiUrl}")
+                        };
                         var appToken = TokenHelper.GetAuth0Token(appAuthConfig);
                         appClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {appToken.access_token}");
 

@@ -76,9 +76,16 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public Task RemoveReunionOrganizer(Guid reunionId, string userId)
+        public async Task RemoveReunionOrganizer(Guid reunionId, string userId)
         {
-            throw new NotImplementedException();
+            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            {
+                "reunionId", reunionId.ToString(),
+                "userId", userId
+            });
+
+            _ = await ExecuteStoredProc("[dbo].[spRemoveReunionOrganizer]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

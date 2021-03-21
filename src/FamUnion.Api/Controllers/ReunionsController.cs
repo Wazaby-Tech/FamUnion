@@ -7,8 +7,10 @@ using FamUnion.Core.Utility;
 using FamUnion.Core.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using RestSharp.Serialization;
 
 namespace FamUnion.Api.Controllers
 {
@@ -25,7 +27,7 @@ namespace FamUnion.Api.Controllers
             _logger = Validator.ThrowIfNull(logger, nameof(logger));
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> GetReunions()
         {
             _logger.LogInformation("ReunionsController.GetReunions()");
@@ -80,7 +82,7 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpPost("new")]
+        [HttpPut]
         public async Task<IActionResult> NewReunion([FromBody] NewReunionRequest request)
         {
             _logger.LogInformation($"{GetType()}.NewReunion|{JsonConvert.SerializeObject(request)}");
@@ -100,7 +102,11 @@ namespace FamUnion.Api.Controllers
                 await _reunionService.AddReunionOrganizer(result.Id.Value, reunion.ActionUserId)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
-                return Ok(result);
+                var resp = CreatedAtAction("GetReunion",
+                    routeValues: new { id = result.Id.Value },
+                    value: result);
+                resp.ContentTypes.Add(ContentType.Json);
+                return resp;
             }
             catch (Exception ex)
             {
@@ -110,7 +116,7 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> SaveReunion([FromBody] Reunion reunion)
         {
             _logger.LogInformation($"ReunionsController.SaveReunion|{JsonConvert.SerializeObject(reunion)}");
