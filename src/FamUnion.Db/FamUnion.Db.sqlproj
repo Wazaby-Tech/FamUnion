@@ -88,6 +88,7 @@
     <Build Include="Tables\ReunionOrganizer.sql" />
     <Build Include="StoredProcedures\spGetManageReunions.sql" />
     <Build Include="StoredProcedures\spAddReunionOrganizer.sql" />
+    <Build Include="StoredProcedures\spRemoveReunionOrganizer.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

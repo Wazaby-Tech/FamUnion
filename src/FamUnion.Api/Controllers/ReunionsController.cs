@@ -7,7 +7,6 @@ using FamUnion.Core.Utility;
 using FamUnion.Core.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RestSharp.Serialization;
