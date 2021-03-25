@@ -85,6 +85,10 @@
     <Build Include="StoredProcedures\spGetUserById.sql" />
     <Build Include="StoredProcedures\spGetUserByEmail.sql" />
     <Build Include="StoredProcedures\spSaveUser.sql" />
+    <Build Include="Tables\ReunionOrganizer.sql" />
+    <Build Include="StoredProcedures\spGetManageReunions.sql" />
+    <Build Include="StoredProcedures\spAddReunionOrganizer.sql" />
+    <Build Include="StoredProcedures\spRemoveReunionOrganizer.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

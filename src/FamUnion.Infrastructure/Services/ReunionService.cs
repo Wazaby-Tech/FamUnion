@@ -12,12 +12,15 @@ namespace FamUnion.Infrastructure.Services
     public class ReunionService : IReunionService
     {
         private readonly IReunionRepository _reunionRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IAddressService _addressService;
         private readonly IEventService _eventService;
 
-        public ReunionService(IReunionRepository reunionRepository, IAddressService addressService, IEventService eventService)
+        public ReunionService(IReunionRepository reunionRepository, IUserRepository userRepository, 
+            IAddressService addressService, IEventService eventService)
         {
             _reunionRepository = Validator.ThrowIfNull(reunionRepository, nameof(reunionRepository));
+            _userRepository = Validator.ThrowIfNull(userRepository, nameof(userRepository));
             _addressService = Validator.ThrowIfNull(addressService, nameof(addressService));
             _eventService = Validator.ThrowIfNull(eventService, nameof(eventService));
         }
@@ -44,9 +47,9 @@ namespace FamUnion.Infrastructure.Services
             return reunions;
         }
 
-        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync()
+        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync(string userId)
         {
-            var reunions = await _reunionRepository.GetManageReunionsAsync()
+            var reunions = await _reunionRepository.GetManageReunionsAsync(userId)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             await PopulateDependentProperties(reunions)
@@ -57,6 +60,11 @@ namespace FamUnion.Infrastructure.Services
 
         public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
+            if(!await _userRepository.ValidateUserIdAsync(reunion.ActionUserId))
+            {
+                throw new Exception($"Invalid user id when saving reunion: '{reunion.ActionUserId}'");
+            }
+
             var savedReunion = await _reunionRepository.SaveReunionAsync(reunion)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -75,6 +83,18 @@ namespace FamUnion.Infrastructure.Services
         public async Task DeleteReunionAsync(Guid id)
         {
             await _reunionRepository.DeleteReunionAsync(id)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task AddReunionOrganizer(Guid reunionId, string userId)
+        {
+            await _reunionRepository.AddReunionOrganizer(reunionId, userId)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task RemoveReunionOrganizer(Guid reunionId, string userId)
+        {
+            await _reunionRepository.RemoveReunionOrganizer(reunionId, userId)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 

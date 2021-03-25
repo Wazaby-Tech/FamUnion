@@ -18,6 +18,7 @@ namespace FamUnion.Core.Utility
             return new Reunion
             {
                 Name = request.Name,
+                ActionUserId = request.UserId,
                 Description = request.Description,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,

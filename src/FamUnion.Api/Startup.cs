@@ -123,15 +123,12 @@ namespace FamUnion.Api
             }
 
             app.UseCors();
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            if (Configuration.GetSection(ConfigSections.AppAuthKey).Exists())
-            {
-                app.UseAuthentication();
-                app.UseAuthorization();
-            }
+            
+            app.UseAuthentication();
+            app.UseAuthorization();            
 
             app.UseEndpoints(options =>
             {

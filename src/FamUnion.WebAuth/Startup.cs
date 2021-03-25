@@ -113,20 +113,24 @@ namespace FamUnion.WebAuth
                     OnTokenValidated = async (context) =>
                     {
                         // Setup Auth0 client call
-                        var authClient = new HttpClient();
-                        authClient.BaseAddress = new Uri($"https://{appAuthConfig.Domain}/api/v2/");
+                        var authClient = new HttpClient
+                        {
+                            BaseAddress = new Uri($"https://{appAuthConfig.Domain}/api/v2/")
+                        };
                         var identityToken = TokenHelper.GetAuth0Token(identityAuthConfig);
                         authClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {identityToken.access_token}");
 
                         // Setup App API client call
-                        var appClient = new HttpClient();
-                        appClient.BaseAddress = new Uri($"{appConfig.ApiUrl}");
+                        var appClient = new HttpClient
+                        {
+                            BaseAddress = new Uri($"{appConfig.ApiUrl}")
+                        };
                         var appToken = TokenHelper.GetAuth0Token(appAuthConfig);
                         appClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {appToken.access_token}");
 
                         // Call App API to ensure user exists in database
                         // TODO: Need caching here so we're not making this db call every time
-                        var identityId = context.Principal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                        var identityId = Helpers.GetUserId(context.Principal);
                         var appUser = JsonConvert.DeserializeObject<User>(await appClient.GetStringAsync($"users/id/{identityId}"));
 
                         // User is validated in Auth0 but not in the app database yet
@@ -139,7 +143,7 @@ namespace FamUnion.WebAuth
                             var newUser = new User()
                             {
                                 UserId = identityId,
-                                AuthType = Extensions.GetUserAuthType(identityId),
+                                AuthType = Helpers.GetUserAuthType(identityId),
                                 Email = authResp.email,
                                 PhoneNumber = authResp.phone_number,
                                 FirstName = authResp.given_name,
@@ -148,7 +152,6 @@ namespace FamUnion.WebAuth
 
                             var userContent = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, ContentType.Json);
                             var postResp = await appClient.PostAsync("users", userContent);
-
                         }
                     }
                 };

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
 using static FamUnion.Core.Utility.Constants;
 
 namespace FamUnion.Core.Utility
 {
-    public static class Extensions
+    public static class Helpers
     {
         public static int? Age(this DateTime dob)
         {
@@ -60,6 +63,11 @@ namespace FamUnion.Core.Utility
                 default:
                     return UserAuthType.Unauthorized;
             }
+        }
+
+        public static string GetUserId(ClaimsPrincipal principal)
+        {
+            return principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
         }
     }
 }
