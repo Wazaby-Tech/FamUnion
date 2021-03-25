@@ -2,7 +2,6 @@
 using FamUnion.Core.Model;
 using FamUnion.Core.Request;
 using System;
-using System.Reflection;
 
 namespace FamUnion.Core.Utility
 {
@@ -19,6 +18,7 @@ namespace FamUnion.Core.Utility
             return new Reunion
             {
                 Name = request.Name,
+                ActionUserId = request.UserId,
                 Description = request.Description,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,

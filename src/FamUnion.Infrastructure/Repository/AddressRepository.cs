@@ -1,6 +1,5 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
-using FamUnion.Core.Utility;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,11 +33,6 @@ namespace FamUnion.Infrastructure.Repository
         }
 
         public Task<Address> GetLodgingAddressAsync(Guid lodgingId)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public Task<Address> GetFamilyAddressAsync(Guid familyId)
         {
             throw new NotImplementedException();
         }
@@ -76,11 +70,6 @@ namespace FamUnion.Infrastructure.Repository
         }
 
         public Task<Address> SaveLodgingAddressAsync(Guid lodgingId, Address address)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Address> SaveFamilyAddressAsync(Guid familyId, Address address)
         {
             throw new NotImplementedException();
         }

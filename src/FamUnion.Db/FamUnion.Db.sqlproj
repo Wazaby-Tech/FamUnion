@@ -65,8 +65,6 @@
     <Build Include="Tables\Reunion.sql" />
     <Build Include="Tables\Address.sql" />
     <Build Include="Tables\User.sql" />
-    <Build Include="Tables\Family.sql" />
-    <Build Include="Tables\FamilyMember.sql" />
     <Build Include="Tables\Event.sql" />
     <Build Include="StoredProcedures\spGetReunions.sql" />
     <Build Include="StoredProcedures\spGetReunionById.sql" />
@@ -84,6 +82,13 @@
     <Build Include="StoredProcedures\spDeleteEventById.sql" />
     <Build Include="StoredProcedures\spGetAddressByEventId.sql" />
     <Build Include="StoredProcedures\spGetAddressByReunionId.sql" />
+    <Build Include="StoredProcedures\spGetUserById.sql" />
+    <Build Include="StoredProcedures\spGetUserByEmail.sql" />
+    <Build Include="StoredProcedures\spSaveUser.sql" />
+    <Build Include="Tables\ReunionOrganizer.sql" />
+    <Build Include="StoredProcedures\spGetManageReunions.sql" />
+    <Build Include="StoredProcedures\spAddReunionOrganizer.sql" />
+    <Build Include="StoredProcedures\spRemoveReunionOrganizer.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

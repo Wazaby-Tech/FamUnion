@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace FamUnion.Infrastructure.Repository
@@ -31,6 +30,12 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
+        public async Task<IEnumerable<Reunion>> GetManageReunionsAsync(string userId)
+        {
+            return await ExecuteStoredProc("[dbo].[spGetManageReunions]", ParameterDictionary.Single("userId", userId))
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
         public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
             if(!reunion.IsValid())
@@ -40,6 +45,7 @@ namespace FamUnion.Infrastructure.Repository
 
             ParameterDictionary parameters = new ParameterDictionary(new string[] {
                 "id", reunion.Id.GetDbGuidString(),
+                "userId", reunion.ActionUserId,
                 "name", reunion.Name,
                 "description", reunion.Description,
                 "startDate", reunion.StartDate.ToString(),
@@ -55,6 +61,30 @@ namespace FamUnion.Infrastructure.Repository
             ParameterDictionary parameters = ParameterDictionary.Single("reunionId", id);
 
             _ = await ExecuteStoredProc("[dbo].[spDeleteReunionById]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task AddReunionOrganizer(Guid reunionId, string userId)
+        {
+            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            {
+                "reunionId", reunionId.ToString(),
+                "userId", userId
+            });
+
+            _ = await ExecuteStoredProc("[dbo].[spAddReunionOrganizer]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task RemoveReunionOrganizer(Guid reunionId, string userId)
+        {
+            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            {
+                "reunionId", reunionId.ToString(),
+                "userId", userId
+            });
+
+            _ = await ExecuteStoredProc("[dbo].[spRemoveReunionOrganizer]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
     }

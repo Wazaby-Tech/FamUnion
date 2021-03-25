@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using RestSharp.Serialization;
 
 namespace FamUnion.Api.Controllers
 {
@@ -25,7 +26,7 @@ namespace FamUnion.Api.Controllers
             _logger = Validator.ThrowIfNull(logger, nameof(logger));
         }
 
-        [HttpGet()]
+        [HttpGet]
         public async Task<IActionResult> GetReunions()
         {
             _logger.LogInformation("ReunionsController.GetReunions()");
@@ -36,6 +37,23 @@ namespace FamUnion.Api.Controllers
                 return new OkObjectResult(result);
             }
             catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message, null);
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("manage/{userId}")]
+        public async Task<IActionResult> GetManageReunions(string userId)
+        {
+            _logger.LogInformation("ReunionsController.GetManageReunions");
+            try
+            {
+                var result = await _reunionService.GetManageReunionsAsync(userId)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+                return Ok(result);
+            }
+            catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -63,7 +81,7 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpPost("new")]
+        [HttpPut]
         public async Task<IActionResult> NewReunion([FromBody] NewReunionRequest request)
         {
             _logger.LogInformation($"{GetType()}.NewReunion|{JsonConvert.SerializeObject(request)}");
@@ -71,28 +89,43 @@ namespace FamUnion.Api.Controllers
             try
             {
                 reunion = NewReunionRequestMapper.Map(request);
+
+                if (!reunion.IsValid())
+                {
+                    return BadRequest(request);
+                }
+
                 var result = await _reunionService.SaveReunionAsync(reunion)
                     .ConfigureAwait(continueOnCapturedContext: false);
-                return Ok(result);
+
+                await _reunionService.AddReunionOrganizer(result.Id.Value, reunion.ActionUserId)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
+                var resp = CreatedAtAction("GetReunion",
+                    routeValues: new { id = result.Id.Value },
+                    value: result);
+                resp.ContentTypes.Add(ContentType.Json);
+                return resp;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
-                if(!reunion.IsValid())
-                {
-                    return BadRequest(request);
-                }
 
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> SaveReunion([FromBody] Reunion reunion)
         {
             _logger.LogInformation($"ReunionsController.SaveReunion|{JsonConvert.SerializeObject(reunion)}");
             try
             {
+                if(string.IsNullOrWhiteSpace(reunion.ActionUserId))
+                {
+                    reunion.ActionUserId = Helpers.GetUserId(HttpContext.User);
+                }
+
                 var result = await _reunionService.SaveReunionAsync(reunion)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return new OkObjectResult(result);
