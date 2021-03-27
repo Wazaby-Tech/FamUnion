@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using static FamUnion.Core.Utility.Constants;
 
 namespace FamUnion.Core.Model
 {
@@ -12,8 +13,8 @@ namespace FamUnion.Core.Model
         public string Details { get; set; }
         public DateTimeOffset StartTime { get; set; }
         public DateTimeOffset? EndTime { get; set; }
-        public TimeSpan? Duration => EndTime.HasValue ? EndTime - StartTime : null;
         public Guid ReunionId { get; set; }
+        public EventAttireType AttireType { get; set; } = EventAttireType.Casual;
 
         public virtual Address Location { get; set; }
 

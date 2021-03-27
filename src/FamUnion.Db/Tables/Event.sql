@@ -6,6 +6,7 @@
 	[Details] NVARCHAR(2000) NULL,
 	[StartTime] DATETIME NOT NULL,
 	[EndTime] DATETIME NULL,
+	[AttireType] INT NOT NULL CONSTRAINT DF_Event_AttireType DEFAULT(0),
 	[AddressId] UNIQUEIDENTIFIER NULL CONSTRAINT FK_Event_AddressId FOREIGN KEY REFERENCES [dbo].[Address]([AddressId]),
 	[IsActive] BIT NOT NULL DEFAULT 1,
 	[CreatedBy] NVARCHAR(100) NOT NULL,
