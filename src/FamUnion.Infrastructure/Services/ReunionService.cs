@@ -70,6 +70,8 @@ namespace FamUnion.Infrastructure.Services
 
             if (reunion.Location != null)
             {
+                reunion.Location.ActionUserId = reunion.ActionUserId;
+
                 var addrRequest = new SaveReunionAddressRequest(savedReunion.Id.Value, reunion.Location);
 
                 savedReunion.Location = await _addressService.SaveEntityAddressAsync(addrRequest)

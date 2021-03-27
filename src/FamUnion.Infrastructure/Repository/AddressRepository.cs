@@ -17,10 +17,8 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<Address> GetAddressAsync(Guid id)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "id", id.ToString()
-            });
+            ParameterDictionary parameters = ParameterDictionary.Single("id", id.ToString());
+
             return (await ExecuteStoredProc("[dbo].[spGetAddressById]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
@@ -50,21 +48,13 @@ namespace FamUnion.Infrastructure.Repository
             Address currentAddress = await GetEventAddressAsync(eventId)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
-            if(currentAddress.Equals(address))
+            if (address is null || (currentAddress != null && currentAddress.Equals(address)))
             {
                 return currentAddress;
             }
 
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "eventId", eventId.ToString(),
-                "description", address.Description,
-                "line1", address.Line1,
-                "line2", address.Line2,
-                "city", address.City,
-                "state", address.State,
-                "zipcode", address.ZipCode
-            });
+            ParameterDictionary parameters = GetAddressParameters(address, "eventId", eventId);
+
             return (await ExecuteStoredProc("[dbo].[spSaveEventAddress]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
@@ -84,9 +74,20 @@ namespace FamUnion.Infrastructure.Repository
                 return currentAddress;
             }
 
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            ParameterDictionary parameters = GetAddressParameters(address, "reunionId", reunionId);
+
+            return (await ExecuteStoredProc("[dbo].[spSaveReunionAddress]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+        }
+
+        #region Helper Methods
+
+        private static ParameterDictionary GetAddressParameters(Address address, string idColumn, Guid id)
+        {
+            return new ParameterDictionary(new string[]
             {
-                "reunionId", reunionId.ToString(),
+                "userId", address.ActionUserId,
+                idColumn, id.ToString(),
                 "description", address.Description,
                 "line1", address.Line1,
                 "line2", address.Line2,
@@ -94,8 +95,8 @@ namespace FamUnion.Infrastructure.Repository
                 "state", address.State,
                 "zipcode", address.ZipCode
             });
-            return (await ExecuteStoredProc("[dbo].[spSaveReunionAddress]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
+
+        #endregion
     }
 }

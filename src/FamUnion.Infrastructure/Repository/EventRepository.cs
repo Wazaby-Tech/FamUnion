@@ -33,6 +33,7 @@ namespace FamUnion.Infrastructure.Repository
         public async Task<Event> SaveEventAsync(Event @event)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[] {
+                "userId", @event.ActionUserId,
                 "id", @event.Id.GetDbGuidString(),
                 "reunionId", @event.ReunionId.ToString(),
                 "name", @event.Name,
