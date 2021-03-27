@@ -5,7 +5,8 @@
 	@name nvarchar(100),
 	@details nvarchar(4000),
 	@starttime date,
-	@endtime date
+	@endtime date,
+	@attireType int
 AS
 	DECLARE @insertId uniqueidentifier = ISNULL(@id, newid())
 
@@ -18,6 +19,7 @@ AS
 			@details [Details],
 			@starttime [StartTime],
 			@endtime [EndTime],
+			@attireType [AttireType],
 			null [AddressId],
 			null [CreatedBy],
 			null [CreatedDate],
@@ -27,8 +29,8 @@ AS
 	ON TARGET.EventId = SOURCE.EventId
 	WHEN NOT MATCHED
 	THEN
-		INSERT (EventId, ReunionId, Name, Details, StartTime, EndTime, CreatedDate, CreatedBy)
-		VALUES (@insertId, SOURCE.ReunionId, SOURCE.Name, SOURCE.Details, SOURCE.StartTime, SOURCE.EndTime, SYSDATETIME(), @userId)
+		INSERT (EventId, ReunionId, Name, Details, StartTime, EndTime, AttireType, CreatedDate, CreatedBy)
+		VALUES (@insertId, SOURCE.ReunionId, SOURCE.Name, SOURCE.Details, SOURCE.StartTime, SOURCE.EndTime, SOURCE.AttireType, SYSDATETIME(), @userId)
 	WHEN MATCHED AND TARGET.IsActive = 1
 	THEN
 		UPDATE SET
@@ -37,6 +39,7 @@ AS
 			TARGET.Details = SOURCE.Details,
 			TARGET.StartTime = SOURCE.StartTime,
 			TARGET.EndTime = SOURCE.EndTime,
+			TARGET.AttireType = SOURCE.AttireType,
 			TARGET.ModifiedBy = @userId,
 			TARGET.ModifiedDate = SYSDATETIME();
 

@@ -41,6 +41,15 @@ namespace FamUnion.Core.Utility
             Facebook = 2,
             Google = 3
         }
+
+        public enum EventAttireType
+        {
+            Casual = 0,
+            Informal = 1,
+            SemiFormal = 2,
+            Formal = 3,
+            BlackTie = 4
+        }
     }
 
     public static class ConfigSections
