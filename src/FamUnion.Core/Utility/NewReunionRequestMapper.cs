@@ -12,7 +12,7 @@ namespace FamUnion.Core.Utility
             var requestLocation = request.Location;
             if (requestLocation != null)
             {
-                requestLocation.AddressType = Constants.AddressEntityType.Reunion;
+                requestLocation.AddressType = Constants.EntityType.Reunion;
             }
 
             return new Reunion

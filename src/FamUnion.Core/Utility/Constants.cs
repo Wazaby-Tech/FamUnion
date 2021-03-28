@@ -4,7 +4,7 @@ namespace FamUnion.Core.Utility
 {
     public static class Constants
     {
-        public enum AddressEntityType
+        public enum EntityType
         {
             Reunion = 1,
             Event = 2,

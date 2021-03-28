@@ -5,7 +5,7 @@ namespace FamUnion.Core.Request
 {
     public class GetEntityAddressRequest
     {
-        public AddressEntityType EntityType { get; set; }
+        public EntityType EntityType { get; set; }
         public Guid EntityId { get; set; }
 
         public GetEntityAddressRequest()
@@ -13,7 +13,7 @@ namespace FamUnion.Core.Request
 
         }
 
-        public GetEntityAddressRequest(AddressEntityType entityType, Guid entityId)
+        public GetEntityAddressRequest(EntityType entityType, Guid entityId)
         {
             EntityId = entityId;
             EntityType = entityType;
@@ -24,7 +24,7 @@ namespace FamUnion.Core.Request
     {
         public GetReunionAddressRequest()
         {
-            EntityType = AddressEntityType.Reunion;
+            EntityType = EntityType.Reunion;
         }
 
         public GetReunionAddressRequest(Guid entityId) : this()
@@ -37,7 +37,7 @@ namespace FamUnion.Core.Request
     {
         public GetEventAddressRequest() 
         {
-            EntityType = AddressEntityType.Event;
+            EntityType = EntityType.Event;
         }
 
         public GetEventAddressRequest(Guid entityId) : this()

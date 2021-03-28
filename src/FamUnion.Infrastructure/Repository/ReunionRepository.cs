@@ -1,5 +1,6 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
+using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
 using Newtonsoft.Json;
 using System;
@@ -56,9 +57,9 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public async Task DeleteReunionAsync(Guid id)
+        public async Task CancelReunionAsync(CancelRequest request)
         {
-            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", id);
+            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", request.EntityId);
 
             _ = await ExecuteStoredProc("[dbo].[spDeleteReunionById]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false);
