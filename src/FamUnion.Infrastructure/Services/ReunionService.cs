@@ -1,4 +1,5 @@
 ﻿using FamUnion.Core.Interface;
+using FamUnion.Core.Interface.Repository;
 using FamUnion.Core.Model;
 using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
@@ -12,15 +13,17 @@ namespace FamUnion.Infrastructure.Services
     public class ReunionService : IReunionService
     {
         private readonly IReunionRepository _reunionRepository;
+        private readonly IUserAccessRepository _userAccessRepository;
         private readonly IUserRepository _userRepository;
         private readonly IAddressService _addressService;
         private readonly IEventService _eventService;
 
         public ReunionService(IReunionRepository reunionRepository, IUserRepository userRepository, 
-            IAddressService addressService, IEventService eventService)
+            IUserAccessRepository userAccessRepository, IAddressService addressService, IEventService eventService)
         {
             _reunionRepository = Validator.ThrowIfNull(reunionRepository, nameof(reunionRepository));
             _userRepository = Validator.ThrowIfNull(userRepository, nameof(userRepository));
+            _userAccessRepository = Validator.ThrowIfNull(userAccessRepository, nameof(userAccessRepository));
             _addressService = Validator.ThrowIfNull(addressService, nameof(addressService));
             _eventService = Validator.ThrowIfNull(eventService, nameof(eventService));
         }
@@ -65,6 +68,11 @@ namespace FamUnion.Infrastructure.Services
                 throw new Exception($"Invalid user id when saving reunion: '{reunion.ActionUserId}'");
             }
 
+            if(!await CheckUserWriteAccess(reunion.ActionUserId, reunion.Id.Value))
+            {
+                throw new UnauthorizedAccessException($"User {reunion.ActionUserId} does not have access to write for reunion {reunion.Id.Value}");
+            }
+
             var savedReunion = await _reunionRepository.SaveReunionAsync(reunion)
                 .ConfigureAwait(continueOnCapturedContext: false);
 
@@ -78,13 +86,23 @@ namespace FamUnion.Infrastructure.Services
                     .ConfigureAwait(continueOnCapturedContext: false);
             }
 
-            return await GetReunionAsync(savedReunion.Id.Value).
-                ConfigureAwait(continueOnCapturedContext: false);
+            return await GetReunionAsync(savedReunion.Id.Value)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task DeleteReunionAsync(Guid id)
+        public async Task CancelReunionAsync(CancelRequest request)
         {
-            await _reunionRepository.DeleteReunionAsync(id)
+            if (!await _userRepository.ValidateUserIdAsync(request.UserId))
+            {
+                throw new Exception($"Invalid user id when saving reunion: '{request.EntityId}'");
+            }
+
+            if (!await CheckUserWriteAccess(request.UserId, request.EntityId))
+            {
+                throw new UnauthorizedAccessException($"User {request.UserId} does not have access to write for reunion {request.EntityId}");
+            }
+
+            await _reunionRepository.CancelReunionAsync(request)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
@@ -98,6 +116,11 @@ namespace FamUnion.Infrastructure.Services
         {
             await _reunionRepository.RemoveReunionOrganizer(reunionId, userId)
                 .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        private async Task<bool> CheckUserWriteAccess(string userId, Guid? id)
+        {
+            return !id.HasValue || await _userAccessRepository.HasWriteAccessToEntity(userId, Constants.EntityType.Reunion, id.Value);
         }
 
         private async Task PopulateDependentProperties(IEnumerable<Reunion> reunions)

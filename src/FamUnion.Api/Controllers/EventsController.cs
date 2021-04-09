@@ -1,5 +1,6 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
+using FamUnion.Core.Request;
 using FamUnion.Core.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,12 @@ namespace FamUnion.Api.Controllers
 
                 return Ok(result);
             }
-            catch(Exception ex)
+            catch (UnauthorizedAccessException uae)
+            {
+                _logger.LogWarning(uae.Message);
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -56,7 +62,12 @@ namespace FamUnion.Api.Controllers
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return Ok(results);
             }
-            catch(Exception ex)
+            catch (UnauthorizedAccessException uae)
+            {
+                _logger.LogWarning(uae.Message);
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message, null);
                 return StatusCode(StatusCodes.Status500InternalServerError);
@@ -73,6 +84,11 @@ namespace FamUnion.Api.Controllers
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return Ok(result);
             }
+            catch(UnauthorizedAccessException uae)
+            {
+                _logger.LogWarning(uae.Message);
+                return StatusCode(StatusCodes.Status401Unauthorized);
+            }
             catch(Exception ex)
             {
                 if(!@event.IsValid())
@@ -85,15 +101,23 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpDelete("{eventId}")]
-        public async Task<IActionResult> DeleteEvent(Guid eventId)
+        [HttpPost("cancel")]
+        public async Task<IActionResult> CancelEvent([FromBody] CancelRequest request)
         {
-            _logger.LogInformation($"EventsController.DeleteEvent|{JsonConvert.SerializeObject(eventId)}");
+            _logger.LogInformation($"EventsController.CancelEvent|{JsonConvert.SerializeObject(request)}");
             try
             {
-                await _eventService.DeleteEventAsync(eventId)
+                await _eventService.CancelEventAsync(request)
                     .ConfigureAwait(continueOnCapturedContext: false);
+
+                _logger.LogInformation($"Event canceled with id: '{request.EntityId}' by user id: '{request.UserId}'");
+                
                 return Ok();
+            }
+            catch(UnauthorizedAccessException uae)
+            {
+                _logger.LogWarning(uae.Message);
+                return StatusCode(StatusCodes.Status401Unauthorized);
             }
             catch (Exception ex)
             {

@@ -37,7 +37,7 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<Address> GetReunionAddressAsync(Guid reunionId)
         {
-            ParameterDictionary parameters = ParameterDictionary.Single("entityTypeId", (int)AddressEntityType.Reunion);
+            ParameterDictionary parameters = ParameterDictionary.Single("entityTypeId", (int)EntityType.Reunion);
             parameters.AddParameter("entityId", reunionId.ToString());
             return (await ExecuteStoredProc("[dbo].[spGetAddressByEntityTypeAndId]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();

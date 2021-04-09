@@ -1,5 +1,6 @@
 ﻿using FamUnion.Core.Auth;
 using FamUnion.Core.Interface;
+using FamUnion.Core.Interface.Repository;
 using FamUnion.Core.Utility;
 using FamUnion.Infrastructure.Repository;
 using FamUnion.Infrastructure.Services;
@@ -54,6 +55,11 @@ namespace FamUnion.Api
             services.AddTransient<IUserRepository, UserRepository>(Provider =>
             {
                 return new UserRepository(dbConnection);
+            });
+
+            services.AddTransient<IUserAccessRepository, UserAccessRepository>(Provider =>
+            {
+                return new UserAccessRepository(dbConnection);
             });
 
             // Health Checks

@@ -44,10 +44,10 @@ namespace FamUnion.Infrastructure.Services
             {
                 switch(request.EntityType)
                 {
-                    case AddressEntityType.Reunion:
+                    case EntityType.Reunion:
                         return await _addressRepository.GetReunionAddressAsync(request.EntityId).ConfigureAwait(continueOnCapturedContext: false);
 
-                    case AddressEntityType.Event:
+                    case EntityType.Event:
                         return await _addressRepository.GetEventAddressAsync(request.EntityId).ConfigureAwait(continueOnCapturedContext: false);
                     
                     default:
@@ -68,10 +68,10 @@ namespace FamUnion.Infrastructure.Services
             {
                 switch(request.EntityType)
                 {
-                    case AddressEntityType.Reunion:
+                    case EntityType.Reunion:
                         return await _addressRepository.SaveReunionAddressAsync(request.EntityId, request.Address);
 
-                    case AddressEntityType.Event:
+                    case EntityType.Event:
                         return await _addressRepository.SaveEventAddressAsync(request.EntityId, request.Address);
 
                     default:
