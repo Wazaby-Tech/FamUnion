@@ -1,4 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spSaveAddressByEntityTypeAndId]	
+	@userId nvarchar(100),
 	@entityType nvarchar(100),
 	@entityId uniqueidentifier,
 	@description nvarchar(255),
@@ -33,7 +34,7 @@ AS
 	WHEN NOT MATCHED 
 	THEN
 		INSERT (AddressId, EntityId, EntityType, Description, Line1, Line2, City, State, ZipCode, Latitude, Longitude, CreatedDate, CreatedBy)
-		VALUES (@insertId, SOURCE.EntityId, @entityTypeId, SOURCE.Description, SOURCE.Line1, SOURCE.Line2, SOURCE.City, SOURCE.State, SOURCE.ZipCode, SOURCE.Latitude, SOURCE.Longitude, SYSDATETIME(), SUSER_SNAME())
+		VALUES (@insertId, SOURCE.EntityId, @entityTypeId, SOURCE.Description, SOURCE.Line1, SOURCE.Line2, SOURCE.City, SOURCE.State, SOURCE.ZipCode, SOURCE.Latitude, SOURCE.Longitude, SYSDATETIME(), @userId)
 	WHEN MATCHED AND TARGET.IsActive = 1
 	THEN
 		UPDATE SET
@@ -45,5 +46,5 @@ AS
 			TARGET.ZipCode = SOURCE.ZipCode,
 			TARGET.Latitude = SOURCE.Latitude,
 			TARGET.Longitude = SOURCE.Longitude,
-			TARGET.ModifiedBy = SUSER_SNAME(),
+			TARGET.ModifiedBy = @userId,
 			TARGET.ModifiedDate = SYSDATETIME();

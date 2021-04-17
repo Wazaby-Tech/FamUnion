@@ -121,6 +121,11 @@ namespace FamUnion.Api.Controllers
             _logger.LogInformation($"ReunionsController.SaveReunion|{JsonConvert.SerializeObject(reunion)}");
             try
             {
+                if(!reunion.Id.HasValue)
+                {
+                    throw new Exception("Reunion doesn't have a valid ID");
+                }
+
                 if(string.IsNullOrWhiteSpace(reunion.ActionUserId))
                 {
                     reunion.ActionUserId = Helpers.GetUserId(HttpContext.User);
@@ -142,13 +147,13 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpDelete("{reunionId}")]
-        public async Task<IActionResult> DeleteReunion(Guid reunionId)
+        [HttpPost("cancel")]
+        public async Task<IActionResult> CancelReunion([FromBody] CancelRequest request)
         {
-            _logger.LogInformation($"ReunionsController.DeleteReunion|{reunionId}");
+            _logger.LogInformation($"ReunionsController.CancelReunion|{request}");
             try
             {
-                await _reunionService.DeleteReunionAsync(reunionId)
+                await _reunionService.CancelReunionAsync(request)
                     .ConfigureAwait(continueOnCapturedContext: false);
                 return Ok();
             }

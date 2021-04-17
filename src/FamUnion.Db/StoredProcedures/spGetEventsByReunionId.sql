@@ -8,6 +8,7 @@ AS
 		Details,
 		StartTime,
 		EndTime,
+		AttireType,
 		AddressId,
 		CreatedBy,
 		CreatedDate,

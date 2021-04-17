@@ -1,5 +1,6 @@
 ﻿using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
+using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,7 @@ namespace FamUnion.Infrastructure.Repository
         public async Task<Event> SaveEventAsync(Event @event)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[] {
+                "userId", @event.ActionUserId,
                 "id", @event.Id.GetDbGuidString(),
                 "reunionId", @event.ReunionId.ToString(),
                 "name", @event.Name,
@@ -45,11 +47,15 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
         }
 
-        public async Task DeleteEventAsync(Guid eventId)
+        public async Task CancelEventAsync(CancelRequest request)
         {
-            ParameterDictionary parameters = ParameterDictionary.Single("eventId", eventId.ToString());
+            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            {
+                "userId", request.UserId,
+                "eventId", request.EntityId.ToString()
+            });
 
-            await ExecuteStoredProc("[dbo].[spDeleteEventById]", parameters).ConfigureAwait(continueOnCapturedContext: false);
+            await ExecuteStoredProc("[dbo].[spCancelEventById]", parameters).ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

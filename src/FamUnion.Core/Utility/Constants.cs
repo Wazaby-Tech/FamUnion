@@ -4,7 +4,7 @@ namespace FamUnion.Core.Utility
 {
     public static class Constants
     {
-        public enum AddressEntityType
+        public enum EntityType
         {
             Reunion = 1,
             Event = 2,
@@ -48,6 +48,15 @@ namespace FamUnion.Core.Utility
             Auth0 = 1,
             Facebook = 2,
             Google = 3
+        }
+
+        public enum EventAttireType
+        {
+            Casual = 0,
+            Informal = 1,
+            SemiFormal = 2,
+            Formal = 3,
+            BlackTie = 4
         }
     }
 

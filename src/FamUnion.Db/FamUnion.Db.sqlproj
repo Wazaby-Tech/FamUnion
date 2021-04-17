@@ -79,7 +79,7 @@
     <Build Include="StoredProcedures\spSaveEventAddress.sql" />
     <Build Include="StoredProcedures\spDeleteAddressById.sql" />
     <Build Include="StoredProcedures\spDeleteReunionById.sql" />
-    <Build Include="StoredProcedures\spDeleteEventById.sql" />
+    <Build Include="StoredProcedures\spCancelEventById.sql" />
     <Build Include="StoredProcedures\spGetAddressByEventId.sql" />
     <Build Include="StoredProcedures\spGetAddressByReunionId.sql" />
     <Build Include="StoredProcedures\spGetUserById.sql" />
@@ -89,6 +89,7 @@
     <Build Include="StoredProcedures\spGetManageReunions.sql" />
     <Build Include="StoredProcedures\spAddReunionOrganizer.sql" />
     <Build Include="StoredProcedures\spRemoveReunionOrganizer.sql" />
+    <Build Include="StoredProcedures\spUserHasWriteAccessToEntity.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />

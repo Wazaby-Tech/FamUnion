@@ -9,7 +9,7 @@ namespace FamUnion.Core.Model
         [Required]
         [MaxLength(255)]
         public string Description { get; set; }
-        public AddressEntityType AddressType { get; set; }
+        public EntityType AddressType { get; set; }
         [MaxLength(100)]
         public string Line1 { get; set; }
         [MaxLength(100)]
