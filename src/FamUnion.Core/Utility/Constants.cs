@@ -52,6 +52,7 @@ namespace FamUnion.Core.Utility
 
         public enum EventAttireType
         {
+            SeeDescription = -1,
             Casual = 0,
             Informal = 1,
             SemiFormal = 2,

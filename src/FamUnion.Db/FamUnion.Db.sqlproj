@@ -60,6 +60,7 @@
     <Folder Include="Tables" />
     <Folder Include="StoredProcedures" />
     <Folder Include="PostDeployment" />
+    <Folder Include="UserTypes" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Reunion.sql" />
@@ -90,6 +91,11 @@
     <Build Include="StoredProcedures\spAddReunionOrganizer.sql" />
     <Build Include="StoredProcedures\spRemoveReunionOrganizer.sql" />
     <Build Include="StoredProcedures\spUserHasWriteAccessToEntity.sql" />
+    <Build Include="Tables\ReunionInvite.sql" />
+    <Build Include="StoredProcedures\spGetInvitesByReunionId.sql" />
+    <Build Include="StoredProcedures\spUpdateInviteStatus.sql" />
+    <Build Include="UserTypes\udfInviteType.sql" />
+    <Build Include="StoredProcedures\spCreateInvites.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
