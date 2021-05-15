@@ -3,6 +3,7 @@ using FamUnion.Core.Model;
 using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,13 @@ namespace FamUnion.Infrastructure.Repository
             : base(connection)
         {
 
+        }
+
+        public async Task<IEnumerable<ReunionInvite>> GetInvitesByReunion(Guid reunionId)
+        {
+            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId);
+            return await ExecuteStoredProc("[dbo].[spGetInvitesByReunionId]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         public async Task CreateInvites(BulkInviteRequest request)

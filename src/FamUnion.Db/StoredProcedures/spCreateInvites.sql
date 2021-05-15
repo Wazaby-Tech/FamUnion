@@ -8,5 +8,5 @@ AS
 		AND SOURCE.Email = TARGET.Email
 	WHEN NOT MATCHED BY TARGET
 	THEN
-		INSERT (ReunionId, Email, Name, CreatedBy, CreatedDate)
-		VALUES (SOURCE.ReunionId, SOURCE.Email, SOURCE.Name, @userId, SYSDATETIME());
+		INSERT (InviteId, ReunionId, Email, Name, CreatedBy, CreatedDate)
+		VALUES (NEWID(), SOURCE.ReunionId, SOURCE.Email, SOURCE.Name, @userId, SYSDATETIME());

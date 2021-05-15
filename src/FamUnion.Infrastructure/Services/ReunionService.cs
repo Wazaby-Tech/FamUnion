@@ -1,5 +1,5 @@
 ﻿using FamUnion.Core.Interface;
-using FamUnion.Core.Interface.Repository;
+using FamUnion.Core.Interface.Services;
 using FamUnion.Core.Model;
 using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
@@ -13,19 +13,22 @@ namespace FamUnion.Infrastructure.Services
     public class ReunionService : IReunionService
     {
         private readonly IReunionRepository _reunionRepository;
-        private readonly IUserAccessRepository _userAccessRepository;
+        private readonly IUserAccessService _userAccessService;
         private readonly IUserRepository _userRepository;
         private readonly IAddressService _addressService;
         private readonly IEventService _eventService;
+        private readonly IInviteService _inviteService;
 
         public ReunionService(IReunionRepository reunionRepository, IUserRepository userRepository, 
-            IUserAccessRepository userAccessRepository, IAddressService addressService, IEventService eventService)
+            IUserAccessService userAccessService, IAddressService addressService, IEventService eventService,
+            IInviteService inviteService)
         {
             _reunionRepository = Validator.ThrowIfNull(reunionRepository, nameof(reunionRepository));
             _userRepository = Validator.ThrowIfNull(userRepository, nameof(userRepository));
-            _userAccessRepository = Validator.ThrowIfNull(userAccessRepository, nameof(userAccessRepository));
+            _userAccessService = Validator.ThrowIfNull(userAccessService, nameof(userAccessService));
             _addressService = Validator.ThrowIfNull(addressService, nameof(addressService));
             _eventService = Validator.ThrowIfNull(eventService, nameof(eventService));
+            _inviteService = Validator.ThrowIfNull(inviteService, nameof(inviteService));
         }
 
         public async Task<Reunion> GetReunionAsync(Guid id)
@@ -120,7 +123,7 @@ namespace FamUnion.Infrastructure.Services
 
         private async Task<bool> CheckUserWriteAccess(string userId, Guid? id)
         {
-            return !id.HasValue || await _userAccessRepository.HasWriteAccessToEntity(userId, Constants.EntityType.Reunion, id.Value);
+            return !id.HasValue || await _userAccessService.HasWriteAccessToEntity(userId, Constants.EntityType.Reunion, id.Value);
         }
 
         private async Task PopulateDependentProperties(IEnumerable<Reunion> reunions)
@@ -129,6 +132,9 @@ namespace FamUnion.Infrastructure.Services
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             await PopulateEvents(reunions)
+                .ConfigureAwait(continueOnCapturedContext: false);
+
+            await PopulateInvites(reunions)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
@@ -157,6 +163,20 @@ namespace FamUnion.Infrastructure.Services
                     reunion.Location = await _addressService.GetEntityAddressAsync(addrRequest)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
+                }
+            });
+
+            return Task.CompletedTask;
+        }
+
+        private Task PopulateInvites(IEnumerable<Reunion> reunions)
+        {
+            Parallel.ForEach(reunions, async reunion =>
+            {
+                if(reunion != null && reunion.Id.HasValue)
+                {
+                    reunion.Invites = await _inviteService.GetInvitesByReunion(reunion.Id.Value)
+                    .ConfigureAwait(continueOnCapturedContext: false);
                 }
             });
 

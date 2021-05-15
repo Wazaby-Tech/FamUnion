@@ -11,5 +11,5 @@ AS
 		[Status]
 	FROM [dbo].[ReunionInvite] (NOLOCK)
 	WHERE [ReunionId] = @reunionId
-	AND [ExpiresAt] >= SYSDATETIME()
+	AND COALESCE([ExpiresAt], DATEADD(DAY, 1, SYSDATETIME())) >= SYSDATETIME()
 	ORDER BY [Email]

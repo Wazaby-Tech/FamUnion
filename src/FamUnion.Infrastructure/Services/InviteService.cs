@@ -27,6 +27,12 @@ namespace FamUnion.Infrastructure.Services
             _inviteRepository = Validator.ThrowIfNull(inviteRepository, nameof(inviteRepository));
         }
 
+        public async Task<IEnumerable<ReunionInvite>> GetInvitesByReunion(Guid reunionId)
+        {
+            return await _inviteRepository.GetInvitesByReunion(reunionId)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
         public async Task CreateInvites(BulkInviteRequest request)
         {
             var requests = request.InviteRequests
