@@ -109,15 +109,45 @@ namespace FamUnion.Infrastructure.Services
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task AddReunionOrganizer(Guid reunionId, string userId)
+        public async Task AddReunionOrganizer(OrganizerRequest request)
         {
-            await _reunionRepository.AddReunionOrganizer(reunionId, userId)
+            if(request.Action != Constants.OrganizerAction.Add)
+            {
+                throw new Exception($"Invalid action specified for AddReunionOrganizer|{request.Action}");
+            }
+
+            if (!await _userRepository.ValidateUserIdAsync(request.UserId) || !await _userRepository.ValidateUserIdAsync(request.ActionUserId))
+            {
+                throw new Exception($"Invalid user id when saving reunion: '{request.ReunionId}'");
+            }
+
+            if (!await CheckUserWriteAccess(request.ActionUserId, request.ReunionId))
+            {
+                throw new UnauthorizedAccessException($"User {request.UserId} does not have access to write for reunion {request.ReunionId}");
+            }
+
+            await _reunionRepository.AddReunionOrganizer(request.ReunionId, request.UserId)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task RemoveReunionOrganizer(Guid reunionId, string userId)
+        public async Task RemoveReunionOrganizer(OrganizerRequest request)
         {
-            await _reunionRepository.RemoveReunionOrganizer(reunionId, userId)
+            if (request.Action != Constants.OrganizerAction.Remove)
+            {
+                throw new Exception($"Invalid action specified for RemoveReunionOrganizer|{request.Action}");
+            }
+
+            if (!await _userRepository.ValidateUserIdAsync(request.UserId) || !await _userRepository.ValidateUserIdAsync(request.ActionUserId))
+            {
+                throw new Exception($"Invalid user id when saving reunion: '{request.ReunionId}'");
+            }
+
+            if (!await CheckUserWriteAccess(request.ActionUserId, request.ReunionId))
+            {
+                throw new UnauthorizedAccessException($"User {request.UserId} does not have access to write for reunion {request.ReunionId}");
+            }
+
+            await _reunionRepository.RemoveReunionOrganizer(request.ReunionId, request.UserId)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
@@ -132,9 +162,6 @@ namespace FamUnion.Infrastructure.Services
                 .ConfigureAwait(continueOnCapturedContext: false);
 
             await PopulateEvents(reunions)
-                .ConfigureAwait(continueOnCapturedContext: false);
-
-            await PopulateInvites(reunions)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
@@ -163,20 +190,6 @@ namespace FamUnion.Infrastructure.Services
                     reunion.Location = await _addressService.GetEntityAddressAsync(addrRequest)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
-                }
-            });
-
-            return Task.CompletedTask;
-        }
-
-        private Task PopulateInvites(IEnumerable<Reunion> reunions)
-        {
-            Parallel.ForEach(reunions, async reunion =>
-            {
-                if(reunion != null && reunion.Id.HasValue)
-                {
-                    reunion.Invites = await _inviteService.GetInvitesByReunion(reunion.Id.Value)
-                    .ConfigureAwait(continueOnCapturedContext: false);
                 }
             });
 

@@ -70,20 +70,20 @@
     - [ ] Need SMTP service/server
     - [ ] Allow sign up through app by passcode (OTP) (?)
 - [ ] **Manage attendees**
-    - [ ] Add attendee
+    - [X] Add attendee
     - [ ] Update attendance
     - [ ] Block attendee (?)
-- [ ] **Manage organizers**
-    - [ ] Add organizer
-    - [ ] Remove organizer
-- [ ] **Add event**
+- [X] **Manage organizers**
+    - [X]] Add organizer
+    - [X] Remove organizer
+- [X] **Add event**
     - [X] Event name
     - [X] Description
-    - [ ] Dress Attire
-        - [ ] Casual
-        - [ ] Semi-Formal
-        - [ ] Formal
-        - [ ] See Description
+    - [X] Dress Attire
+        - [X] Casual
+        - [X] Semi-Formal
+        - [X] Formal
+        - [X] See Description
     - [X] Date/Time
     - [X] Address
 - [ ] **Add lodging**

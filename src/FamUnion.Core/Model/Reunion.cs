@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,7 +16,6 @@ namespace FamUnion.Core.Model
         public DateTime? EndDate { get; set; }
         
         public virtual Address Location { get; set; }
-        public virtual IEnumerable<ReunionInvite> Invites { get; set; }
         public virtual IEnumerable<Event> Events { get; set; }
         public virtual IEnumerable<User> Organizers { get; set; }
         public virtual IEnumerable<Lodging> Lodgings { get; set; }

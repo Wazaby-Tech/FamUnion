@@ -98,7 +98,7 @@ namespace FamUnion.Api.Controllers
                 var result = await _reunionService.SaveReunionAsync(reunion)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
-                await _reunionService.AddReunionOrganizer(result.Id.Value, reunion.ActionUserId)
+                await _reunionService.AddReunionOrganizer(OrganizerRequest.AddOrganizerRequest(reunion.Id.Value, reunion.ActionUserId, reunion.ActionUserId))
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 var resp = CreatedAtAction("GetReunion",
@@ -161,6 +161,40 @@ namespace FamUnion.Api.Controllers
             {
                 _logger.LogError(ex, ex.Message, null);
                 return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("organizer/add")]
+        public async Task<IActionResult> AddOrganizer([FromBody] OrganizerRequest request)
+        {
+            try
+            {
+                await _reunionService.AddReunionOrganizer(request)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(503);
+            }
+        }
+
+        [HttpPost("organizer/remove")]
+        public async Task<IActionResult> RemoveOrganizer([FromBody] OrganizerRequest request)
+        {
+            try
+            {
+                await _reunionService.RemoveReunionOrganizer(request)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(503);
             }
         }
     }

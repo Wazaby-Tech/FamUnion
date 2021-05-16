@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace FamUnion.Infrastructure.Repository
 {
-    public class InviteRepository : DbAccess<ReunionInvite>, IInviteRepository
+    public class InviteRepository : DbAccess<AttendeeInvite>, IInviteRepository
     {
         public InviteRepository(string connection)
             : base(connection)
@@ -17,7 +17,7 @@ namespace FamUnion.Infrastructure.Repository
 
         }
 
-        public async Task<IEnumerable<ReunionInvite>> GetInvitesByReunion(Guid reunionId)
+        public async Task<IEnumerable<AttendeeInvite>> GetInvitesByReunion(Guid reunionId)
         {
             ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId);
             return await ExecuteStoredProc("[dbo].[spGetInvitesByReunionId]", parameters)
@@ -33,7 +33,7 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task<ReunionInvite> GetInviteAsync(InviteInfo inviteInfo)
+        public async Task<AttendeeInvite> GetInviteAsync(InviteInfo inviteInfo)
         {
             ParameterDictionary parameters = ParameterDictionary.Single("inviteId", inviteInfo.InviteId);
 

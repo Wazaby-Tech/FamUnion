@@ -10,8 +10,8 @@ namespace FamUnion.Core.Interface.Services
 {
     public interface IInviteService
     {
-        Task<IEnumerable<ReunionInvite>> GetInvitesByReunion(Guid reunionId);
-        Task<ReunionInvite> GetInviteAsync(InviteInfo inviteInfo);
+        Task<IEnumerable<AttendeeInvite>> GetInvitesByReunion(Guid reunionId);
+        Task<AttendeeInvite> GetInviteAsync(InviteInfo inviteInfo);
         Task InviteResponseAsync(Guid inviteId, InviteResponseStatus status);
         Task CreateInvites(BulkInviteRequest request);
     }

@@ -11,12 +11,12 @@ namespace FamUnion.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class InvitesController : ControllerBase
+    public class AttendeesController : ControllerBase
     {
         private readonly ILogger _logger;
         private readonly IInviteService _inviteService;
 
-        public InvitesController(ILogger<InvitesController> logger, IInviteService inviteService)
+        public AttendeesController(ILogger<AttendeesController> logger, IInviteService inviteService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _inviteService = inviteService ?? throw new ArgumentNullException(nameof(inviteService));
@@ -60,6 +60,28 @@ namespace FamUnion.Api.Controllers
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 return Ok();
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(503);
+            }
+        }
+
+        [HttpGet("reunion/{reunionId}")]
+        public async Task<IActionResult> GetAttendeesByReunionId(string reunionId)
+        {
+            try
+            {
+                if(!Guid.TryParse(reunionId, out Guid reunionGuid))
+                {
+                    throw new ArgumentException($"reunionId '{reunionId}' is invalid");
+                }
+
+                var results = await _inviteService.GetInvitesByReunion(reunionGuid)
+                    .ConfigureAwait(continueOnCapturedContext: false);
+
+                return Ok(results);
             }
             catch(Exception ex)
             {

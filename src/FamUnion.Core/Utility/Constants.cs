@@ -59,6 +59,12 @@ namespace FamUnion.Core.Utility
             Formal = 3,
             BlackTie = 4
         }
+
+        public enum OrganizerAction
+        {
+            Add = 1,
+            Remove = 2
+        }
     }
 
     public static class ConfigSections
