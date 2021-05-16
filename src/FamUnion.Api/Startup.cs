@@ -48,6 +48,7 @@ namespace FamUnion.Api
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<IAddressService, AddressService>();
             services.AddTransient<IInviteService, InviteService>();
+            services.AddTransient<IUserAccessService, UserAccessService>();
 
             // Singletons
             services.AddSingleton<ReunionValidator>();
