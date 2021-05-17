@@ -14,7 +14,7 @@ namespace FamUnion.Core.Interface
         Task<Reunion> SaveReunionAsync(Reunion reunion);
         Task CancelReunionAsync(CancelRequest request);
 
-        Task AddReunionOrganizer(Guid reunionId, string userId);
-        Task RemoveReunionOrganizer(Guid reunionId, string userId);
+        Task AddReunionOrganizer(Guid reunionId, string email);
+        Task RemoveReunionOrganizer(Guid reunionId, string email);
     }
 }

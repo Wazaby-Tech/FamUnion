@@ -9,27 +9,27 @@ namespace FamUnion.Core.Request
     {
         public Guid ReunionId { get; set; }
         public OrganizerAction Action { get; set; }
-        public string UserId { get; set; }
+        public string Email { get; set; }
         public string ActionUserId { get; set; }
 
-        public static OrganizerRequest AddOrganizerRequest(Guid reunionId, string userId, string actionUserId)
+        public static OrganizerRequest AddOrganizerRequest(Guid reunionId, string email, string actionUserId)
         {
             return new OrganizerRequest()
             {
                 ReunionId = reunionId,
                 Action = OrganizerAction.Add,
-                UserId = userId,
+                Email = email,
                 ActionUserId = actionUserId
             };
         }
 
-        public static OrganizerRequest RemoveOrganizerRequest(Guid reunionId, string userId, string actionUserId)
+        public static OrganizerRequest RemoveOrganizerRequest(Guid reunionId, string email, string actionUserId)
         {
             return new OrganizerRequest()
             {
                 ReunionId = reunionId,
                 Action = OrganizerAction.Remove,
-                UserId = userId,
+                Email = email,
                 ActionUserId = actionUserId
             };
         }

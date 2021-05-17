@@ -164,32 +164,32 @@ namespace FamUnion.Api.Controllers
             }
         }
 
-        [HttpPost("organizer/add")]
-        public async Task<IActionResult> AddOrganizer([FromBody] OrganizerRequest request)
+        [HttpPost("organizers")]
+        public async Task<IActionResult> OrganizerOperations([FromBody] OrganizerRequest request)
         {
+            _logger.LogInformation($"ReunionsController.GetOrganizers|{request}");
             try
             {
-                await _reunionService.AddReunionOrganizer(request)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                switch(request.Action)
+                {
+                    case Constants.OrganizerAction.List:
+                        var results = await _reunionService.GetReunionOrganizers(request)
+                            .ConfigureAwait(continueOnCapturedContext: false);
+                        return Ok(results);
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(503);
-            }
-        }
+                    case Constants.OrganizerAction.Add:
+                        await _reunionService.AddReunionOrganizer(request)
+                            .ConfigureAwait(continueOnCapturedContext: false);
+                        return Ok();
 
-        [HttpPost("organizer/remove")]
-        public async Task<IActionResult> RemoveOrganizer([FromBody] OrganizerRequest request)
-        {
-            try
-            {
-                await _reunionService.RemoveReunionOrganizer(request)
-                    .ConfigureAwait(continueOnCapturedContext: false);
+                    case Constants.OrganizerAction.Remove:
+                        await _reunionService.RemoveReunionOrganizer(request)
+                            .ConfigureAwait(continueOnCapturedContext: false);
+                        return Ok();
 
-                return Ok();
+                    default:
+                        throw new ArgumentException("Invalid action specified");
+                }
             }
             catch(Exception ex)
             {

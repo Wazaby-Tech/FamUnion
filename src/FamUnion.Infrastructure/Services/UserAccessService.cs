@@ -22,9 +22,10 @@ namespace FamUnion.Infrastructure.Services
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public Task<bool> HasWriteAccessToEntity(string userId, Constants.EntityType type, Guid id)
+        public async Task<bool> HasWriteAccessToEntity(string userId, Constants.EntityType type, Guid id)
         {
-            throw new NotImplementedException();
+            return await _userAccessRepository.HasWriteAccessToEntity(userId, type, id)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

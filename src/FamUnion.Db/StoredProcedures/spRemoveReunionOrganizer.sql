@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spRemoveReunionOrganizer]
 	@reunionId UNIQUEIDENTIFIER,
-	@userId NVARCHAR(100)
+	@email NVARCHAR(255)
 AS
 	
 MERGE INTO [dbo].[ReunionOrganizer] TARGET
@@ -9,7 +9,7 @@ USING (
 		@reunionId [ReunionId],
 		u.Id [OrganizerId]
 	FROM [dbo].[User] u (NOLOCK)
-	WHERE u.UserId = @userId
+	WHERE u.Email = @email
 ) SOURCE
 ON SOURCE.ReunionId = TARGET.ReunionId
 AND SOURCE.OrganizerId = TARGET.UserId

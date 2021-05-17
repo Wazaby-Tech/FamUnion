@@ -2,6 +2,7 @@
 using FamUnion.Core.Model;
 using FamUnion.Core.Utility;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,6 +19,12 @@ namespace FamUnion.Infrastructure.Repository
         public async Task<bool> ValidateUserIdAsync(string userId)
         {
             return (await GetUserByIdAsync(userId)
+                .ConfigureAwait(continueOnCapturedContext: false)) != null;
+        }
+
+        public async Task<bool> ValidateEmailAsync(string email)
+        {
+            return (await GetUserByEmailAsync(email)
                 .ConfigureAwait(continueOnCapturedContext: false)) != null;
         }
 
@@ -46,6 +53,14 @@ namespace FamUnion.Infrastructure.Repository
 
             return (await ExecuteStoredProc("[dbo].[spSaveUser]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+        }
+
+        public async Task<IEnumerable<User>> GetReunionOrganizers(Guid reunionId)
+        {
+            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId);
+
+            return await ExecuteStoredProc("[dbo].[spGetOrganizersByReunionId]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false);
         }
     }
 }

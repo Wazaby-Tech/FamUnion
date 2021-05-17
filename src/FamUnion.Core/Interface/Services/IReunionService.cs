@@ -16,5 +16,6 @@ namespace FamUnion.Core.Interface
 
         Task AddReunionOrganizer(OrganizerRequest request);
         Task RemoveReunionOrganizer(OrganizerRequest request);
+        Task<IEnumerable<User>> GetReunionOrganizers(OrganizerRequest request);
     }
 }

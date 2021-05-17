@@ -62,8 +62,9 @@ namespace FamUnion.Core.Utility
 
         public enum OrganizerAction
         {
-            Add = 1,
-            Remove = 2
+            List = 1,
+            Add = 2,
+            Remove = 3,
         }
     }
 

@@ -96,6 +96,7 @@
     <Build Include="StoredProcedures\spUpdateInviteStatus.sql" />
     <Build Include="UserTypes\udfInviteType.sql" />
     <Build Include="StoredProcedures\spCreateInvites.sql" />
+    <Build Include="StoredProcedures\spGetOrganizersByReunionId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
