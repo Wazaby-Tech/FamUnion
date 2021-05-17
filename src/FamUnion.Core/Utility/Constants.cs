@@ -18,7 +18,8 @@ namespace FamUnion.Core.Utility
             NotRead = 1,
             Read = 2,
             Accepted = 3,
-            Declined = 4
+            Declined = 4,
+            Blocked = 5
         }
 
         public enum Size

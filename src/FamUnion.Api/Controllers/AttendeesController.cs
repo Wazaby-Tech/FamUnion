@@ -16,10 +16,10 @@ namespace FamUnion.Api.Controllers
         private readonly ILogger _logger;
         private readonly IAttendeeService _attendeeService;
 
-        public AttendeesController(ILogger<AttendeesController> logger, IAttendeeService inviteService)
+        public AttendeesController(ILogger<AttendeesController> logger, IAttendeeService attendeeService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _attendeeService = inviteService ?? throw new ArgumentNullException(nameof(inviteService));
+            _attendeeService = attendeeService ?? throw new ArgumentNullException(nameof(attendeeService));
         }
 
         [HttpGet("{inviteInfo}")]
