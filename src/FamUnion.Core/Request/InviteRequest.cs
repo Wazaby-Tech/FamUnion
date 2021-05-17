@@ -11,7 +11,7 @@ namespace FamUnion.Core.Request
         public string Name { get; set; }
     }
 
-    public class BulkInviteRequest
+    public class BulkAttendeeRequest
     {
         public IEnumerable<InviteRequest> InviteRequests { get; set; }
         public string UserId { get; set; }

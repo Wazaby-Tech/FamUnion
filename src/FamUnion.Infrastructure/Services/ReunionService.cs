@@ -17,18 +17,15 @@ namespace FamUnion.Infrastructure.Services
         private readonly IUserRepository _userRepository;
         private readonly IAddressService _addressService;
         private readonly IEventService _eventService;
-        private readonly IInviteService _inviteService;
 
         public ReunionService(IReunionRepository reunionRepository, IUserRepository userRepository, 
-            IUserAccessService userAccessService, IAddressService addressService, IEventService eventService,
-            IInviteService inviteService)
+            IUserAccessService userAccessService, IAddressService addressService, IEventService eventService)
         {
             _reunionRepository = Validator.ThrowIfNull(reunionRepository, nameof(reunionRepository));
             _userRepository = Validator.ThrowIfNull(userRepository, nameof(userRepository));
             _userAccessService = Validator.ThrowIfNull(userAccessService, nameof(userAccessService));
             _addressService = Validator.ThrowIfNull(addressService, nameof(addressService));
             _eventService = Validator.ThrowIfNull(eventService, nameof(eventService));
-            _inviteService = Validator.ThrowIfNull(inviteService, nameof(inviteService));
         }
 
         public async Task<Reunion> GetReunionAsync(Guid id)

@@ -47,7 +47,7 @@ namespace FamUnion.Api
             services.AddTransient<IReunionService, ReunionService>();
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<IAddressService, AddressService>();
-            services.AddTransient<IInviteService, InviteService>();
+            services.AddTransient<IAttendeeService, AttendeeService>();
             services.AddTransient<IUserAccessService, UserAccessService>();
 
             // Singletons
@@ -126,9 +126,9 @@ namespace FamUnion.Api
                 return new UserAccessRepository(dbConnection);
             });
 
-            services.AddTransient<IInviteRepository, InviteRepository>(Provider =>
+            services.AddTransient<IAttendeeRepository, AttendeeRepository>(Provider =>
             {
-                return new InviteRepository(dbConnection);
+                return new AttendeeRepository(dbConnection);
             });
         }
 

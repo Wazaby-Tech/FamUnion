@@ -9,22 +9,22 @@ using System.Threading.Tasks;
 
 namespace FamUnion.Infrastructure.Repository
 {
-    public class InviteRepository : DbAccess<AttendeeInvite>, IInviteRepository
+    public class AttendeeRepository : DbAccess<AttendeeInvite>, IAttendeeRepository
     {
-        public InviteRepository(string connection)
+        public AttendeeRepository(string connection)
             : base(connection)
         {
 
         }
 
-        public async Task<IEnumerable<AttendeeInvite>> GetInvitesByReunion(Guid reunionId)
+        public async Task<IEnumerable<AttendeeInvite>> GetAttendeesByReunion(Guid reunionId)
         {
             ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId);
             return await ExecuteStoredProc("[dbo].[spGetInvitesByReunionId]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task CreateInvites(BulkInviteRequest request)
+        public async Task AddAttendees(BulkAttendeeRequest request)
         {
             ParameterDictionary parameters = ParameterDictionary.Single("invites", TvpHelper.MapInvites(request.InviteRequests));
             parameters.AddParameter("userId", request.UserId);
@@ -41,7 +41,7 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false)).FirstOrDefault();
         }
 
-        public async Task InviteResponseAsync(Guid inviteId, Constants.InviteResponseStatus status)
+        public async Task AttendeeResponseAsync(Guid inviteId, Constants.AttendeeResponseStatus status)
         {
             ParameterDictionary parameters = new ParameterDictionary();
             parameters.AddParameter("inviteId", inviteId);

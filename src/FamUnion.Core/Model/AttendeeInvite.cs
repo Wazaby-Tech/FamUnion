@@ -9,9 +9,7 @@ namespace FamUnion.Core.Model
         public string Email { get; set; }
         public string Name { get; set; }
         public int RsvpCount { get; set; } = 0;
-        public DateTime? ExpiresAt { get; set; }
-        public bool InviteSent { get; set; } = false;
-        public InviteResponseStatus Status { get; set; } = InviteResponseStatus.NotResponded;
+        public AttendeeResponseStatus Status { get; set; } = AttendeeResponseStatus.NotSent;
 
         public override bool IsValid()
         {

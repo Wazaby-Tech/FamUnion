@@ -12,11 +12,13 @@ namespace FamUnion.Core.Utility
             Lodging = 4
         }
 
-        public enum InviteResponseStatus
+        public enum AttendeeResponseStatus
         {
-            NotResponded = 0,
-            Accepted = 1,
-            Declined = 2
+            NotSent = 0,
+            NotRead = 1,
+            Read = 2,
+            Accepted = 3,
+            Declined = 4
         }
 
         public enum Size

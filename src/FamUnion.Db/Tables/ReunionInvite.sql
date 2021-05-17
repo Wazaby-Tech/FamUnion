@@ -5,7 +5,6 @@
 	[Email] NVARCHAR(255) NOT NULL,
 	[Name] NVARCHAR(255),
 	[RsvpCount] INT NOT NULL CONSTRAINT DF_ReunionInvite_RsvpCount DEFAULT (0),
-	[ExpiresAt] DATETIME NULL,
 	[Status] INT NOT NULL CONSTRAINT DF_ReunionInvite_Status DEFAULT (0),
 	[CreatedBy] NVARCHAR(100) NOT NULL CONSTRAINT DF_ReunionInvite_CreatedBy DEFAULT SUSER_SNAME(),
 	[CreatedDate] DATETIME NOT NULL CONSTRAINT DF_ReunionInvite_CreatedDate DEFAULT SYSDATETIME(),

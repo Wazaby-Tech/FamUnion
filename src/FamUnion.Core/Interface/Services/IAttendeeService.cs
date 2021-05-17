@@ -8,11 +8,11 @@ using static FamUnion.Core.Utility.Constants;
 
 namespace FamUnion.Core.Interface.Services
 {
-    public interface IInviteService
+    public interface IAttendeeService
     {
-        Task<IEnumerable<AttendeeInvite>> GetInvitesByReunion(Guid reunionId);
+        Task<IEnumerable<AttendeeInvite>> GetAttendeesByReunion(Guid reunionId);
         Task<AttendeeInvite> GetInviteAsync(InviteInfo inviteInfo);
-        Task InviteResponseAsync(Guid inviteId, InviteResponseStatus status);
-        Task CreateInvites(BulkInviteRequest request);
+        Task AttendeeResponseAsync(Guid inviteId, AttendeeResponseStatus status);
+        Task AddAttendees(BulkAttendeeRequest request);
     }
 }

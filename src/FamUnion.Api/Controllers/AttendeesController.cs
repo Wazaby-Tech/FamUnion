@@ -14,12 +14,12 @@ namespace FamUnion.Api.Controllers
     public class AttendeesController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly IInviteService _inviteService;
+        private readonly IAttendeeService _attendeeService;
 
-        public AttendeesController(ILogger<AttendeesController> logger, IInviteService inviteService)
+        public AttendeesController(ILogger<AttendeesController> logger, IAttendeeService inviteService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _inviteService = inviteService ?? throw new ArgumentNullException(nameof(inviteService));
+            _attendeeService = inviteService ?? throw new ArgumentNullException(nameof(inviteService));
         }
 
         [HttpGet("{inviteInfo}")]
@@ -34,7 +34,7 @@ namespace FamUnion.Api.Controllers
                     return BadRequest();
                 }
 
-                var reunionInvite = await _inviteService.GetInviteAsync(invite)
+                var reunionInvite = await _attendeeService.GetInviteAsync(invite)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 if (reunionInvite == null)
@@ -52,11 +52,11 @@ namespace FamUnion.Api.Controllers
         }
 
         [HttpPost()]
-        public async Task<IActionResult> AddInvites([FromBody]BulkInviteRequest invites)
+        public async Task<IActionResult> AddInvites([FromBody]BulkAttendeeRequest invites)
         {
             try
             {
-                await _inviteService.CreateInvites(invites)
+                await _attendeeService.AddAttendees(invites)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 return Ok();
@@ -78,7 +78,7 @@ namespace FamUnion.Api.Controllers
                     throw new ArgumentException($"reunionId '{reunionId}' is invalid");
                 }
 
-                var results = await _inviteService.GetInvitesByReunion(reunionGuid)
+                var results = await _attendeeService.GetAttendeesByReunion(reunionGuid)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 return Ok(results);
