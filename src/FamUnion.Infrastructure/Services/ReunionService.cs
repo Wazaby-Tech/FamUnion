@@ -1,5 +1,5 @@
 ﻿using FamUnion.Core.Interface;
-using FamUnion.Core.Interface.Repository;
+using FamUnion.Core.Interface.Services;
 using FamUnion.Core.Model;
 using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
@@ -13,17 +13,17 @@ namespace FamUnion.Infrastructure.Services
     public class ReunionService : IReunionService
     {
         private readonly IReunionRepository _reunionRepository;
-        private readonly IUserAccessRepository _userAccessRepository;
+        private readonly IUserAccessService _userAccessService;
         private readonly IUserRepository _userRepository;
         private readonly IAddressService _addressService;
         private readonly IEventService _eventService;
 
         public ReunionService(IReunionRepository reunionRepository, IUserRepository userRepository, 
-            IUserAccessRepository userAccessRepository, IAddressService addressService, IEventService eventService)
+            IUserAccessService userAccessService, IAddressService addressService, IEventService eventService)
         {
             _reunionRepository = Validator.ThrowIfNull(reunionRepository, nameof(reunionRepository));
             _userRepository = Validator.ThrowIfNull(userRepository, nameof(userRepository));
-            _userAccessRepository = Validator.ThrowIfNull(userAccessRepository, nameof(userAccessRepository));
+            _userAccessService = Validator.ThrowIfNull(userAccessService, nameof(userAccessService));
             _addressService = Validator.ThrowIfNull(addressService, nameof(addressService));
             _eventService = Validator.ThrowIfNull(eventService, nameof(eventService));
         }
@@ -106,21 +106,72 @@ namespace FamUnion.Infrastructure.Services
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task AddReunionOrganizer(Guid reunionId, string userId)
+        public async Task AddReunionOrganizer(OrganizerRequest request)
         {
-            await _reunionRepository.AddReunionOrganizer(reunionId, userId)
+            if(request.Action != Constants.OrganizerAction.Add)
+            {
+                throw new Exception($"Invalid action specified for AddReunionOrganizer|{request.Action}");
+            }
+
+            if (!await _userRepository.ValidateEmailAsync(request.Email) || !await _userRepository.ValidateUserIdAsync(request.ActionUserId))
+            {
+                throw new Exception($"Invalid user id when saving reunion: '{request.ReunionId}'");
+            }
+
+            if (!await CheckUserWriteAccess(request.ActionUserId, request.ReunionId))
+            {
+                throw new UnauthorizedAccessException($"User {request.ActionUserId} does not have access to write for reunion {request.ReunionId}");
+            }
+
+            await _reunionRepository.AddReunionOrganizer(request.ReunionId, request.Email)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task RemoveReunionOrganizer(Guid reunionId, string userId)
+        public async Task RemoveReunionOrganizer(OrganizerRequest request)
         {
-            await _reunionRepository.RemoveReunionOrganizer(reunionId, userId)
+            if (request.Action != Constants.OrganizerAction.Remove)
+            {
+                throw new Exception($"Invalid action specified for RemoveReunionOrganizer|{request.Action}");
+            }
+
+            if (!await _userRepository.ValidateEmailAsync(request.Email) || !await _userRepository.ValidateUserIdAsync(request.ActionUserId))
+            {
+                throw new Exception($"Invalid user id when saving reunion: '{request.ReunionId}'");
+            }
+
+            if (!await CheckUserWriteAccess(request.ActionUserId, request.ReunionId))
+            {
+                throw new UnauthorizedAccessException($"User {request.ActionUserId} does not have access to write for reunion {request.ReunionId}");
+            }
+
+            await _reunionRepository.RemoveReunionOrganizer(request.ReunionId, request.Email)
+                .ConfigureAwait(continueOnCapturedContext: false);
+        }
+
+        public async Task<IEnumerable<User>> GetReunionOrganizers(OrganizerRequest request)
+        {
+            if (request.Action != Constants.OrganizerAction.List)
+            {
+                throw new Exception($"Invalid action specified for GetReunionOrganizers|{request.Action}");
+            }
+
+            if (!await _userRepository.ValidateUserIdAsync(request.ActionUserId))
+            {
+                throw new Exception($"Invalid user id when saving reunion: '{request.ReunionId}'");
+            }
+
+            if (!await CheckUserWriteAccess(request.ActionUserId, request.ReunionId))
+            {
+                throw new UnauthorizedAccessException($"User {request.ActionUserId} does not have access to write for reunion {request.ReunionId}");
+            }
+
+            return await _userRepository.GetReunionOrganizers(request.ReunionId)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
         private async Task<bool> CheckUserWriteAccess(string userId, Guid? id)
         {
-            return !id.HasValue || await _userAccessRepository.HasWriteAccessToEntity(userId, Constants.EntityType.Reunion, id.Value);
+            return !id.HasValue || await _userAccessService.HasWriteAccessToEntity(userId, Constants.EntityType.Reunion, id.Value);
         }
 
         private async Task PopulateDependentProperties(IEnumerable<Reunion> reunions)

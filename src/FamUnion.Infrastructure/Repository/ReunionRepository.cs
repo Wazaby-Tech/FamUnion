@@ -65,24 +65,24 @@ namespace FamUnion.Infrastructure.Repository
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task AddReunionOrganizer(Guid reunionId, string userId)
+        public async Task AddReunionOrganizer(Guid reunionId, string email)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
                 "reunionId", reunionId.ToString(),
-                "userId", userId
+                "email", email
             });
 
             _ = await ExecuteStoredProc("[dbo].[spAddReunionOrganizer]", parameters)
                 .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        public async Task RemoveReunionOrganizer(Guid reunionId, string userId)
+        public async Task RemoveReunionOrganizer(Guid reunionId, string email)
         {
             ParameterDictionary parameters = new ParameterDictionary(new string[]
             {
                 "reunionId", reunionId.ToString(),
-                "userId", userId
+                "email", email
             });
 
             _ = await ExecuteStoredProc("[dbo].[spRemoveReunionOrganizer]", parameters)

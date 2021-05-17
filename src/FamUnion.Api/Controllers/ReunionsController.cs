@@ -98,7 +98,7 @@ namespace FamUnion.Api.Controllers
                 var result = await _reunionService.SaveReunionAsync(reunion)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
-                await _reunionService.AddReunionOrganizer(result.Id.Value, reunion.ActionUserId)
+                await _reunionService.AddReunionOrganizer(OrganizerRequest.AddOrganizerRequest(reunion.Id.Value, reunion.ActionUserId, reunion.ActionUserId))
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 var resp = CreatedAtAction("GetReunion",
@@ -161,6 +161,40 @@ namespace FamUnion.Api.Controllers
             {
                 _logger.LogError(ex, ex.Message, null);
                 return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost("organizers")]
+        public async Task<IActionResult> OrganizerOperations([FromBody] OrganizerRequest request)
+        {
+            _logger.LogInformation($"ReunionsController.GetOrganizers|{request}");
+            try
+            {
+                switch(request.Action)
+                {
+                    case Constants.OrganizerAction.List:
+                        var results = await _reunionService.GetReunionOrganizers(request)
+                            .ConfigureAwait(continueOnCapturedContext: false);
+                        return Ok(results);
+
+                    case Constants.OrganizerAction.Add:
+                        await _reunionService.AddReunionOrganizer(request)
+                            .ConfigureAwait(continueOnCapturedContext: false);
+                        return Ok();
+
+                    case Constants.OrganizerAction.Remove:
+                        await _reunionService.RemoveReunionOrganizer(request)
+                            .ConfigureAwait(continueOnCapturedContext: false);
+                        return Ok();
+
+                    default:
+                        throw new ArgumentException("Invalid action specified");
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(503);
             }
         }
     }

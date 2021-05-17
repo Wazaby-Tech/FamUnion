@@ -1,7 +1,9 @@
 ﻿using FamUnion.Core.Auth;
 using FamUnion.Core.Interface;
 using FamUnion.Core.Interface.Repository;
+using FamUnion.Core.Interface.Services;
 using FamUnion.Core.Utility;
+using FamUnion.Core.Validation;
 using FamUnion.Infrastructure.Repository;
 using FamUnion.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -35,32 +37,7 @@ namespace FamUnion.Api
         {
             // DB Connection
             var dbConnection = Configuration.GetConnectionString(ConfigSections.DbKey);
-
-            // Repositories
-            services.AddTransient<IReunionRepository, ReunionRepository>(Provider =>
-            {
-                return new ReunionRepository(dbConnection);
-            });
-
-            services.AddTransient<IAddressRepository, AddressRepository>(Provider =>
-            {
-                return new AddressRepository(dbConnection);
-            });
-
-            services.AddTransient<IEventRepository, EventRepository>(Provider =>
-            {
-                return new EventRepository(dbConnection);
-            });
-
-            services.AddTransient<IUserRepository, UserRepository>(Provider =>
-            {
-                return new UserRepository(dbConnection);
-            });
-
-            services.AddTransient<IUserAccessRepository, UserAccessRepository>(Provider =>
-            {
-                return new UserAccessRepository(dbConnection);
-            });
+            ConfigureRepositories(services, dbConnection);
 
             // Health Checks
             services.AddHealthChecks()
@@ -70,6 +47,11 @@ namespace FamUnion.Api
             services.AddTransient<IReunionService, ReunionService>();
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<IAddressService, AddressService>();
+            services.AddTransient<IAttendeeService, AttendeeService>();
+            services.AddTransient<IUserAccessService, UserAccessService>();
+
+            // Singletons
+            services.AddSingleton<ReunionValidator>();
 
             services.AddCors(options =>
             {
@@ -114,6 +96,40 @@ namespace FamUnion.Api
             services.AddControllers();
 
             services.AddOpenApiDocument(); // add OpenAPI v3 document
+        }
+
+        private static void ConfigureRepositories(IServiceCollection services, string dbConnection)
+        {
+            // Repositories
+            services.AddTransient<IReunionRepository, ReunionRepository>(Provider =>
+            {
+                return new ReunionRepository(dbConnection);
+            });
+
+            services.AddTransient<IAddressRepository, AddressRepository>(Provider =>
+            {
+                return new AddressRepository(dbConnection);
+            });
+
+            services.AddTransient<IEventRepository, EventRepository>(Provider =>
+            {
+                return new EventRepository(dbConnection);
+            });
+
+            services.AddTransient<IUserRepository, UserRepository>(Provider =>
+            {
+                return new UserRepository(dbConnection);
+            });
+
+            services.AddTransient<IUserAccessRepository, UserAccessRepository>(Provider =>
+            {
+                return new UserAccessRepository(dbConnection);
+            });
+
+            services.AddTransient<IAttendeeRepository, AttendeeRepository>(Provider =>
+            {
+                return new AttendeeRepository(dbConnection);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

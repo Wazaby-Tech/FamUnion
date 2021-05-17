@@ -14,9 +14,18 @@ namespace FamUnion.Infrastructure.Repository
 
         }
 
-        public Task<bool> HasReadAccessToEntity(string userId, Constants.EntityType type, Guid id)
+        public async Task<bool> HasReadAccessToEntity(string userId, Constants.EntityType type, Guid id)
         {
-            throw new NotImplementedException();
+            ParameterDictionary parameters = new ParameterDictionary(new string[]
+            {
+                "userId", userId,
+                "entityType", ((int)type).ToString(),
+                "entityId", id.ToString()
+            });
+
+            var result = (await ExecuteStoredProc("[dbo].[spUserHasReadAccessToEntity]", parameters)
+                .ConfigureAwait(continueOnCapturedContext: false)).FirstOrDefault();
+            return result;
         }
 
         public async Task<bool> HasWriteAccessToEntity(string userId, Constants.EntityType type, Guid id)

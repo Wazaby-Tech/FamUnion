@@ -10,15 +10,15 @@
 
 ### MVP
 #### Authentication (Auth0)
-- [ ] Email/Password
+- [X] Email/Password
 - [ ] Facebook
 - [ ] Google
 #### Create reunion
-- [ ] Reunion Name
-- [ ] Description (optional)
-- [ ] Start Date
-- [ ] City
-- [ ] End Date (optional)
+- [X] Reunion Name
+- [X] Description (optional)
+- [X] Start Date
+- [X] City
+- [X] End Date (optional)
 - [ ] Add attendee emails (optional)
 - [ ] Organizer Contact Details (optional)
 #### Attend reunion
@@ -70,22 +70,22 @@
     - [ ] Need SMTP service/server
     - [ ] Allow sign up through app by passcode (OTP) (?)
 - [ ] **Manage attendees**
-    - [ ] Add attendee
+    - [X] Add attendee
     - [ ] Update attendance
     - [ ] Block attendee (?)
-- [ ] **Manage organizers**
-    - [ ] Add organizer
-    - [ ] Remove organizer
-- [ ] **Add event**
-    - [ ] Event name
-    - [ ] Description
-    - [ ] Dress Attire
-        - [ ] Casual
-        - [ ] Semi-Formal
-        - [ ] Formal
-        - [ ] See Description
-    - [ ] Date/Time
-    - [ ] Address
+- [X] **Manage organizers**
+    - [X]] Add organizer
+    - [X] Remove organizer
+- [X] **Add event**
+    - [X] Event name
+    - [X] Description
+    - [X] Dress Attire
+        - [X] Casual
+        - [X] Semi-Formal
+        - [X] Formal
+        - [X] See Description
+    - [X] Date/Time
+    - [X] Address
 - [ ] **Add lodging**
     - [ ] Lodging name
     - [ ] Address
@@ -93,6 +93,10 @@
 
 #### Next Iteration
 - [ ] Organizer MFA
+- [ ] User Account Management
+    - [ ] Minor accounts? (Under 18)
+        - [ ] Linked to invited user account
+        - [ ] Managed by linked user account
 - [ ] Payments https://www.entrepreneur.com/article/286006
     - [ ] PayPal
     - [ ] Apple Pay
@@ -104,6 +108,7 @@
     - [ ] Expenses
     - [ ] Payments from attendees (if applicable)
     - [ ] Balance Sheet
+    - [ ] Donations
 - [ ] Public Attendee (allow download of contact info to other attendees)
     - [ ] Export contact info for:
         - [ ] iOS
@@ -113,7 +118,7 @@
 - [ ] (Premium) Upload Reunion/Event Photos/Videos/Media
     - [ ] Integrate with 3rd party photo storage?
         - [ ] Needs API
-        - [ ] Low cost entry OR enterprise license
+        - [ ] Low/No cost entry OR enterprise license
     - [ ] Provide access to all emails on the attendee list
 - [ ] Provide lodging recommendations based on city, location of events
 - [ ] Provide event recommendations

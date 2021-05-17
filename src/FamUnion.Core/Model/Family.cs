@@ -8,9 +8,7 @@ namespace FamUnion.Core.Model
         [Required]
         [MaxLength(100)]
         public string LastName { get; set; }        
-        public string PhotoLocation { get; set; }
         public bool Attending { get; set; }
-        public bool ReceivingAlerts { get; set; }
 
         public virtual IEnumerable<FamilyMember> Members { get; set; }
         public virtual Address Address { get; set; }

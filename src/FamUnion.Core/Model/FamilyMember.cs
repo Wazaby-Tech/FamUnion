@@ -13,7 +13,6 @@ namespace FamUnion.Core.Model
         public DateTime? DateOfBirth { get; set; }
         public int? Age => DateOfBirth.Age();
         public Size TshirtSize { get; set; }
-        public string PhotoLocation { get; set; }
 
         public virtual User UserAccount { get; set; }
         public virtual Family Family { get; set; }
