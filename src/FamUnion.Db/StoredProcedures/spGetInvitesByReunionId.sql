@@ -6,10 +6,8 @@ AS
 		[ReunionId], 
 		[Email], 
 		[Name], 
-		[RsvpCount], 
-		[ExpiresAt], 
+		[RsvpCount],  
 		[Status]
 	FROM [dbo].[ReunionInvite] (NOLOCK)
 	WHERE [ReunionId] = @reunionId
-	AND COALESCE([ExpiresAt], DATEADD(DAY, 1, SYSDATETIME())) >= SYSDATETIME()
 	ORDER BY [Email]

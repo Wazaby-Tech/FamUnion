@@ -194,7 +194,7 @@ namespace FamUnion.Api.Controllers
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(503);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }

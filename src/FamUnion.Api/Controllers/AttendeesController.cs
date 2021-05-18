@@ -1,6 +1,7 @@
 ﻿using FamUnion.Core.Interface.Services;
 using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -47,7 +48,7 @@ namespace FamUnion.Api.Controllers
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(503);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -64,7 +65,7 @@ namespace FamUnion.Api.Controllers
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(503);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
 
@@ -86,7 +87,7 @@ namespace FamUnion.Api.Controllers
             catch(Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return StatusCode(503);
+                return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
     }
