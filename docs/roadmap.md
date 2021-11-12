@@ -74,7 +74,7 @@
     - [ ] Update attendance
     - [ ] Block attendee (?)
 - [X] **Manage organizers**
-    - [X]] Add organizer
+    - [X] Add organizer
     - [X] Remove organizer
 - [X] **Add event**
     - [X] Event name

@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -40,6 +39,7 @@ namespace FamUnion.WebAuth.Controllers
 
         public async Task<IActionResult> Index()
         {
+            HomeModel model = new();
             // If the user is authenticated, then this is how you can get the access_token and id_token
             if (User.Identity.IsAuthenticated)
             {
@@ -69,9 +69,10 @@ namespace FamUnion.WebAuth.Controllers
                 var resp = await _apiClient.GetAsync("api/reunions");
                 var respContent = await resp.Content.ReadAsStringAsync();
                 var reunions = JsonConvert.DeserializeObject<IEnumerable<Reunion>>(respContent);
+                model.Reunions = reunions;
             }
 
-            return View();
+            return View(model);
         }
 
         public IActionResult Privacy()
