@@ -1,8 +1,20 @@
-﻿@{
+﻿@using FamUnion.Core.Model
+@model HomeModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>
+    <h2>Reunions (@Model.Reunions.Count())</h2>
+    <ul>
+    @foreach(Reunion reunion in Model.Reunions)
+    {
+        <li>@reunion.Name</li>
+    }
+    </ul>
 </div>
