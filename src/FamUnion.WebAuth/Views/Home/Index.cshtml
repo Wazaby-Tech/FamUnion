@@ -14,7 +14,7 @@
     <ul>
     @foreach(Reunion reunion in Model.Reunions)
     {
-        <li>@reunion.Name</li>
+        <li>@reunion.Id|@reunion.Name : Events (@reunion.Events.Count())</li>
     }
     </ul>
 </div>
