@@ -66,7 +66,7 @@ namespace FamUnion.WebAuth.Controllers
                 var token = TokenHelper.GetAuth0Token(_appAuthConfig);
                 _apiClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {token.access_token}");
 
-                var resp = await _apiClient.GetAsync("api/reunions");
+                var resp = await _apiClient.GetAsync("reunions");
                 var respContent = await resp.Content.ReadAsStringAsync();
                 var reunions = JsonConvert.DeserializeObject<IEnumerable<Reunion>>(respContent);
                 model.Reunions = reunions;
