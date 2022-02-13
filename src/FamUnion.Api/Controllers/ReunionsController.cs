@@ -98,7 +98,7 @@ namespace FamUnion.Api.Controllers
                 var result = await _reunionService.SaveReunionAsync(reunion)
                     .ConfigureAwait(continueOnCapturedContext: false);
 
-                await _reunionService.AddReunionOrganizer(OrganizerRequest.AddOrganizerRequest(reunion.Id.Value, reunion.ActionUserId, reunion.ActionUserId))
+                await _reunionService.AddReunionOrganizer(OrganizerRequest.AddOrganizerRequest(result.Id.Value, reunion.ActionUserId, reunion.ActionUserId))
                     .ConfigureAwait(continueOnCapturedContext: false);
 
                 var resp = CreatedAtAction("GetReunion",

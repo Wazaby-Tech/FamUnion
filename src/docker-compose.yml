@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  famunion.api:
+    image: ${DOCKER_REGISTRY-}famunionapi
+    build:
+      context: .
+      dockerfile: FamUnion.Api/Dockerfile
+
+  famunion.webauth:
+    image: ${DOCKER_REGISTRY-}famunionwebauth
+    build:
+      context: .
+      dockerfile: FamUnion.WebAuth/Dockerfile

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28606.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamUnion.Core", "FamUnion.Core\FamUnion.Core.csproj", "{D2883C04-1848-4382-84FB-ED73AEDE7C72}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{FE8A150D-7BF3-4B15-9E14-796F165F4333}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FamUnion.WebAuth", "FamUnion.WebAuth\FamUnion.WebAuth.csproj", "{F650B8F8-0231-4B21-9D84-3CEE7A7DBAE8}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +139,22 @@ Global
 		{F650B8F8-0231-4B21-9D84-3CEE7A7DBAE8}.Release|x64.Build.0 = Release|Any CPU
 		{F650B8F8-0231-4B21-9D84-3CEE7A7DBAE8}.Release|x86.ActiveCfg = Release|Any CPU
 		{F650B8F8-0231-4B21-9D84-3CEE7A7DBAE8}.Release|x86.Build.0 = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|ARM.Build.0 = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|x64.Build.0 = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Debug|x86.Build.0 = Debug|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|ARM.ActiveCfg = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|ARM.Build.0 = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|x64.ActiveCfg = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|x64.Build.0 = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3FA1BF0-078E-486A-B265-0D0095A7BEF9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

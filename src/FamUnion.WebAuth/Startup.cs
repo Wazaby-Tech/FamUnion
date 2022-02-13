@@ -15,10 +15,8 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using RestSharp.Serialization;
 using System;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,9 +34,18 @@ namespace FamUnion.WebAuth
 
         public IWebHostEnvironment HostingEnvironment { get; }
 
+        // Create an HttpClientHandler object and set to use default credentials
+        // ONLY USE FOR DEVELOPMENT!
+        private readonly HttpClientHandler handler = new()
+        {
+            // Set custom server validation callback
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             // Configure Auth0
             services.AddTransient<IAuthConfigService, AuthConfigService>();
             var appAuthConfig = Configuration.GetSection(ConfigSections.AppAuthKey).Get<AuthConfig>();
@@ -55,13 +62,15 @@ namespace FamUnion.WebAuth
             });
 
             // Add authentication services
-            services.AddAuthentication(options => {
+            services.AddAuthentication(options =>
+            {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddCookie()
-            .AddOpenIdConnect("Auth0", options => {
+            .AddOpenIdConnect("Auth0", options =>
+            {
                 // Set the authority to your Auth0 domain
                 options.Authority = $"https://{appAuthConfig.Domain}";
 
@@ -112,6 +121,8 @@ namespace FamUnion.WebAuth
                     },
                     OnTokenValidated = async (context) =>
                     {
+                        HttpClientHandler devHandler = HostingEnvironment.IsDevelopment() ? handler : null;
+
                         // Setup Auth0 client call
                         var authClient = new HttpClient
                         {
@@ -121,7 +132,7 @@ namespace FamUnion.WebAuth
                         authClient.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse($"Bearer {identityToken.access_token}");
 
                         // Setup App API client call
-                        var appClient = new HttpClient
+                        var appClient = new HttpClient(devHandler)
                         {
                             BaseAddress = new Uri($"{appConfig.ApiUrl}")
                         };
@@ -134,7 +145,7 @@ namespace FamUnion.WebAuth
                         var appUser = JsonConvert.DeserializeObject<User>(await appClient.GetStringAsync($"users/id/{identityId}"));
 
                         // User is validated in Auth0 but not in the app database yet
-                        if(appUser.AuthType == Constants.UserAuthType.Unauthorized)
+                        if (appUser.AuthType == Constants.UserAuthType.Unauthorized)
                         {
                             // Pull full user object from Auth0
                             var authResp = JsonConvert.DeserializeObject<Auth0User>(await authClient.GetStringAsync($"users/{identityId}"));
@@ -160,14 +171,28 @@ namespace FamUnion.WebAuth
             services.AddHttpClient("API", (options) =>
             {
                 options.BaseAddress = new Uri(appConfig.ApiUrl);
+
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return GetHttpClientHandler();
             });
 
             services.AddHttpClient("AppUsers", (client) =>
             {
                 client.BaseAddress = new Uri($"https://{appAuthConfig.Domain}/api/v2/");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return GetHttpClientHandler();
             });
 
             services.AddControllersWithViews();
+        }
+
+        private HttpClientHandler GetHttpClientHandler()
+        {
+            return HostingEnvironment.IsDevelopment() ? handler : null;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
