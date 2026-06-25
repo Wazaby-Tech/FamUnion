@@ -1,7 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using Microsoft.Data.SqlClient;
 using System.Dynamic;
 using System.Linq;
 
@@ -46,10 +44,7 @@ namespace FamUnion.Infrastructure
 
         public static ParameterDictionary Empty
         {
-            get
-            {
-                return new ParameterDictionary();
-            }
+            get { return new ParameterDictionary(); }
         }
 
         public static ParameterDictionary Single(string parameterName, object parameterValue)
@@ -71,7 +66,6 @@ namespace FamUnion.Infrastructure
         public void AddParameter(string parameterName, object value)
         {
             RemoveParameter(parameterName);
-
             _dictionary[parameterName] = value;
         }
 
@@ -80,14 +74,6 @@ namespace FamUnion.Infrastructure
             if (_dictionary.ContainsKey(parameterName))
             {
                 _dictionary.Remove(parameterName);
-            }
-        }
-
-        public void AddToCommand(DbCommand command)
-        {
-            foreach (KeyValuePair<string, object> kvp in _dictionary)
-            {
-                command.Parameters.Add(new SqlParameter(kvp.Key, kvp.Value));
             }
         }
 
@@ -105,5 +91,4 @@ namespace FamUnion.Infrastructure
             return eoDynamic;
         }
     }
-
 }

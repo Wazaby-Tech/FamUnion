@@ -1,7 +1,7 @@
-﻿using FamUnion.Core.Validation;
+using FamUnion.Core.Validation;
 using System.Collections.Generic;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -9,83 +9,73 @@ namespace FamUnion.Infrastructure
 {
     public class DbAccess<T>
     {
-        private string _connectionString;
-
-        private static readonly CommandType _sProcType = CommandType.StoredProcedure;
+        private readonly string _connectionString;
 
         public DbAccess(string connectionString)
         {
             _connectionString = Validator.ThrowIfNull(connectionString, nameof(connectionString));
-        }        
-
-        protected async Task<IEnumerable<T>> ExecuteStoredProc(string proc, IDataMapper<T> mapper, ParameterDictionary parameters)
-        {
-            return await Execute(proc, mapper, parameters)
-                .ConfigureAwait(continueOnCapturedContext: false);
         }
 
-        protected async Task<IEnumerable<T>> ExecuteStoredProc(string proc, IDataMapper<T> mapper)
+        protected async Task<IEnumerable<T>> ExecuteStoredProc(string sql, IDataMapper<T> mapper, ParameterDictionary parameters)
         {
-            return await Execute(proc, mapper, null)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            return await Execute(sql, mapper, parameters).ConfigureAwait(false);
         }
 
-        protected async Task<IEnumerable<T>> ExecuteStoredProc(string proc, ParameterDictionary parameters)
+        protected async Task<IEnumerable<T>> ExecuteStoredProc(string sql, IDataMapper<T> mapper)
         {
-            return await Execute(proc, null, parameters)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            return await Execute(sql, mapper, null).ConfigureAwait(false);
         }
 
-        protected async Task<IEnumerable<T>> ExecuteStoredProc(string proc)
+        protected async Task<IEnumerable<T>> ExecuteStoredProc(string sql, ParameterDictionary parameters)
         {
-            return await Execute(proc, null, null)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            return await Execute(sql, null, parameters).ConfigureAwait(false);
         }
 
-        private async Task<IEnumerable<T>> Execute(string proc, IDataMapper<T> mapper, ParameterDictionary parameters)
+        protected async Task<IEnumerable<T>> ExecuteStoredProc(string sql)
         {
-            //_logger.LogInformation($"DataAccess.Execute|Stored Proc: {proc}, Return type: {typeof(T).ToString()}, Data Mapper: {mapper?.GetType()?.ToString() ?? "N/A"}, Parameters: {parameters?.GetDynamicObject() ?? "N/A"}");
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            return await Execute(sql, null, null).ConfigureAwait(false);
+        }
+
+        protected async Task ExecuteNonQueryProc(string sql, ParameterDictionary parameters)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync().ConfigureAwait(false);
+            await conn.ExecuteAsync(sql, parameters?.GetDynamicObject(), commandType: CommandType.Text)
+                .ConfigureAwait(false);
+        }
+
+        protected async Task ExecuteNonQueryProc(string sql)
+        {
+            await ExecuteNonQueryProc(sql, null).ConfigureAwait(false);
+        }
+
+        private async Task<IEnumerable<T>> Execute(string sql, IDataMapper<T> mapper, ParameterDictionary parameters)
+        {
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync().ConfigureAwait(false);
+
+            if (mapper != null)
             {
-                conn.Open();
-
-                if (mapper != null)
-                {
-                    SqlMapper.GridReader reader = await conn.QueryMultipleAsync(proc, parameters?.GetDynamicObject() ?? null, commandType: _sProcType)
-                        .ConfigureAwait(continueOnCapturedContext: false);
-
-                    return await mapper.MapDataAsync(reader)
-                        .ConfigureAwait(continueOnCapturedContext: false);
-                }
-                else if (parameters != null)
-                {
-                    return await conn.QueryAsync<T>(proc, parameters.GetDynamicObject(), commandType: _sProcType)
-                        .ConfigureAwait(continueOnCapturedContext: false);
-                }
-                else
-                {
-                    return await conn.QueryAsync<T>(proc, commandType: _sProcType)
-                        .ConfigureAwait(continueOnCapturedContext: false);
-                }
+                SqlMapper.GridReader reader = await conn.QueryMultipleAsync(sql, parameters?.GetDynamicObject(), commandType: CommandType.Text)
+                    .ConfigureAwait(false);
+                return await mapper.MapDataAsync(reader).ConfigureAwait(false);
             }
+
+            return await conn.QueryAsync<T>(sql, parameters?.GetDynamicObject(), commandType: CommandType.Text)
+                .ConfigureAwait(false);
         }
 
-        protected async Task<object> ExecuteScalar(string proc, ParameterDictionary parameters)
+        protected async Task<object> ExecuteScalar(string sql, ParameterDictionary parameters)
         {
-            return await ExecuteScalarWithTimeout(proc, parameters, null)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            return await ExecuteScalarWithTimeout(sql, parameters, null).ConfigureAwait(false);
         }
 
-        protected async Task<object> ExecuteScalarWithTimeout(string proc, ParameterDictionary parameters, int? timeout)
+        protected async Task<object> ExecuteScalarWithTimeout(string sql, ParameterDictionary parameters, int? timeout)
         {
-            //_logger.LogInformation($"DataAccess.ExecuteScalarWithTimeout|Stored Proc: {proc}, Parameters: {parameters?.GetDynamicObject() ?? "N/A"}, Timeout: {timeout ?? 0}");
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-
-                return await conn.ExecuteScalarAsync(proc, parameters?.GetDynamicObject(), commandTimeout: timeout, commandType: _sProcType)
-                    .ConfigureAwait(continueOnCapturedContext: false);
-            }
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync().ConfigureAwait(false);
+            return await conn.ExecuteScalarAsync(sql, parameters?.GetDynamicObject(), commandTimeout: timeout, commandType: CommandType.Text)
+                .ConfigureAwait(false);
         }
     }
 }
