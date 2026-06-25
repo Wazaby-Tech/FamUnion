@@ -4,9 +4,9 @@ services:
   postgres:
     image: postgres:17
     environment:
-      POSTGRES_DB: famunion
-      POSTGRES_USER: famunion
-      POSTGRES_PASSWORD: famunion
+      POSTGRES_DB: ${POSTGRES_DB:-famunion}
+      POSTGRES_USER: ${POSTGRES_USER:-famunion}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
     ports:
       - "5432:5432"
     volumes:
@@ -20,7 +20,7 @@ services:
     depends_on:
       - postgres
     environment:
-      - ConnectionStrings__FamUnionDb=Host=postgres;Port=5432;Database=famunion;Username=famunion;Password=famunion
+      - ConnectionStrings__FamUnionDb=Host=postgres;Port=5432;Database=${POSTGRES_DB:-famunion};Username=${POSTGRES_USER:-famunion};Password=${POSTGRES_PASSWORD}
 
   famunion.webauth:
     image: ${DOCKER_REGISTRY-}famunionwebauth
@@ -30,7 +30,7 @@ services:
     depends_on:
       - postgres
     environment:
-      - ConnectionStrings__FamUnionDb=Host=postgres;Port=5432;Database=famunion;Username=famunion;Password=famunion
+      - ConnectionStrings__FamUnionDb=Host=postgres;Port=5432;Database=${POSTGRES_DB:-famunion};Username=${POSTGRES_USER:-famunion};Password=${POSTGRES_PASSWORD}
 
 volumes:
   postgres_data:
