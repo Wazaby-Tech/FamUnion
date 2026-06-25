@@ -16,12 +16,9 @@ namespace FamUnion.Infrastructure.Repository
 
         public async Task<Address> GetAddressAsync(Guid id)
         {
-            const string sql = "SELECT * FROM sp_get_address_by_entity_type_and_id(@entityTypeId, @entityId)";
-            ParameterDictionary parameters = new ParameterDictionary(
-                "entityTypeId", (int)EntityType.Reunion,
-                "entityId",     id
-            );
-            return (await ExecuteStoredProc(sql, parameters).ConfigureAwait(false)).SingleOrDefault();
+            const string sql = "SELECT * FROM sp_get_address_by_id(@id)";
+            return (await ExecuteStoredProc(sql, ParameterDictionary.Single("id", id))
+                .ConfigureAwait(false)).SingleOrDefault();
         }
 
         public async Task<Address> GetEventAddressAsync(Guid eventId)

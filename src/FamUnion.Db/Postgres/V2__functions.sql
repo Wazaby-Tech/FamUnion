@@ -88,7 +88,7 @@ LANGUAGE sql AS $$
         r.modified_by,
         r.modified_date
     FROM reunion r
-    JOIN reunion_organizer ro ON ro.reunion_id = r.reunion_id
+    JOIN reunion_organizer ro ON ro.reunion_id = r.reunion_id AND ro.is_active = TRUE
     JOIN app_user u           ON ro.user_id = u.id
     WHERE r.is_active = TRUE
       AND u.user_id = p_user_id
@@ -211,7 +211,8 @@ LANGUAGE sql AS $$
         modified_by,
         modified_date
     FROM events
-    WHERE event_id = p_id;
+    WHERE event_id = p_id
+      AND is_active = TRUE;
 $$;
 
 CREATE OR REPLACE FUNCTION sp_get_events_by_reunion_id(p_reunion_id UUID)
@@ -245,6 +246,7 @@ LANGUAGE sql AS $$
         modified_date
     FROM events
     WHERE reunion_id = p_reunion_id
+      AND is_active = TRUE
     ORDER BY start_time, name;
 $$;
 
@@ -313,6 +315,46 @@ $$;
 -- ============================================================
 -- Address functions
 -- ============================================================
+
+CREATE OR REPLACE FUNCTION sp_get_address_by_id(p_address_id UUID)
+RETURNS TABLE (
+    id            UUID,
+    address_type  INT,
+    description   VARCHAR,
+    entity_type   INT,
+    line1         VARCHAR,
+    line2         VARCHAR,
+    city          VARCHAR,
+    state         VARCHAR,
+    zip_code      VARCHAR,
+    latitude      BIGINT,
+    longitude     BIGINT,
+    created_by    VARCHAR,
+    created_date  TIMESTAMP,
+    modified_by   VARCHAR,
+    modified_date TIMESTAMP
+)
+LANGUAGE sql AS $$
+    SELECT
+        a.address_id,
+        a.entity_type,
+        a.description,
+        a.entity_type,
+        a.line1,
+        a.line2,
+        a.city,
+        a.state,
+        a.zip_code,
+        a.latitude,
+        a.longitude,
+        a.created_by,
+        a.created_date,
+        a.modified_by,
+        a.modified_date
+    FROM address a
+    WHERE a.address_id = p_address_id
+      AND a.is_active  = TRUE;
+$$;
 
 CREATE OR REPLACE FUNCTION sp_get_address_by_entity_type_and_id(p_entity_type_id INT, p_entity_id UUID)
 RETURNS TABLE (

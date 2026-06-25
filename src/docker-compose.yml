@@ -19,6 +19,8 @@ services:
       dockerfile: FamUnion.Api/Dockerfile
     depends_on:
       - postgres
+    environment:
+      - ConnectionStrings__FamUnionDb=Host=postgres;Port=5432;Database=famunion;Username=famunion;Password=famunion
 
   famunion.webauth:
     image: ${DOCKER_REGISTRY-}famunionwebauth
@@ -27,6 +29,8 @@ services:
       dockerfile: FamUnion.WebAuth/Dockerfile
     depends_on:
       - postgres
+    environment:
+      - ConnectionStrings__FamUnionDb=Host=postgres;Port=5432;Database=famunion;Username=famunion;Password=famunion
 
 volumes:
   postgres_data:
