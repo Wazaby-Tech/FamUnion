@@ -1,7 +1,7 @@
 ﻿using FamUnion.Core.Validation;
 using System.Collections.Generic;
 using Dapper;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Threading.Tasks;
 
