@@ -171,7 +171,7 @@ namespace FamUnion.Api
             {
                 options.DocumentName = "FamUnion API";
             }); // serve OpenAPI/Swagger documents
-            app.UseSwaggerUi3(options =>
+            app.UseSwaggerUi(options =>
             {
                 options.DocumentTitle = "FamUnion API";
             }); // serve Swagger UI
