@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using RestSharp.Serialization;
 
 namespace FamUnion.Api.Controllers
 {
@@ -104,7 +103,7 @@ namespace FamUnion.Api.Controllers
                 var resp = CreatedAtAction("GetReunion",
                     routeValues: new { id = result.Id.Value },
                     value: result);
-                resp.ContentTypes.Add(ContentType.Json);
+                resp.ContentTypes.Add("application/json");
                 return resp;
             }
             catch (Exception ex)

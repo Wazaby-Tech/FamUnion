@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
-using RestSharp.Serialization;
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -161,7 +160,7 @@ namespace FamUnion.WebAuth
                                 LastName = authResp.family_name
                             };
 
-                            var userContent = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, ContentType.Json);
+                            var userContent = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, "application/json");
                             var postResp = await appClient.PostAsync("users", userContent);
                         }
                     }
