@@ -1,4 +1,4 @@
-﻿using FamUnion.Core.Interface.Repository;
+using FamUnion.Core.Interface.Repository;
 using FamUnion.Core.Utility;
 using System;
 using System.Linq;
@@ -11,35 +11,28 @@ namespace FamUnion.Infrastructure.Repository
         public UserAccessRepository(string connection)
             : base(connection)
         {
-
         }
 
         public async Task<bool> HasReadAccessToEntity(string userId, Constants.EntityType type, Guid id)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "userId", userId,
-                "entityType", ((int)type).ToString(),
-                "entityId", id.ToString()
-            });
-
-            var result = (await ExecuteStoredProc("[dbo].[spUserHasReadAccessToEntity]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false)).FirstOrDefault();
-            return result;
+            const string sql = "SELECT result FROM sp_user_has_read_access_to_entity(@userId, @entityType, @entityId)";
+            ParameterDictionary parameters = new ParameterDictionary(
+                "userId",     userId,
+                "entityType", (int)type,
+                "entityId",   id
+            );
+            return (await ExecuteStoredProc(sql, parameters).ConfigureAwait(false)).FirstOrDefault();
         }
 
         public async Task<bool> HasWriteAccessToEntity(string userId, Constants.EntityType type, Guid id)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "userId", userId,
-                "entityType", ((int)type).ToString(),
-                "entityId", id.ToString()
-            });
-
-            var result = (await ExecuteStoredProc("[dbo].[spUserHasWriteAccessToEntity]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false)).FirstOrDefault();
-            return result;
+            const string sql = "SELECT result FROM sp_user_has_write_access_to_entity(@userId, @entityType, @entityId)";
+            ParameterDictionary parameters = new ParameterDictionary(
+                "userId",     userId,
+                "entityType", (int)type,
+                "entityId",   id
+            );
+            return (await ExecuteStoredProc(sql, parameters).ConfigureAwait(false)).FirstOrDefault();
         }
     }
 }

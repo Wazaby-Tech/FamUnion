@@ -1,4 +1,4 @@
-﻿using FamUnion.Core.Interface;
+using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
 using FamUnion.Core.Utility;
 using System;
@@ -13,54 +13,52 @@ namespace FamUnion.Infrastructure.Repository
         public UserRepository(string connection)
             : base(connection)
         {
-
         }
 
         public async Task<bool> ValidateUserIdAsync(string userId)
         {
-            return (await GetUserByIdAsync(userId)
-                .ConfigureAwait(continueOnCapturedContext: false)) != null;
+            return (await GetUserByIdAsync(userId).ConfigureAwait(false)) != null;
         }
 
         public async Task<bool> ValidateEmailAsync(string email)
         {
-            return (await GetUserByEmailAsync(email)
-                .ConfigureAwait(continueOnCapturedContext: false)) != null;
+            return (await GetUserByEmailAsync(email).ConfigureAwait(false)) != null;
         }
 
         public async Task<User> GetUserByIdAsync(string userId)
         {
-            return (await ExecuteStoredProc("[dbo].[spGetUserById]", ParameterDictionary.Single("userId", userId))
-                .ConfigureAwait(continueOnCapturedContext: false)).FirstOrDefault();
+            const string sql = "SELECT * FROM sp_get_user_by_id(@userId)";
+            return (await ExecuteStoredProc(sql, ParameterDictionary.Single("userId", userId))
+                .ConfigureAwait(false)).FirstOrDefault();
         }
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
-            return (await ExecuteStoredProc("[dbo].[spGetUserByEmail]", ParameterDictionary.Single("email", email))
-                .ConfigureAwait(continueOnCapturedContext: false)).FirstOrDefault();
+            const string sql = "SELECT * FROM sp_get_user_by_email(@email)";
+            return (await ExecuteStoredProc(sql, ParameterDictionary.Single("email", email))
+                .ConfigureAwait(false)).FirstOrDefault();
         }
 
         public async Task<User> SaveUserAsync(User user)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[] {
-                "id", user.Id.GetDbGuidString(),
-                "userId", user.UserId,
-                "email", user.Email,
+            const string sql = "SELECT * FROM sp_save_user(@id, @userId, @email, @firstName, @lastName, @authType)";
+            ParameterDictionary parameters = new ParameterDictionary(
+                "id",        user.Id ?? Guid.NewGuid(),
+                "userId",    user.UserId,
+                "email",     user.Email,
                 "firstName", user.FirstName,
-                "lastName", user.LastName,
-                "authType", ((int)user.AuthType).ToString()
-            });
+                "lastName",  user.LastName,
+                "authType",  (int)user.AuthType
+            );
 
-            return (await ExecuteStoredProc("[dbo].[spSaveUser]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+            return (await ExecuteStoredProc(sql, parameters).ConfigureAwait(false)).SingleOrDefault();
         }
 
         public async Task<IEnumerable<User>> GetReunionOrganizers(Guid reunionId)
         {
-            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", reunionId);
-
-            return await ExecuteStoredProc("[dbo].[spGetOrganizersByReunionId]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            const string sql = "SELECT * FROM sp_get_organizers_by_reunion_id(@reunionId)";
+            return await ExecuteStoredProc(sql, ParameterDictionary.Single("reunionId", reunionId))
+                .ConfigureAwait(false);
         }
     }
 }

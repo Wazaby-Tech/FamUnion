@@ -1,31 +1,21 @@
-﻿using Dapper;
 using FamUnion.Core.Request;
-using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
+using System.Linq;
 
 namespace FamUnion.Infrastructure
 {
     public static class TvpHelper
     {
-        public static SqlMapper.ICustomQueryParameter MapInvites(IEnumerable<InviteRequest> requests)
+        public static string MapInvites(IEnumerable<InviteRequest> requests)
         {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("ReunionId", typeof(Guid));
-            dt.Columns.Add("Email", typeof(string));
-            dt.Columns.Add("Name", typeof(string));
-
-            foreach(var request in requests)
+            var items = requests.Select(r => new
             {
-                DataRow row = dt.NewRow();
-                row["ReunionId"] = request.ReunionId;
-                row["Email"] = request.Email;
-                row["Name"] = request.Name;
-                dt.Rows.Add(row);
-            }
-
-            return dt.AsTableValuedParameter("[dbo].[udfInviteType]");
+                reunion_id = r.ReunionId,
+                email      = r.Email,
+                name       = r.Name
+            });
+            return JsonConvert.SerializeObject(items);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using FamUnion.Core.Interface;
+using FamUnion.Core.Interface;
 using FamUnion.Core.Model;
 using FamUnion.Core.Request;
 using FamUnion.Core.Utility;
@@ -12,81 +12,76 @@ namespace FamUnion.Infrastructure.Repository
 {
     public class ReunionRepository : DbAccess<Reunion>, IReunionRepository
     {
-        public ReunionRepository(string connection) 
+        public ReunionRepository(string connection)
             : base(connection)
         {
-
         }
 
         public async Task<Reunion> GetReunionAsync(Guid id)
         {
-            ParameterDictionary parameters = ParameterDictionary.Single("id", id.ToString());
-            return (await ExecuteStoredProc("[dbo].[spGetReunionById]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+            const string sql = "SELECT * FROM sp_get_reunion_by_id(@id)";
+            return (await ExecuteStoredProc(sql, ParameterDictionary.Single("id", id))
+                .ConfigureAwait(false)).SingleOrDefault();
         }
 
         public async Task<IEnumerable<Reunion>> GetReunionsAsync()
         {
-            return await ExecuteStoredProc("[dbo].[spGetReunions]", ParameterDictionary.Empty)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            return await ExecuteStoredProc("SELECT * FROM sp_get_reunions()")
+                .ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Reunion>> GetManageReunionsAsync(string userId)
         {
-            return await ExecuteStoredProc("[dbo].[spGetManageReunions]", ParameterDictionary.Single("userId", userId))
-                .ConfigureAwait(continueOnCapturedContext: false);
+            const string sql = "SELECT * FROM sp_get_manage_reunions(@userId)";
+            return await ExecuteStoredProc(sql, ParameterDictionary.Single("userId", userId))
+                .ConfigureAwait(false);
         }
 
         public async Task<Reunion> SaveReunionAsync(Reunion reunion)
         {
-            if(!reunion.IsValid())
+            if (!reunion.IsValid())
             {
                 throw new Exception($"Reunion is not valid|{JsonConvert.SerializeObject(reunion)}");
             }
 
-            ParameterDictionary parameters = new ParameterDictionary(new string[] {
-                "id", reunion.Id.GetDbGuidString(),
-                "userId", reunion.ActionUserId,
-                "name", reunion.Name,
+            const string sql = "SELECT * FROM sp_save_reunion(@id, @userId, @name, @description, @startDate, @endDate)";
+            ParameterDictionary parameters = new ParameterDictionary(
+                "id",          reunion.Id ?? Guid.NewGuid(),
+                "userId",      reunion.ActionUserId,
+                "name",        reunion.Name,
                 "description", reunion.Description,
-                "startDate", reunion.StartDate.ToString(),
-                "endDate", reunion.EndDate.ToString()
-            });
+                "startDate",   reunion.StartDate,
+                "endDate",     reunion.EndDate
+            );
 
-            return (await ExecuteStoredProc("[dbo].[spSaveReunion]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false)).SingleOrDefault();
+            return (await ExecuteStoredProc(sql, parameters).ConfigureAwait(false)).SingleOrDefault();
         }
 
         public async Task CancelReunionAsync(CancelRequest request)
         {
-            ParameterDictionary parameters = ParameterDictionary.Single("reunionId", request.EntityId);
-
-            _ = await ExecuteStoredProc("[dbo].[spDeleteReunionById]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            const string sql = "SELECT sp_delete_reunion_by_id(@reunionId)";
+            await ExecuteNonQueryProc(sql, ParameterDictionary.Single("reunionId", request.EntityId))
+                .ConfigureAwait(false);
         }
 
         public async Task AddReunionOrganizer(Guid reunionId, string email)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "reunionId", reunionId.ToString(),
-                "email", email
-            });
-
-            _ = await ExecuteStoredProc("[dbo].[spAddReunionOrganizer]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            const string sql = "SELECT sp_add_reunion_organizer(@reunionId, @email)";
+            ParameterDictionary parameters = new ParameterDictionary(
+                "reunionId", reunionId,
+                "email",     email
+            );
+            await ExecuteNonQueryProc(sql, parameters).ConfigureAwait(false);
         }
 
         public async Task RemoveReunionOrganizer(Guid reunionId, string email)
         {
-            ParameterDictionary parameters = new ParameterDictionary(new string[]
-            {
-                "reunionId", reunionId.ToString(),
-                "email", email
-            });
-
-            _ = await ExecuteStoredProc("[dbo].[spRemoveReunionOrganizer]", parameters)
-                .ConfigureAwait(continueOnCapturedContext: false);
+            const string sql = "SELECT sp_remove_reunion_organizer(@reunionId, @email)";
+            ParameterDictionary parameters = new ParameterDictionary(
+                "reunionId", reunionId,
+                "email",     email
+            );
+            await ExecuteNonQueryProc(sql, parameters).ConfigureAwait(false);
         }
     }
 }

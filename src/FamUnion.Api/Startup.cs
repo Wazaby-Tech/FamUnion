@@ -1,4 +1,5 @@
-﻿using FamUnion.Core.Auth;
+﻿using Dapper;
+using FamUnion.Core.Auth;
 using FamUnion.Core.Interface;
 using FamUnion.Core.Interface.Repository;
 using FamUnion.Core.Interface.Services;
@@ -37,11 +38,15 @@ namespace FamUnion.Api
         {
             // DB Connection
             var dbConnection = Configuration.GetConnectionString(ConfigSections.DbKey);
+
+            // Enable snake_case → PascalCase column mapping for Dapper
+            DefaultTypeMap.MatchNamesWithUnderscores = true;
+
             ConfigureRepositories(services, dbConnection);
 
             // Health Checks
             services.AddHealthChecks()
-                .AddSqlServer(dbConnection);
+                .AddNpgSql(dbConnection);
 
             // Services
             services.AddTransient<IReunionService, ReunionService>();
