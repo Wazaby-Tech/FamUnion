@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/native-stack": "^6.9.17",
     "bufferutil": "^4.0.2",
     "canvas": "^2.8.0",
     "react": "16.13.1",
@@ -27,6 +29,7 @@
     "@babel/core": "^7.8.4",
     "@babel/runtime": "^7.8.4",
     "@react-native-community/eslint-config": "^1.1.0",
+    "@testing-library/react-native": "^9.0.0",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
     "jest": "^25.1.0",
@@ -34,6 +37,12 @@
     "react-test-renderer": "16.13.1"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "moduleNameMapper": {
+      "^@env$": "<rootDir>/__mocks__/@env.js"
+    },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-native|@react-native|@testing-library|react-native-screens|react-native-safe-area-context|react-native-gesture-handler|react-native-reanimated)/)"
+    ]
   }
 }

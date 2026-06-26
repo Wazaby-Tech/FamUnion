@@ -1,14 +1,22 @@
-/**
- * @format
- */
-
 import 'react-native';
 import React from 'react';
+import renderer from 'react-test-renderer';
 import App from '../App';
 
-// Note: test renderer must be required after react-native.
-import renderer from 'react-test-renderer';
+jest.mock('@react-navigation/native', () => ({
+  NavigationContainer: ({ children }) => children,
+}));
 
-it('renders correctly', () => {
+jest.mock('@react-navigation/native-stack', () => ({
+  createNativeStackNavigator: () => ({
+    Navigator: ({ children }) => children,
+    // Render null for each screen to avoid pulling in screen deps here
+    Screen: () => null,
+  }),
+}));
+
+jest.mock('react-native-gesture-handler', () => ({}));
+
+it('renders without crashing', () => {
   renderer.create(<App />);
 });

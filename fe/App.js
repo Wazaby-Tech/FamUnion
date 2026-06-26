@@ -1,111 +1,32 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  ActivityIndicator
-} from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { APIURL } from '@env';
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import ReunionDetailScreen from './src/screens/ReunionDetailScreen';
+import EventDetailScreen from './src/screens/EventDetailScreen';
 
-import Reunions from './components/Reunions/Reunions';
+const Stack = createNativeStackNavigator();
 
-const App: () => React$Node = () => {
-  const [isLoading, setLoading] = useState(true);
-  const [reunions, setReunions] = useState([]);
-
-  //console.log(`${APIURL}/api/reunions`);
-
-  useEffect(() => {
-    fetch(`${APIURL}/api/reunions`)
-    .then((response) => { return response.json(); })
-    .then((responseJson) => { setReunions(responseJson || []); })
-    .catch((reason) => {
-      console.log(`ERROR fetching reunions: ${reason}`);
-      setReunions([]);
-    })
-    .finally(() => { setLoading(false); });
-  }, [])
-
+export default function App() {
   return (
     <NavigationContainer>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>FamUnion</Text>
-              <Text style={styles.sectionDescription}>
-                This is the FamUnion mobile app.
-              </Text>
-            </View>
-          </View>
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Reunions</Text>
-              <Text style={styles.sectionDescription}>
-              {isLoading ? <ActivityIndicator/> : <Reunions reunions={reunions} />}
-              </Text>
-            </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: '#4A90E2' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: '700' },
+          contentStyle: { backgroundColor: '#F2F4F8' },
+        }}>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'FamUnion' }}
+        />
+        <Stack.Screen name="ReunionDetail" component={ReunionDetailScreen} />
+        <Stack.Screen name="EventDetail" component={EventDetailScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
-};
-
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  body: {
-    backgroundColor: Colors.white,
-    
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
-
-export default App;
+}
