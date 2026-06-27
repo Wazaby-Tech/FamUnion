@@ -98,9 +98,10 @@ describe('HomeScreen', () => {
       .mockResolvedValueOnce(REUNIONS)
       .mockResolvedValueOnce(REUNIONS);
 
-    const { UNSAFE_getByType } = render(<HomeScreen navigation={navigation} />);
+    const { UNSAFE_getByType, findByText } = render(<HomeScreen navigation={navigation} />);
 
-    await waitFor(() => expect(reunionService.getReunions).toHaveBeenCalledTimes(1));
+    // Wait for the list to be rendered before accessing FlatList (loading spinner shows first)
+    await findByText('Smith Reunion');
 
     await act(async () => {
       UNSAFE_getByType(FlatList).props.refreshControl.props.onRefresh();
@@ -125,6 +126,6 @@ describe('HomeScreen', () => {
     const retryBtn = await findByText('Retry');
     fireEvent.press(retryBtn);
     expect(await findByText('Smith Reunion')).toBeTruthy();
-    expect(queryByText('Failed to load reunions')).toBeNull();
+    expect(queryByText(/Failed to load reunions/)).toBeNull();
   });
 });
