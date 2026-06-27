@@ -101,7 +101,7 @@ return await ExecuteStoredProc(sql, ParameterDictionary.Single("id", id));
 
 - **Provider**: Auth0 (JWT Bearer). Config keys live under `AppAuth` and `IdentityAuth` in `appsettings.json`.
 - **Policies** (`src/FamUnion.Core/Auth/AppClaims.cs`): three tiers — `Access` (view), `Manage` (reunion organizer), `Admin` (system). Policies check the `permissions` claim in the JWT.
-- The default policy applied to all controllers is `Access`. Use `[Authorize(Policy = AppClaimPolicy.Manage)]` for organizer-only endpoints.
+- `Access` is configured as the `DefaultPolicy`, meaning it applies when an endpoint uses `[Authorize]` without specifying a policy name. Endpoints are **anonymous by default** unless decorated with `[Authorize]` (or `FallbackPolicy` is set in Startup). Currently no controllers carry `[Authorize]`, so all endpoints are open. Use `[Authorize(Policy = AppClaimPolicy.Manage)]` for organizer-only endpoints.
 - `FamUnion.WebAuth` is a separate web app that handles the Auth0 login/callback flow and is not part of the API.
 
 ### API surface
@@ -147,17 +147,26 @@ All tables carry `created_by`, `created_date`, `modified_by`, `modified_date` au
 
 ### Backend
 
-`src/FamUnion.Api/appsettings.json` — fill in for local development:
+`src/FamUnion.Api/appsettings.json` is **tracked in git** — it contains only placeholder empty strings and must never have real secrets committed to it.
 
+For local development, put secrets in one of these two git-safe locations:
+
+**Option A — `appsettings.Development.json`** (git-ignored):
 ```json
 {
-  "ConnectionStrings": { "FamUnionDb": "Host=localhost;Port=5432;Database=famunion" },
-  "AppAuth":      { "Domain": "", "ClientId": "", "ClientSecret": "", "Audience": "" },
-  "IdentityAuth": { "Domain": "", "ClientId": "", "ClientSecret": "", "Audience": "" }
+  "ConnectionStrings": { "FamUnionDb": "Host=localhost;Port=5432;Database=famunion;Username=...;Password=..." },
+  "AppAuth":      { "Domain": "...", "ClientId": "...", "ClientSecret": "...", "Audience": "..." },
+  "IdentityAuth": { "Domain": "...", "ClientId": "...", "ClientSecret": "...", "Audience": "..." }
 }
 ```
 
-Use `appsettings.Development.json` to override for local dev (it is git-ignored).
+**Option B — .NET user-secrets** (preferred):
+```bash
+dotnet user-secrets --project src/FamUnion.Api set "AppAuth:Domain" "..."
+dotnet user-secrets --project src/FamUnion.Api set "AppAuth:ClientSecret" "..."
+dotnet user-secrets --project src/FamUnion.Api set "IdentityAuth:ClientSecret" "..."
+# etc.
+```
 
 ### Frontend
 
