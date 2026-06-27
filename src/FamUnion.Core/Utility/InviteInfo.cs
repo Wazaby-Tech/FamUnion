@@ -31,9 +31,10 @@ namespace FamUnion.Core.Utility
             bwriter.Write((byte)bs);
             bwriter.Write(ExpiresAt.ToShortDateString());
             bs = r.Next(1, 255); // a randomized byte to append after ExpiresAt
+            bwriter.Write((byte)bs);
             bwriter.Write(InviteEmail);
             bs = r.Next(1, 255); // a randomized byte to append after InviteEmail
-            bwriter.Write(bs);  
+            bwriter.Write((byte)bs);
             bwriter.Close();
             return HttpUtility.UrlEncode(Convert.ToBase64String(stream.ToArray()));
         }

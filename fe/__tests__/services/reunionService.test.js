@@ -33,4 +33,22 @@ describe('reunionService', () => {
     api.get.mockRejectedValue(new Error('API error 404'));
     await expect(getReunion('missing')).rejects.toThrow('API error 404');
   });
+
+  it('getReunions propagates API errors', async () => {
+    api.get.mockRejectedValue(new Error('API error 500'));
+    await expect(getReunions()).rejects.toThrow('API error 500');
+  });
+
+  it('getReunions returns an empty array when API returns []', async () => {
+    api.get.mockResolvedValue([]);
+    const result = await getReunions();
+    expect(result).toEqual([]);
+  });
+
+  it('getReunion calls the correct endpoint with any id type', async () => {
+    const data = { id: 'abc-123', name: 'Test' };
+    api.get.mockResolvedValue(data);
+    await getReunion('abc-123');
+    expect(api.get).toHaveBeenCalledWith('/api/reunions/abc-123');
+  });
 });
