@@ -104,4 +104,46 @@ describe('ReunionDetailScreen', () => {
     );
     expect(await findByText(/Failed to load reunion details/)).toBeTruthy();
   });
+
+  it('renders without crashing when reunion has no description', async () => {
+    const noDesc = { ...REUNION, description: null };
+    reunionService.getReunion.mockResolvedValue(noDesc);
+    eventService.getEventsByReunion.mockResolvedValue([]);
+    const { findByText, queryByText } = render(
+      <ReunionDetailScreen route={{ params: { reunion: noDesc } }} navigation={navigation} />,
+    );
+    expect(await findByText('Smith Reunion')).toBeTruthy();
+    expect(queryByText('Annual gathering for the Smiths')).toBeNull();
+  });
+
+  it('omits location when reunion has no location', async () => {
+    const noLocation = { ...REUNION, location: null };
+    reunionService.getReunion.mockResolvedValue(noLocation);
+    eventService.getEventsByReunion.mockResolvedValue([]);
+    const { findByText, queryByText } = render(
+      <ReunionDetailScreen route={{ params: { reunion: noLocation } }} navigation={navigation} />,
+    );
+    expect(await findByText('Smith Reunion')).toBeTruthy();
+    expect(queryByText('Atlanta, GA')).toBeNull();
+  });
+
+  it('shows "Time TBD" for events with no startTime', async () => {
+    const noTimeEvent = { ...EVENTS[0], startTime: null };
+    reunionService.getReunion.mockResolvedValue(REUNION);
+    eventService.getEventsByReunion.mockResolvedValue([noTimeEvent]);
+    const { findByText } = render(
+      <ReunionDetailScreen route={route} navigation={navigation} />,
+    );
+    expect(await findByText('Time TBD')).toBeTruthy();
+  });
+
+  it('shows "Date TBD" when reunion has no start date', async () => {
+    const noDate = { ...REUNION, startDate: null, endDate: null };
+    reunionService.getReunion.mockResolvedValue(noDate);
+    eventService.getEventsByReunion.mockResolvedValue([]);
+    const { findByText } = render(
+      <ReunionDetailScreen route={{ params: { reunion: noDate } }} navigation={navigation} />,
+    );
+    expect(await findByText('Date TBD')).toBeTruthy();
+  });
 });

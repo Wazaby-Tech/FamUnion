@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { FlatList } from 'react-native';
+import { act, render, fireEvent, waitFor } from '@testing-library/react-native';
 import HomeScreen from '../../src/screens/HomeScreen';
 import * as reunionService from '../../src/services/reunionService';
 
@@ -90,5 +91,40 @@ describe('HomeScreen', () => {
     expect(navigation.navigate).toHaveBeenCalledWith('ReunionDetail', {
       reunion: REUNIONS[0],
     });
+  });
+
+  it('refetches data on pull-to-refresh', async () => {
+    reunionService.getReunions
+      .mockResolvedValueOnce(REUNIONS)
+      .mockResolvedValueOnce(REUNIONS);
+
+    const { UNSAFE_getByType } = render(<HomeScreen navigation={navigation} />);
+
+    await waitFor(() => expect(reunionService.getReunions).toHaveBeenCalledTimes(1));
+
+    await act(async () => {
+      UNSAFE_getByType(FlatList).props.refreshControl.props.onRefresh();
+    });
+
+    await waitFor(() => expect(reunionService.getReunions).toHaveBeenCalledTimes(2));
+  });
+
+  it('shows no description text when description is absent', async () => {
+    reunionService.getReunions.mockResolvedValue([REUNIONS[1]]);
+    const { findByText, queryByText } = render(<HomeScreen navigation={navigation} />);
+    expect(await findByText('Johnson Family')).toBeTruthy();
+    expect(queryByText('Annual gathering')).toBeNull();
+  });
+
+  it('clears error state when retry succeeds', async () => {
+    reunionService.getReunions
+      .mockRejectedValueOnce(new Error('fail'))
+      .mockResolvedValueOnce(REUNIONS);
+
+    const { findByText, queryByText } = render(<HomeScreen navigation={navigation} />);
+    const retryBtn = await findByText('Retry');
+    fireEvent.press(retryBtn);
+    expect(await findByText('Smith Reunion')).toBeTruthy();
+    expect(queryByText('Failed to load reunions')).toBeNull();
   });
 });
